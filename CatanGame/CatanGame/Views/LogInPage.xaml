@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CatanGame.Views.LogInPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:CatanGame.Models"
+    xmlns:vm="clr-namespace:CatanGame.ViewModels"
+    x:DataType="vm:LogInPageVM"
+    IsBusy="{Binding IsBusy}">
+
+    <VerticalStackLayout
+        Padding="30"
+        Spacing="25"
+        VerticalOptions="Center">
+
+        <Label
+            FontAttributes="Bold"
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="{x:Static m:Strings.LoginTitle}" />
+
+        <Label
+            FontAttributes="Bold"
+            FontFamily="MaterialSymbols"
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="{StaticResource IconVerified_user}" />
+
+        <Border
+            Padding="10"
+            Stroke="Olive"
+            StrokeShape="RoundRectangle 8"
+            StrokeThickness="1">
+
+            <Entry
+                ClearButtonVisibility="WhileEditing"
+                FontSize="18"
+                Placeholder="{x:Static m:Strings.UserNameLabel}"
+                ReturnType="Next"
+                Text="{Binding UserName}"
+                TextColor="black" />
+        </Border>
+
+        <Border
+            Stroke="Olive"
+            StrokeShape="RoundRectangle 8"
+            StrokeThickness="1">
+
+            <Grid
+                Padding="10"
+                ColumnDefinitions="*,Auto"
+                VerticalOptions="Center">
+
+                <Entry
+                    BackgroundColor="Transparent"
+                    ClearButtonVisibility="WhileEditing"
+                    FontSize="18"
+                    IsPassword="{Binding IsPassword}"
+                    Placeholder="{x:Static m:Strings.PasswordLabel}"
+                    ReturnType="Done"
+                    Text="{Binding Password}"
+                    TextColor="black"
+                    VerticalOptions="Center" />
+
+                <Button
+                    BackgroundColor="Transparent"
+                    BorderWidth="0"
+                    Command="{Binding ToggleIsPasswordCommand}"
+                    FontFamily="MaterialSymbols"
+                    FontSize="24"
+                    Style="{StaticResource IconButtonStyle}"
+                    HorizontalOptions="End"
+                    Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+                    TextColor="Olive"
+                    VerticalOptions="Center" />
+
+            </Grid>
+        </Border>
+
+        <Button
+            Command="{Binding LoginCommand}"
+            CornerRadius="8"
+            FontSize="18"
+            HeightRequest="50"
+            Text="{x:Static m:Strings.LoginButton}"
+            TextColor="White">
+
+            <Button.ImageSource>
+                <FontImageSource Glyph="{StaticResource IconLogin}">
+                    <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
+                </FontImageSource>
+            </Button.ImageSource>
+
+        </Button>
+
+        <Label
+            FontAttributes="Bold"
+            FontSize="28"
+            HorizontalOptions="Center"
+            Text="{x:Static m:Strings.DontHaveAnAcoountLabel}" />
+
+        <Button
+            Command="{Binding ToggleIsPasswordCommand}"
+            CornerRadius="8"
+            FontSize="18"
+            HeightRequest="50"
+            Text="{x:Static m:Strings.CreateAnAcoountLabel}"
+            TextColor="White" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
