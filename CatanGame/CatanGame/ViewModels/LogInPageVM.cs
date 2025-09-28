@@ -5,13 +5,15 @@ using CatanGame.ModelsLogic;
 
 namespace CatanGame.ViewModels
 {
-    public class LogInPageVM : ObservableObject
+    public partial class LogInPageVM : ObservableObject
     {
-        private User user = new();
+        private readonly  User user = new();
         public ICommand LoginCommand { get; }
         public ICommand CreateAcoountPage { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public bool IsBusy { get; set; } = false;
+        public bool IsVisibleUserNameMessege { get; set; } = true;
+        public bool IsVisiblePasswordMessege { get; set; } = false;
         public string UserName
         {
             get => user.UserName;
@@ -19,6 +21,8 @@ namespace CatanGame.ViewModels
             {
                 user.UserName = value;
                 (LoginCommand as Command)?.ChangeCanExecute();
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
             }
         }
         public string Password
@@ -28,6 +32,8 @@ namespace CatanGame.ViewModels
             {
                 user.Password = value;
                 (LoginCommand as Command)?.ChangeCanExecute();
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
             }
         }
         public bool IsPassword { get; set; } = true;
@@ -45,6 +51,18 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsPassword));
         }
 
+        private void ToggleIsVisibleUserNameMessege()
+        {
+            IsVisibleUserNameMessege = string.IsNullOrWhiteSpace(user.UserName);
+            OnPropertyChanged(nameof(IsVisibleUserNameMessege));
+        }
+
+        private void ToggleIsVisiblePasswordMessege()
+        {
+            IsVisiblePasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && string.IsNullOrWhiteSpace(user.Password);
+            OnPropertyChanged(nameof(IsVisiblePasswordMessege));
+        }
+
         private async Task Login()
         {
             IsBusy = true;
@@ -58,7 +76,7 @@ namespace CatanGame.ViewModels
         {
             return (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password));
         }
-        public void GoToRegister()
+        public static void GoToRegister()
         {
 
         }

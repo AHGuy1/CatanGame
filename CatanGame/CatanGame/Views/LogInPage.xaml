@@ -28,70 +28,93 @@
 
         <Border
             Padding="10"
-            Stroke="Olive"
-            StrokeShape="RoundRectangle 8"
+            Stroke="DodgerBlue"
+            StrokeShape="RoundRectangle 16"
             StrokeThickness="1">
+ 
+            <Grid
+                RowDefinitions="auto,auto,auto">
+                <Label 
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.UserNameLabel}" />
 
-            <Entry
-                ClearButtonVisibility="WhileEditing"
-                FontSize="18"
-                Placeholder="{x:Static m:Strings.UserNameLabel}"
-                ReturnType="Next"
-                Text="{Binding UserName}"
-                TextColor="black" />
+                <Entry
+                    Grid.Row="1"
+                    FontSize="18"
+                    Text="{Binding UserName}"
+                    TextColor="black" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="12"
+                    TextColor="Red"
+                    Grid.Row="2"
+                    IsVisible="{Binding IsVisibleUserNameMessege}"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.UsernameRequiredMessage}" />
+            </Grid>
+
         </Border>
 
         <Border
-            Stroke="Olive"
-            StrokeShape="RoundRectangle 8"
-            StrokeThickness="1">
+            Padding="10"
+            Stroke="DodgerBlue"
+            StrokeShape="RoundRectangle 16"
+             StrokeThickness="1">
 
-            <Grid
-                Padding="10"
-                ColumnDefinitions="*,Auto"
-                VerticalOptions="Center">
-
-                <Entry
-                    BackgroundColor="Transparent"
-                    ClearButtonVisibility="WhileEditing"
-                    FontSize="18"
-                    IsPassword="{Binding IsPassword}"
-                    Placeholder="{x:Static m:Strings.PasswordLabel}"
-                    ReturnType="Done"
-                    Text="{Binding Password}"
-                    TextColor="black"
-                    VerticalOptions="Center" />
+            <Grid 
+                RowDefinitions="auto,auto,auto">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.PasswordLabel}" />
+                <Grid 
+                    Grid.Row="1" 
+                    ColumnDefinitions="*,auto">
+                    <Entry 
+                        Text="{Binding Password}"
+                        IsPassword="{Binding IsPassword}"
+                        FontSize="18"
+                        TextColor="black" />
+                    <Button
+                        BackgroundColor="Transparent"
+                        BorderWidth="0"
+                        Command="{Binding ToggleIsPasswordCommand}"
+                        FontFamily="MaterialSymbols"
+                        FontSize="24"
+                        Style="{StaticResource IconButtonStyle}"
+                        HorizontalOptions="End"
+                        Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+                        TextColor="DodgerBlue" />
+                </Grid>
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="12"
+                    TextColor="Red"
+                    Grid.Row="2"
+                    IsVisible="{Binding IsVisiblePasswordMessege}"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.PasswordRequiredMessage}" />
+            </Grid>
+            </Border>
 
                 <Button
-                    BackgroundColor="Transparent"
-                    BorderWidth="0"
-                    Command="{Binding ToggleIsPasswordCommand}"
-                    FontFamily="MaterialSymbols"
-                    FontSize="24"
-                    Style="{StaticResource IconButtonStyle}"
-                    HorizontalOptions="End"
-                    Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
-                    TextColor="Olive"
-                    VerticalOptions="Center" />
+                    Command="{Binding LoginCommand}"
+                    CornerRadius="8"
+                    FontSize="18"
+                    HeightRequest="50"
+                    Text="{x:Static m:Strings.LoginButton}"
+                    TextColor="White">
 
-            </Grid>
-        </Border>
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{StaticResource IconLogin}">
+                        <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
+                    </FontImageSource>
+                </Button.ImageSource>
 
-        <Button
-            Command="{Binding LoginCommand}"
-            CornerRadius="8"
-            FontSize="18"
-            HeightRequest="50"
-            Text="{x:Static m:Strings.LoginButton}"
-            TextColor="White">
-
-            <Button.ImageSource>
-                <FontImageSource Glyph="{StaticResource IconLogin}">
-                    <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
-                </FontImageSource>
-            </Button.ImageSource>
-
-        </Button>
+                </Button>
 
         <Label
             FontAttributes="Bold"

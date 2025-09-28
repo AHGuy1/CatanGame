@@ -35,7 +35,6 @@
                 <Entry
                     Grid.Row="1"
                     FontSize="18"
-                    ReturnType="Next"
                     Text="{Binding UserName}"
                     TextColor="black" />
                 <Label
@@ -70,7 +69,6 @@
                         Text="{Binding Password}"
                         IsPassword="{Binding IsPassword}"
                         FontSize="18"
-                        ReturnType="Next"
                         TextColor="black" />
                     <Button
                         BackgroundColor="Transparent"
@@ -81,7 +79,7 @@
                         Style="{StaticResource IconButtonStyle}"
                         HorizontalOptions="End"
                         Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
-                        TextColor="Olive" />
+                        TextColor="DodgerBlue" />
                 </Grid>
                 <Label
                     FontAttributes="Bold"
@@ -115,7 +113,6 @@
                         Text="{Binding ConfirmPassword}"
                         IsPassword="{Binding IsPasswordConfirmPassword}"
                         FontSize="18"
-                        ReturnType="Next"
                         TextColor="black" />
                     <Button
                         BackgroundColor="Transparent"
@@ -126,7 +123,7 @@
                         Style="{StaticResource IconButtonStyle}"
                         HorizontalOptions="End"
                         Text="{Binding IsPasswordConfirmPassword, Converter={StaticResource passwordIconConvert}}"
-                        TextColor="Olive"
+                        TextColor="DodgerBlue"
                         VerticalOptions="Center" />
                 </Grid>
                 <Label
@@ -157,7 +154,6 @@
                 <Entry
                     Grid.Row="1"
                     FontSize="18"
-                    ReturnType="Next"
                     Text="{Binding Email}"
                     TextColor="black" />
                 <Label

@@ -5,16 +5,12 @@ using CatanGame.ModelsLogic;
 
 namespace CatanGame.ViewModels
 {
-    internal class RegisterPageVM : ObservableObject
+    public partial class RegisterPageVM : ObservableObject
     {
-        private User user = new();
+        private readonly User user = new();
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
-        public ICommand VisibleUserNameMessegeCommand { get; }
-        public ICommand VisiblePasswordMessegeCommand { get; }
-        public ICommand VisibleConfirmPasswordMessegeCommand { get; }
-        public ICommand VisibleEmailMessegeCommand { get; }
         public bool IsPasswordConfirmPassword { get; set; } = true;
         public bool IsPassword { get; set; } = true;
         public bool IsVisibleUserNameMessege { get; set; } = true;
@@ -27,12 +23,10 @@ namespace CatanGame.ViewModels
             set
             {
                 user.UserName = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-                (VisibleUserNameMessegeCommand as Command)?.ChangeCanExecute();
-                (VisiblePasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleConfirmPasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleEmailMessegeCommand as Command)?.ChangeCanExecute();
-
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
+                ToggleIsVisibleConfirmPasswordMessege();
+                ToggleIsVisibleEmailMessege();
             }
         }
         public string Password
@@ -41,11 +35,10 @@ namespace CatanGame.ViewModels
             set
             {
                 user.Password = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-                (VisibleUserNameMessegeCommand as Command)?.ChangeCanExecute();
-                (VisiblePasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleConfirmPasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleEmailMessegeCommand as Command)?.ChangeCanExecute();
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
+                ToggleIsVisibleConfirmPasswordMessege();
+                ToggleIsVisibleEmailMessege();
             }
         }
         public string ConfirmPassword
@@ -54,11 +47,10 @@ namespace CatanGame.ViewModels
             set
             {
                 user.ConfirmPassword = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-                (VisibleUserNameMessegeCommand as Command)?.ChangeCanExecute();
-                (VisiblePasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleConfirmPasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleEmailMessegeCommand as Command)?.ChangeCanExecute();
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
+                ToggleIsVisibleConfirmPasswordMessege();
+                ToggleIsVisibleEmailMessege();
             }
         }
         public string Email
@@ -68,10 +60,10 @@ namespace CatanGame.ViewModels
             {
                 user.Email = value;
                 (RegisterCommand as Command)?.ChangeCanExecute();
-                (VisibleUserNameMessegeCommand as Command)?.ChangeCanExecute();
-                (VisiblePasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleConfirmPasswordMessegeCommand as Command)?.ChangeCanExecute();
-                (VisibleEmailMessegeCommand as Command)?.ChangeCanExecute();
+                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisiblePasswordMessege();
+                ToggleIsVisibleConfirmPasswordMessege();
+                ToggleIsVisibleEmailMessege();
             }
         }
 
@@ -80,10 +72,6 @@ namespace CatanGame.ViewModels
             RegisterCommand = new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             ToggleIsPasswordCommandConfirmPassword = new Command(ToggleIsPasswordConfirmPassword);
-            VisibleUserNameMessegeCommand = new Command(ToggleIsVisibleUserNameMessege);
-            VisiblePasswordMessegeCommand = new Command(ToggleIsVisiblePasswordMessege);
-            VisibleConfirmPasswordMessegeCommand = new Command(ToggleIsVisibleConfirmPasswordMessege);
-            VisibleEmailMessegeCommand = new Command(ToggleIsVisibleEmailMessege);
         }
 
         public bool CanRegister()
