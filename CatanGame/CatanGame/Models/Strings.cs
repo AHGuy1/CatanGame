@@ -19,6 +19,9 @@
         public const string DontHaveAnAcoountLabel = "Dont Have An Acoount?";
         public const string PasswordsDoNotMatch = "Passwords Do Not Match.";
         public const string UnvalidEmail = "You Must Enter a Valid Email.";
+        public const string RegisterError = "ERROR!";
+        public const string RegisterErrorOk = "OK";
+
 
 
     }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576491131527",
+    "project_id": "acatangameh",
+    "storage_bucket": "acatangameh.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576491131527:android:0d0ba5476e3cd99410de22",
+        "android_client_info": {
+          "package_name": "com.meitar.catangame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiMqS0AFWWQFeV3mnZuVYH1VC3SGaNtQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,22 +7,43 @@ namespace CatanGame.ModelsLogic
     {
         public override void Register()
         {
+            fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, OnComplete);
+        }
+
+        private void OnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully) 
+            {
+                SaveToPreferences();
+            }
+            else
+            {
+                Shell.Current.DisplayAlert(Strings.RegisterError, task.Exception?.Message, Strings.RegisterErrorOk);
+            }
+        }
+
+        private void SaveToPreferences()
+        {
             Preferences.Set(Keys.UserNameKey, UserName);
             Preferences.Set(Keys.PasswordKey, Password);
             Preferences.Set(Keys.EmailKey, Email);
-
         }
+
         public override bool Login()
         {
             return true;
         }
-        public User()
+        public User(bool flag)
         {
-            UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
-            Password = Preferences.Get(Keys.PasswordKey, string.Empty);
-            ConfirmPassword = Preferences.Get(Keys.PasswordKey, string.Empty);
-            Email = Preferences.Get(Keys.EmailKey, string.Empty);
-
+            //used for Register
+            if(flag)
+            {
+                UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
+                Password = Preferences.Get(Keys.PasswordKey, string.Empty);
+                ConfirmPassword = Preferences.Get(Keys.PasswordKey, string.Empty);
+                Email = Preferences.Get(Keys.EmailKey, string.Empty);
+            }
         }
+
     }
 }

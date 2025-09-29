@@ -7,7 +7,7 @@ namespace CatanGame.ViewModels
 {
     public partial class RegisterPageVM : ObservableObject
     {
-        private readonly User user = new();
+        private readonly User user = new(true);
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }

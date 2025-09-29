@@ -17,28 +17,30 @@
             FontAttributes="Bold"
             FontSize="32"
             HorizontalOptions="Center"
-            Text="{x:Static m:Strings.LoginTitle}" />
+            Text="{x:Static m:Strings.LoginTitle}"
+            TextColor="DodgerBlue" />
 
         <Label
             FontAttributes="Bold"
             FontFamily="MaterialSymbols"
             FontSize="32"
             HorizontalOptions="Center"
-            Text="{StaticResource IconVerified_user}" />
+            Text="{StaticResource IconVerified_user}"
+            TextColor="DodgerBlue" />
 
         <Border
             Padding="10"
             Stroke="DodgerBlue"
             StrokeShape="RoundRectangle 16"
             StrokeThickness="1">
- 
-            <Grid
-                RowDefinitions="auto,auto,auto">
-                <Label 
+
+            <Grid RowDefinitions="auto,auto,auto">
+                <Label
                     FontAttributes="Bold"
                     FontSize="20"
                     HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.UserNameLabel}" />
+                    Text="{x:Static m:Strings.UserNameLabel}"
+                    TextColor="DarkOrange" />
 
                 <Entry
                     Grid.Row="1"
@@ -46,13 +48,13 @@
                     Text="{Binding UserName}"
                     TextColor="black" />
                 <Label
+                    Grid.Row="2"
                     FontAttributes="Bold"
                     FontSize="12"
-                    TextColor="Red"
-                    Grid.Row="2"
-                    IsVisible="{Binding IsVisibleUserNameMessege}"
                     HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.UsernameRequiredMessage}" />
+                    IsVisible="{Binding IsVisibleUserNameMessege}"
+                    Text="{x:Static m:Strings.UsernameRequiredMessage}"
+                    TextColor="#E32636" />
             </Grid>
 
         </Border>
@@ -61,22 +63,20 @@
             Padding="10"
             Stroke="DodgerBlue"
             StrokeShape="RoundRectangle 16"
-             StrokeThickness="1">
+            StrokeThickness="1">
 
-            <Grid 
-                RowDefinitions="auto,auto,auto">
+            <Grid RowDefinitions="auto,auto,auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="20"
                     HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.PasswordLabel}" />
-                <Grid 
-                    Grid.Row="1" 
-                    ColumnDefinitions="*,auto">
-                    <Entry 
-                        Text="{Binding Password}"
-                        IsPassword="{Binding IsPassword}"
+                    Text="{x:Static m:Strings.PasswordLabel}"
+                    TextColor="DarkOrange" />
+                <Grid Grid.Row="1" ColumnDefinitions="*,auto">
+                    <Entry
                         FontSize="18"
+                        IsPassword="{Binding IsPassword}"
+                        Text="{Binding Password}"
                         TextColor="black" />
                     <Button
                         BackgroundColor="Transparent"
@@ -84,49 +84,50 @@
                         Command="{Binding ToggleIsPasswordCommand}"
                         FontFamily="MaterialSymbols"
                         FontSize="24"
-                        Style="{StaticResource IconButtonStyle}"
                         HorizontalOptions="End"
+                        Style="{StaticResource IconButtonStyle}"
                         Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
                         TextColor="DodgerBlue" />
                 </Grid>
                 <Label
+                    Grid.Row="2"
                     FontAttributes="Bold"
                     FontSize="12"
-                    TextColor="Red"
-                    Grid.Row="2"
-                    IsVisible="{Binding IsVisiblePasswordMessege}"
                     HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.PasswordRequiredMessage}" />
+                    IsVisible="{Binding IsVisiblePasswordMessege}"
+                    Text="{x:Static m:Strings.PasswordRequiredMessage}"
+                    TextColor="#E32636" />
             </Grid>
-            </Border>
+        </Border>
 
-                <Button
-                    Command="{Binding LoginCommand}"
-                    CornerRadius="8"
-                    FontSize="18"
-                    HeightRequest="50"
-                    Text="{x:Static m:Strings.LoginButton}"
-                    TextColor="White">
+        <Button
+            Command="{Binding LoginCommand}"
+            CornerRadius="8"
+            FontSize="18"
+            HeightRequest="70"
+            Text="{x:Static m:Strings.LoginButton}"
+            TextColor="White">
 
-                <Button.ImageSource>
-                    <FontImageSource Glyph="{StaticResource IconLogin}">
-                        <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
-                    </FontImageSource>
-                </Button.ImageSource>
+            <Button.ImageSource>
+                <FontImageSource Glyph="{StaticResource IconLogin}">
+                    <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
+                </FontImageSource>
+            </Button.ImageSource>
 
-                </Button>
+        </Button>
 
         <Label
             FontAttributes="Bold"
-            FontSize="28"
+            FontSize="30"
             HorizontalOptions="Center"
-            Text="{x:Static m:Strings.DontHaveAnAcoountLabel}" />
+            Text="{x:Static m:Strings.DontHaveAnAcoountLabel}"
+            TextColor="DarkOrange" />
 
         <Button
             Command="{Binding ToggleIsPasswordCommand}"
             CornerRadius="8"
             FontSize="18"
-            HeightRequest="50"
+            HeightRequest="70"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
 
