@@ -1,5 +1,5 @@
-﻿using CatanGame.Views;
-using CatanGame.ModelsLogic;
+﻿using CatanGame.ModelsLogic;
+using CatanGame.Views;
 
 namespace CatanGame
 {
@@ -8,9 +8,7 @@ namespace CatanGame
         public App()
         {
             InitializeComponent();
-            User user = new(true);
-            Page page = user.IsRegistered ? new LogInPage() : new RegisterPage(); 
-            MainPage  = page;
+            MainPage = new RegisterPage();
         }
     }
 }

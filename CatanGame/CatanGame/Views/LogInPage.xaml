@@ -95,7 +95,7 @@
                     FontSize="12"
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsVisiblePasswordMessege}"
-                    Text="{x:Static m:Strings.PasswordRequiredMessage}"
+                    Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
                     TextColor="#E32636" />
             </Grid>
         </Border>

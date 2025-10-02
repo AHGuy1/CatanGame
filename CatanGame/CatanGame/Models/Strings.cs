@@ -11,7 +11,7 @@
         public const string LoginSuccessMessage = "Login successful!";
         public const string LoginFailureMessage = "Login failed. Please try again.";
         public const string UsernameRequiredMessage = "A Username is required.";
-        public const string PasswordRequiredMessage = "A Password is required.";
+        public const string ValidPasswordRequiredMessage = "Password must include 8 to 12 charcters.";
         public const string RegisterTitle = "Register";
         public const string ConfirmPasswordLabel = "Confirm Password:";
         public const string EmailLabel = "Email:";
@@ -19,9 +19,6 @@
         public const string DontHaveAnAcoountLabel = "Dont Have An Acoount?";
         public const string PasswordsDoNotMatch = "Passwords Do Not Match.";
         public const string UnvalidEmail = "You Must Enter a Valid Email.";
-        public const string RegisterError = "ERROR!";
-        public const string RegisterErrorOk = "OK";
-
 
 
     }

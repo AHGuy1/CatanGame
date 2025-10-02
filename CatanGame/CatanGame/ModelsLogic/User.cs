@@ -12,13 +12,13 @@ namespace CatanGame.ModelsLogic
 
         private void OnComplete(Task task)
         {
-            if (task.IsCompletedSuccessfully) 
+            if (task.IsCompletedSuccessfully)
             {
                 SaveToPreferences();
             }
             else
             {
-                Shell.Current.DisplayAlert(Strings.RegisterError, task.Exception?.Message, Strings.RegisterErrorOk);
+
             }
         }
 
@@ -28,22 +28,17 @@ namespace CatanGame.ModelsLogic
             Preferences.Set(Keys.PasswordKey, Password);
             Preferences.Set(Keys.EmailKey, Email);
         }
-
         public override bool Login()
         {
             return true;
         }
-        public User(bool flag)
+        public User()
         {
-            //used for Register
-            if(flag)
-            {
-                UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
-                Password = Preferences.Get(Keys.PasswordKey, string.Empty);
-                ConfirmPassword = Preferences.Get(Keys.PasswordKey, string.Empty);
-                Email = Preferences.Get(Keys.EmailKey, string.Empty);
-            }
-        }
+            UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
+            Password = Preferences.Get(Keys.PasswordKey, string.Empty);
+            ConfirmPassword = Preferences.Get(Keys.PasswordKey, string.Empty);
+            Email = Preferences.Get(Keys.EmailKey, string.Empty);
 
+        }
     }
 }

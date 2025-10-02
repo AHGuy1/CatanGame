@@ -13,7 +13,7 @@ namespace CatanGame.Models
         public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<System.Threading.Tasks.Task> OnComplete);
 
-        public FbDataModel() 
+        public FbDataModel()
         {
             FirebaseAuthConfig fac = new()
             {
@@ -24,6 +24,5 @@ namespace CatanGame.Models
             facl = new FirebaseAuthClient(fac);
             fdb = CrossCloudFirestore.Current.Instance;
         }
-
     }
 }

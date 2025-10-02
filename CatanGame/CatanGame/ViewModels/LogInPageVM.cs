@@ -7,7 +7,7 @@ namespace CatanGame.ViewModels
 {
     public partial class LogInPageVM : ObservableObject
     {
-        private readonly  User user = new(false);
+        private readonly  User user = new();
         public ICommand LoginCommand { get; }
         public ICommand CreateAcoountPage { get; }
         public ICommand ToggleIsPasswordCommand { get; }

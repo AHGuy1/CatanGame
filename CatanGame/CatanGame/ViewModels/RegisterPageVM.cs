@@ -7,7 +7,7 @@ namespace CatanGame.ViewModels
 {
     public partial class RegisterPageVM : ObservableObject
     {
-        private readonly User user = new(true);
+        private readonly User user = new();
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
@@ -98,19 +98,19 @@ namespace CatanGame.ViewModels
 
         private void ToggleIsVisiblePasswordMessege()
         {
-            IsVisiblePasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && string.IsNullOrWhiteSpace(user.Password);
+            IsVisiblePasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && (string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12);
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
 
         private void ToggleIsVisibleConfirmPasswordMessege()
         {
-            IsVisibleConfirmPasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && !string.IsNullOrWhiteSpace(user.Password) && user.Password != user.ConfirmPassword;
+            IsVisibleConfirmPasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && !(string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12) && user.Password != user.ConfirmPassword;
             OnPropertyChanged(nameof(IsVisibleConfirmPasswordMessege));
         }
 
         private void ToggleIsVisibleEmailMessege()
         {
-            IsVisibleEmailMessege = (!string.IsNullOrWhiteSpace(user.UserName) && !string.IsNullOrWhiteSpace(user.Password) && user.Password == user.ConfirmPassword && !(user.Email.Contains('@') && user.Email.Contains('.')));
+            IsVisibleEmailMessege = !string.IsNullOrWhiteSpace(user.UserName) && !(string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12) && user.Password == user.ConfirmPassword && !(user.Email.Contains('@') && user.Email.Contains('.'));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
 

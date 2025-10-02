@@ -14,6 +14,5 @@ namespace CatanGame.Models
         public const string FbApiKey = "AIzaSyBiMqS0AFWWQFeV3mnZuVYH1VC3SGaNtQ0";
         public const string FbApiAuthDomain = "acatangameh.firebaseapp.com";
 
-
     }
 }
