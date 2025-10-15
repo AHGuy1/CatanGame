@@ -12,6 +12,6 @@ namespace CatanGame.Models
         public string ConfirmPassword { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public abstract void Register();
-        public abstract bool Login();
+        public abstract void Login();
     }
 }
