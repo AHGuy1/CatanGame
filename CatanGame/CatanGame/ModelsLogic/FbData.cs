@@ -36,7 +36,17 @@ namespace CatanGame.ModelsLogic
         {
             await facl.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(OnComplete);
         }
-
+        public override async void SendSignInLinkToEmail(string email, Action<System.Threading.Tasks.Task> OnComplete)
+        {
+            var acs = new ActionCodeSettings()
+            {
+                Url = "https://www.example.com/finishSignUp?cartId=1234",
+                HandleCodeInApp = true,
+                iOSBundleId = "com.CatanGame.ios",
+                AndroidPackageName = "com.CatanGame.ios",
+                linkDomain = true,
+            };
+        }   
 
     }
 }

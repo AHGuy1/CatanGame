@@ -24,7 +24,7 @@
 		<ApplicationTitle>CatanGame</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.catangame</ApplicationId>
+		<ApplicationId>com.meitar.catangame</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -56,6 +56,15 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+
+  <!-- Explicitly handle google-services.json like the working project -->
+  <ItemGroup>
+    <MauiAsset Remove="Resources\Raw\google-services.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <GoogleServicesJson Include="Resources\Raw\google-services.json" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />

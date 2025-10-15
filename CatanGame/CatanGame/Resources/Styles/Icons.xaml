@@ -1076,7 +1076,11 @@
     <x:String x:Key="IconImportant_devices">&#xe912;</x:String>
     <x:String x:Key="IconDesktop_mac">&#xe30b;</x:String>
     <x:String x:Key="IconLaptop_chromebook">&#xe31f;</x:String>
-    <x:String x:Key="IconComputer">&#xe30a;</x:String>
+    <x:String x:Key="Icon
+              
+              
+              
+              uter">&#xe30a;</x:String>
     <x:String x:Key="IconComputer_cancel">&#xf2f6;</x:String>
     <x:String x:Key="IconComputer_arrow_up">&#xf2f7;</x:String>
     <x:String x:Key="IconSync_saved_locally">&#xf820;</x:String>
