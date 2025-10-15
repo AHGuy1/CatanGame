@@ -96,9 +96,17 @@
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsVisiblePasswordMessege}"
                     Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
-                    TextColor="#E32636" />
+                    TextColor="#E32636"/>
             </Grid>
         </Border>
+
+        <Button
+            Command="{Binding ToggleIsPasswordCommand}"
+            FontSize="20"            
+            Background="Transparent"
+            HeightRequest="50"
+            Text="{x:Static m:Strings.ForgotPassword}"
+            TextColor="DodgerBlue"/>
 
         <Button
             Command="{Binding LoginCommand}"
@@ -118,7 +126,7 @@
 
         <Label
             FontAttributes="Bold"
-            FontSize="30"
+            FontSize="25"
             HorizontalOptions="Center"
             Text="{x:Static m:Strings.DontHaveAnAcoountLabel}"
             TextColor="DarkOrange" />
@@ -130,6 +138,8 @@
             HeightRequest="70"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
+        
+        
 
     </VerticalStackLayout>
 

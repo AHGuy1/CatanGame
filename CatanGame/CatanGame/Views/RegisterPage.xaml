@@ -184,6 +184,14 @@
 
         </Button>
 
+        <Label
+            FontAttributes="Bold"
+            FontSize="20"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsEmailTaken}"
+            Text="{x:Static m:Strings.EmailAlreadyExiests}"
+            TextColor="#E32636" />
+
 
     </VerticalStackLayout>
 

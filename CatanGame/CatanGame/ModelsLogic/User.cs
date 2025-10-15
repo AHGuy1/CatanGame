@@ -1,4 +1,5 @@
 ﻿using CatanGame.Models;
+using CatanGame.ViewModels;
 using System;
 
 namespace CatanGame.ModelsLogic
@@ -18,27 +19,33 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
+                EmailIsTaken = true;
+            }
+        }
+
+        private void LoginOnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+
+            }
+            else
+            {
 
             }
         }
 
         private void SaveToPreferences()
         {
-            Preferences.Set(Keys.UserNameKey, UserName);
-            Preferences.Set(Keys.PasswordKey, Password);
-            Preferences.Set(Keys.EmailKey, Email);
+            Preferences.Set(Keys.IsRegisteredKey, true);
         }
-        public override bool Login()
+        public override void Login()
         {
-            return true;
+            fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
         }
         public User()
         {
-            UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
-            Password = Preferences.Get(Keys.PasswordKey, string.Empty);
-            ConfirmPassword = Preferences.Get(Keys.PasswordKey, string.Empty);
-            Email = Preferences.Get(Keys.EmailKey, string.Empty);
-
+            IsRegistered = Preferences.Get(Keys.IsRegisteredKey, false);
         }
     }
 }

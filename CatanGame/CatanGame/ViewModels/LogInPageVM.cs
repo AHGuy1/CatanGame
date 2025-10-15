@@ -40,7 +40,7 @@ namespace CatanGame.ViewModels
 
         public LogInPageVM()
         {
-            LoginCommand = new Command(async () => await Login(), CanLogin);
+            LoginCommand = new Command(Login, CanLogin);
             CreateAcoountPage = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
         }
@@ -63,13 +63,9 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
 
-        private async Task Login()
+        private void Login()
         {
-            IsBusy = true;
-            OnPropertyChanged(nameof(IsBusy));
-            await Task.Delay(5000);
-            IsBusy = false;
-            OnPropertyChanged(nameof(IsBusy));
+            user.Login();
         }
 
         private bool CanLogin()

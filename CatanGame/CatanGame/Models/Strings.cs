@@ -6,7 +6,7 @@
         public const string UserNameLabel = "Username:";
         public const string PasswordLabel = "Password:";
         public const string LoginButton = "Login";
-        public const string ForgotPasswordLink = "Forgot your password?";
+        public const string ForgotPassword = "Forgot your password?";
         public const string InvalidCredentialsMessage = "Invalid username or password.";
         public const string LoginSuccessMessage = "Login successful!";
         public const string LoginFailureMessage = "Login failed. Please try again.";
@@ -19,7 +19,6 @@
         public const string DontHaveAnAcoountLabel = "Dont Have An Acoount?";
         public const string PasswordsDoNotMatch = "Passwords Do Not Match.";
         public const string UnvalidEmail = "You Must Enter a Valid Email.";
-
-
+        public const string EmailAlreadyExiests = "Email Is Alredy Linked To An Acoount";
     }
 }

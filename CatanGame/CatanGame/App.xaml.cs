@@ -8,7 +8,9 @@ namespace CatanGame
         public App()
         {
             InitializeComponent();
-            MainPage = new RegisterPage();
+            User user = new();
+            Page page = user.IsRegistered ? new LogInPage() : new RegisterPage();
+            MainPage = page;
         }
     }
 }
