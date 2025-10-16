@@ -96,21 +96,28 @@
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsVisiblePasswordMessege}"
                     Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
-                    TextColor="#E32636"/>
+                    TextColor="#E32636" />
             </Grid>
         </Border>
+        <Grid>
+            <Button
+                Background="Transparent"
+                Command="{Binding PasswordReset}"
+                HeightRequest="20"
+                WidthRequest="215" />
 
-        <Button
-            Command="{Binding ToggleIsPasswordCommand}"
-            FontSize="20"            
-            Background="Transparent"
-            HeightRequest="50"
-            Text="{x:Static m:Strings.ForgotPassword}"
-            TextColor="DodgerBlue"/>
+            <Label
+                FontSize="20"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.ForgotPassword}"
+                TextColor="#2E2EFF"
+                TextDecorations="Underline"
+                VerticalTextAlignment="Center" />
+        </Grid>
+
 
         <Button
             Command="{Binding LoginCommand}"
-            CornerRadius="8"
             FontSize="18"
             HeightRequest="70"
             Text="{x:Static m:Strings.LoginButton}"
@@ -126,6 +133,14 @@
 
         <Label
             FontAttributes="Bold"
+            FontSize="12"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePasswordOrUserNameMessege}"
+            Text="{x:Static m:Strings.InvalidCredentialsMessage}"
+            TextColor="#E32636" />
+
+        <Label
+            FontAttributes="Bold"
             FontSize="25"
             HorizontalOptions="Center"
             Text="{x:Static m:Strings.DontHaveAnAcoountLabel}"
@@ -133,13 +148,12 @@
 
         <Button
             Command="{Binding ToggleIsPasswordCommand}"
-            CornerRadius="8"
             FontSize="18"
             HeightRequest="70"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
-        
-        
+
+
 
     </VerticalStackLayout>
 

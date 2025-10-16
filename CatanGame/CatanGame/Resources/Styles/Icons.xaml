@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <x:String x:Key="IconDelete">&#xe872;</x:String>
     <x:String x:Key="IconRestore_from_trash">&#xe938;</x:String>
     <x:String x:Key="IconDelete_forever">&#xe92b;</x:String>
@@ -1076,11 +1075,7 @@
     <x:String x:Key="IconImportant_devices">&#xe912;</x:String>
     <x:String x:Key="IconDesktop_mac">&#xe30b;</x:String>
     <x:String x:Key="IconLaptop_chromebook">&#xe31f;</x:String>
-    <x:String x:Key="Icon
-              
-              
-              
-              uter">&#xe30a;</x:String>
+    <x:String x:Key="Icon                                                            uter">&#xe30a;</x:String>
     <x:String x:Key="IconComputer_cancel">&#xf2f6;</x:String>
     <x:String x:Key="IconComputer_arrow_up">&#xf2f7;</x:String>
     <x:String x:Key="IconSync_saved_locally">&#xf820;</x:String>

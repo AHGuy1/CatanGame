@@ -34,7 +34,7 @@ namespace CatanGame.ModelsLogic
 
         public override async void SignInWithEmailAndPasswordAsync(string email, string password, Action<System.Threading.Tasks.Task> OnComplete)
         {
-            await facl.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(OnComplete);
+           await facl.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(OnComplete);
         }
         public override async void ResetPassword(string email, Action<System.Threading.Tasks.Task> OnComplete)
         {

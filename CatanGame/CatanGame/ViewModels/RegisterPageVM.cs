@@ -1,7 +1,9 @@
 ﻿using CatanGame.Models;
+using CatanGame.ModelsLogic;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using System;
 using System.Windows.Input;
-using CatanGame.ModelsLogic;
 
 namespace CatanGame.ViewModels
 {
@@ -94,13 +96,13 @@ namespace CatanGame.ViewModels
         {
             IsEmailTaken = true;
             OnPropertyChanged(nameof(IsEmailTaken));
-            user.EmailIsTaken = false;
+            user.InvalidEmailOrPassword = false;
         }
 
         private void Register()
         {
             user.Register();
-            if (user.EmailIsTaken) ToggleIsEmailTaken();
+            if (user.InvalidEmailOrPassword) ToggleIsEmailTaken();
         }
 
         private void ToggleIsPassword()

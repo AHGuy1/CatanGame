@@ -5,7 +5,7 @@ namespace CatanGame.Models
     public abstract class UserModel
     {
         protected FbData fbd = new();
-        public bool EmailIsTaken { get; set; } = false;
+        public bool InvalidEmailOrPassword { get; set; } = false;
         public bool IsRegistered { get; set; } = false;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -13,5 +13,7 @@ namespace CatanGame.Models
         public string Email { get; set; } = string.Empty;
         public abstract void Register();
         public abstract void Login();
+        public abstract void ResetPassword();
+
     }
 }

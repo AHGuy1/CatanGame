@@ -1,5 +1,4 @@
 using CatanGame.ViewModels;
-using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace CatanGame.Views;
 

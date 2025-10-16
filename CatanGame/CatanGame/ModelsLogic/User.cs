@@ -11,6 +11,11 @@ namespace CatanGame.ModelsLogic
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, OnComplete);
         }
 
+        public override void ResetPassword()
+        {
+            fbd.ResetPassword(Email, ResetPasswordOnComplete);
+        }
+
         private void OnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
@@ -19,7 +24,18 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                EmailIsTaken = true;
+                InvalidEmailOrPassword = true;
+            }
+        }
+        private void ResetPasswordOnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                
+            }
+            else
+            {
+                InvalidEmailOrPassword = true;
             }
         }
 
@@ -31,17 +47,18 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-
+                InvalidEmailOrPassword = true;
             }
         }
 
-        private void SaveToPreferences()
+        private static void SaveToPreferences()
         {
             Preferences.Set(Keys.IsRegisteredKey, true);
         }
         public override void Login()
         {
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
+            
         }
         public User()
         {

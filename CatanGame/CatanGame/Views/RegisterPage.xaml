@@ -161,7 +161,7 @@
                     FontSize="12"
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsVisibleEmailMessege}"
-                    Text="{x:Static m:Strings.UnvalidEmail}"
+                    Text="{x:Static m:Strings.invalidEmail}"
                     TextColor="#E32636" />
             </Grid>
 
@@ -169,7 +169,6 @@
 
         <Button
             Command="{Binding RegisterCommand}"
-            CornerRadius="16"
             FontAttributes="Bold"
             FontSize="22"
             HeightRequest="70"
