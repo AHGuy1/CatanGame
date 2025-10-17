@@ -39,21 +39,21 @@
                     FontAttributes="Bold"
                     FontSize="20"
                     HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.UserNameLabel}"
+                    Text="{x:Static m:Strings.EmailLabel}"
                     TextColor="DarkOrange" />
 
                 <Entry
                     Grid.Row="1"
                     FontSize="18"
-                    Text="{Binding UserName}"
+                    Text="{Binding Email}"
                     TextColor="black" />
                 <Label
                     Grid.Row="2"
                     FontAttributes="Bold"
                     FontSize="12"
                     HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisibleUserNameMessege}"
-                    Text="{x:Static m:Strings.UsernameRequiredMessage}"
+                    IsVisible="{Binding IsVisibleEmailMessege}"
+                    Text="{x:Static m:Strings.invalidEmail}"
                     TextColor="#E32636" />
             </Grid>
 
@@ -130,14 +130,6 @@
             </Button.ImageSource>
 
         </Button>
-
-        <Label
-            FontAttributes="Bold"
-            FontSize="12"
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePasswordOrUserNameMessege}"
-            Text="{x:Static m:Strings.InvalidCredentialsMessage}"
-            TextColor="#E32636" />
 
         <Label
             FontAttributes="Bold"

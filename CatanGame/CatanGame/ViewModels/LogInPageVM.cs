@@ -14,17 +14,16 @@ namespace CatanGame.ViewModels
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand PasswordReset { get; }
         public bool IsBusy { get; set; } = false;
-        public bool IsVisibleUserNameMessege { get; set; } = true;
+        public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisiblePasswordMessege { get; set; } = false;
-        public bool IsVisiblePasswordOrUserNameMessege { get; set; } = false;
-        public string UserName
+        public string Email
         {
-            get => user.UserName;
+            get => user.Email;
             set
             {
-                user.UserName = value;
+                user.Email = value;
                 (LoginCommand as Command)?.ChangeCanExecute();
-                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisibleEmailMessege();
                 ToggleIsVisiblePasswordMessege();
             }
         }
@@ -35,7 +34,7 @@ namespace CatanGame.ViewModels
             {
                 user.Password = value;
                 (LoginCommand as Command)?.ChangeCanExecute();
-                ToggleIsVisibleUserNameMessege();
+                ToggleIsVisibleEmailMessege();
                 ToggleIsVisiblePasswordMessege();
             }
         }
@@ -47,6 +46,27 @@ namespace CatanGame.ViewModels
             CreateAcoountPage = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             PasswordReset = new Command(GoToResetPassword);
+            user.OnAuthFalier += OnAuthFalier;
+            user.OnAuthComplete += OnAuthComplete;
+        }
+
+        private void OnAuthComplete(object? sender, EventArgs e)
+        {
+            if (Application.Current != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage = new AppShell();
+                });
+            }
+        }
+
+        private void OnAuthFalier(object? sender, EventArgs e)
+        {
+            Email = "";
+            Password = "";
+            OnPropertyChanged(Password);
+            OnPropertyChanged(Email);
         }
 
         private void ToggleIsPassword()
@@ -55,38 +75,28 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsPassword));
         }
 
-        private void ToggleIsVisibleUserNameMessege()
+        private void ToggleIsVisibleEmailMessege()
         {
-            IsVisibleUserNameMessege = string.IsNullOrWhiteSpace(user.UserName);
-            IsVisiblePasswordOrUserNameMessege = false;
-            OnPropertyChanged(nameof(IsVisibleUserNameMessege));
-            OnPropertyChanged(nameof(IsVisiblePasswordOrUserNameMessege));
+            IsVisibleEmailMessege = !(user.Email.Contains('@') && user.Email.Contains('.'));
+            OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
 
         private void ToggleIsVisiblePasswordMessege()
         {
-            IsVisiblePasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && !(user.Password.Length >= 8 && user.Password.Length <= 12);
-            IsVisiblePasswordOrUserNameMessege = false;
+            IsVisiblePasswordMessege = (user.Email.Contains('@') && user.Email.Contains('.')) && !(user.Password.Length >= 8 && user.Password.Length <= 12);
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
-            OnPropertyChanged(nameof(IsVisiblePasswordOrUserNameMessege));
         }
 
-        private void ToggleIsVisiblePasswordOrUserNameMessege()
-        {
-            IsVisiblePasswordOrUserNameMessege = true;
-            OnPropertyChanged(nameof(IsVisiblePasswordOrUserNameMessege));
-            user.InvalidEmailOrPassword = false;
-        }
+
 
         private void Login()
         {
             user.Login();
-            if(user.InvalidEmailOrPassword) ToggleIsVisiblePasswordOrUserNameMessege();
         }
 
         private bool CanLogin()
         {
-            return (!string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password));
+            return (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password));
         }
 
         private void GoToResetPassword()

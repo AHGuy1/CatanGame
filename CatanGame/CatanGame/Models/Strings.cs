@@ -20,5 +20,7 @@
         public const string invalidEmail = "You Must Enter a Valid Email!";
         public const string EmailAlreadyExiests = "Email Is Alredy Linked To An Acoount";
         public const string PasswordResetTitle = "Reset Password!";
+        public const string AcoountCreated = "Acoount Created Successfuly";
+        public const string UnknownError = "Unknown Error";
     }
 }

@@ -15,7 +15,6 @@ namespace CatanGame.ViewModels
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
         public bool IsPasswordConfirmPassword { get; set; } = true;
         public bool IsPassword { get; set; } = true;
-        public bool IsEmailTaken { get; set; } = false;
         public bool IsVisibleUserNameMessege { get; set; } = true;
         public bool IsVisiblePasswordMessege { get; set; } = false;
         public bool IsVisibleConfirmPasswordMessege { get; set; } = false;
@@ -70,7 +69,6 @@ namespace CatanGame.ViewModels
                 ToggleIsVisiblePasswordMessege();
                 ToggleIsVisibleConfirmPasswordMessege();
                 ToggleIsVisibleEmailMessege();
-                ToggleIsEmailNotTaken();
             }
         }
 
@@ -79,6 +77,18 @@ namespace CatanGame.ViewModels
             RegisterCommand = new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             ToggleIsPasswordCommandConfirmPassword = new Command(ToggleIsPasswordConfirmPassword);
+            user.OnAuthComplete += OnAuthComplete;
+        }
+
+        private void OnAuthComplete(object? sender, EventArgs e)
+        {
+            if(Application.Current != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage = new AppShell();
+                });
+            }
         }
 
         public bool CanRegister()
@@ -86,23 +96,9 @@ namespace CatanGame.ViewModels
             return (!string.IsNullOrWhiteSpace(user.UserName) && !string.IsNullOrWhiteSpace(user.Password) && !string.IsNullOrWhiteSpace(user.ConfirmPassword) && !string.IsNullOrWhiteSpace(user.Email) && user.Password == user.ConfirmPassword && user.Email.Contains('@') && user.Email.Contains('.'));
         }
 
-        public void ToggleIsEmailNotTaken()
-        {
-            IsEmailTaken = false;
-            OnPropertyChanged(nameof(IsEmailTaken));
-        }
-
-        public void ToggleIsEmailTaken()
-        {
-            IsEmailTaken = true;
-            OnPropertyChanged(nameof(IsEmailTaken));
-            user.InvalidEmailOrPassword = false;
-        }
-
         private void Register()
         {
             user.Register();
-            if (user.InvalidEmailOrPassword) ToggleIsEmailTaken();
         }
 
         private void ToggleIsPassword()

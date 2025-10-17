@@ -5,8 +5,9 @@ namespace CatanGame.Models
     public abstract class UserModel
     {
         protected FbData fbd = new();
-        public bool InvalidEmailOrPassword { get; set; } = false;
         public bool IsRegistered { get; set; } = false;
+        public EventHandler? OnAuthComplete;
+        public EventHandler? OnAuthFalier;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;

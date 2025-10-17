@@ -1,9 +1,6 @@
 ﻿using CatanGame.Models;
-using System;
 using System.Windows.Input;
 using CatanGame.ModelsLogic;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 
 namespace CatanGame.ViewModels
 {
@@ -33,13 +30,6 @@ namespace CatanGame.ViewModels
             IsVisibleEmailMessege = !(user.Email.Contains('@') && user.Email.Contains('.'));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
-        private void ToggleVisibleEmailMessege()
-        {
-            IsVisibleEmailMessege = true;
-            OnPropertyChanged(nameof(IsVisibleEmailMessege));
-            user.InvalidEmailOrPassword = false;
-        }
-
         private bool CanResetPassWord()
         {
             return user.Email.Contains('@') && user.Email.Contains('.');
@@ -47,7 +37,6 @@ namespace CatanGame.ViewModels
         private void ResetPassWord()
         {
             user.ResetPassword();
-            if(user.InvalidEmailOrPassword) ToggleVisibleEmailMessege();
         }
     }
     
