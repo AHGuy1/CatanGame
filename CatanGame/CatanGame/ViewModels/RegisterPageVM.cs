@@ -16,6 +16,7 @@ namespace CatanGame.ViewModels
         public bool IsPasswordConfirmPassword { get; set; } = true;
         public bool IsPassword { get; set; } = true;
         public bool IsVisibleUserNameMessege { get; set; } = true;
+        public bool IsBusy { get; set; } = false;
         public bool IsVisiblePasswordMessege { get; set; } = false;
         public bool IsVisibleConfirmPasswordMessege { get; set; } = false;
         public bool IsVisibleEmailMessege { get; set; } = false;
@@ -78,6 +79,7 @@ namespace CatanGame.ViewModels
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             ToggleIsPasswordCommandConfirmPassword = new Command(ToggleIsPasswordConfirmPassword);
             user.OnAuthComplete += OnAuthComplete;
+            user.OnAuthFalier += OnAuthFalier;
         }
 
         private void OnAuthComplete(object? sender, EventArgs e)
@@ -89,6 +91,30 @@ namespace CatanGame.ViewModels
                     Application.Current.MainPage = new AppShell();
                 });
             }
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
+        }
+
+        private void OnAuthFalier(object? sender, EventArgs e)
+        {
+            ResetFields();
+        }
+
+        private void ResetFields()
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Email = string.Empty;
+                UserName = string.Empty;
+                ConfirmPassword = string.Empty;
+                IsBusy = false;
+                Password = string.Empty;
+                OnPropertyChanged(nameof(IsBusy));
+                OnPropertyChanged(nameof(Email));
+                OnPropertyChanged(nameof(Password));
+                OnPropertyChanged(nameof(ConfirmPassword));
+                OnPropertyChanged(nameof(UserName));
+            });
         }
 
         public bool CanRegister()
@@ -98,6 +124,8 @@ namespace CatanGame.ViewModels
 
         private void Register()
         {
+            IsBusy = true;
+            OnPropertyChanged(nameof(IsBusy));
             user.Register();
         }
 

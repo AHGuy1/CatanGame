@@ -16,15 +16,27 @@ namespace CatanGame.ViewModels
         public bool IsBusy { get; set; } = false;
         public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisiblePasswordMessege { get; set; } = false;
+        public bool IsPassword { get; set; } = true;
+        public bool IsRemembered
+        {
+            get => Preferences.Get(Keys.IsRememberedKey, false);
+            set
+            {
+                Preferences.Set(Keys.IsRememberedKey, value);
+                RememberMe();
+            }
+        }
+
         public string Email
         {
             get => user.Email;
             set
             {
                 user.Email = value;
-                (LoginCommand as Command)?.ChangeCanExecute();
+                RememberMe();
                 ToggleIsVisibleEmailMessege();
                 ToggleIsVisiblePasswordMessege();
+                (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
         public string Password
@@ -33,12 +45,12 @@ namespace CatanGame.ViewModels
             set
             {
                 user.Password = value;
-                (LoginCommand as Command)?.ChangeCanExecute();
+                RememberMe();
                 ToggleIsVisibleEmailMessege();
                 ToggleIsVisiblePasswordMessege();
+                (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
-        public bool IsPassword { get; set; } = true;
 
         public LogInPageVM()
         {
@@ -59,14 +71,31 @@ namespace CatanGame.ViewModels
                     Application.Current.MainPage = new AppShell();
                 });
             }
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
         }
 
         private void OnAuthFalier(object? sender, EventArgs e)
         {
-            Email = "";
-            Password = "";
-            OnPropertyChanged(Password);
-            OnPropertyChanged(Email);
+            ResetFields();
+        }
+
+        private void ResetFields()
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Email = string.Empty;
+                IsBusy = false;
+                Password = string.Empty;
+                OnPropertyChanged(nameof(IsBusy));
+                OnPropertyChanged(nameof(Email));
+                OnPropertyChanged(nameof(Password));
+            });
+        }
+
+        private void RememberMe()
+        {
+            user.RememberMe();
         }
 
         private void ToggleIsPassword()
@@ -87,26 +116,38 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
 
-
-
         private void Login()
         {
+            IsBusy = true;
+            OnPropertyChanged(nameof(IsBusy));
             user.Login();
         }
 
         private bool CanLogin()
         {
-            return (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password));
+            return (Email.Contains('@') && Email.Contains('.') && Password.Length >= 8 && Password.Length <= 12);
         }
 
         private void GoToResetPassword()
         {
-
+            if (Application.Current != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage = new AppShell();
+                });
+            }
         }
 
         public static void GoToRegister()
         {
-
+            if (Application.Current != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage = new AppShell();
+                });
+            }
         }
     }
 }

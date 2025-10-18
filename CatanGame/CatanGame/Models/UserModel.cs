@@ -15,6 +15,7 @@ namespace CatanGame.Models
         public abstract void Register();
         public abstract void Login();
         public abstract void ResetPassword();
+        public abstract void RememberMe();
 
     }
 }

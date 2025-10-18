@@ -22,5 +22,18 @@
         public const string PasswordResetTitle = "Reset Password!";
         public const string AcoountCreated = "Acoount Created Successfuly";
         public const string UnknownError = "Unknown Error";
+        public const string RememberMeLabel = "Remember Me:";
+        public const string ContainsINVALID_LOGIN_CREDENTIALS = "INVALID_LOGIN_CREDENTIALS";
+        public const string ContainsReason = "Reason";
+        public const string EmptySpace = " ";
+        public const string PasswordResetLabel = "Reset Password";
+        public const string ReturnToLogInLabl = "Return To Log In Page";
+        public const string PassWordResetLinkSentPartOne = "If The Email Matches An";
+        public const string PassWordResetLinkSentPartTwo =  "Existing Acoount A Password" ;
+        public const string PassWordResetLinkSentPartThree = "Reset Link Has Been Sent.";
+        public const string ChechSpamFolderPartOne = "(If You havent Recived An Email Please" ;
+        public const string ChechSpamFolderPartTwo = "Check Your Spam Folder";
+        public const string ChechSpamFolderPartThree = "Or Try Again.)";
+        public const string TryAgainLabel = "Try Again";
     }
 }

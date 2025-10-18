@@ -99,6 +99,26 @@
                     TextColor="#E32636" />
             </Grid>
         </Border>
+
+        <Grid 
+            ColumnDefinitions="*,*,*">
+            <CheckBox
+                Color="DodgerBlue"
+                Grid.Column="2"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"
+                IsChecked="{Binding IsRemembered}"/>
+            <Label
+                FontAttributes="Bold"
+                FontSize="25"
+                Grid.ColumnSpan="2"
+                HorizontalOptions="End"
+                VerticalOptions="Center"
+                Text="{x:Static m:Strings.RememberMeLabel}"
+                TextColor="DarkOrange" />
+
+        </Grid>
+       
         <Grid>
             <Button
                 Background="Transparent"

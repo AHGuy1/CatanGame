@@ -6,7 +6,8 @@
     xmlns:m="clr-namespace:CatanGame.Models"
     xmlns:vm="clr-namespace:CatanGame.ViewModels"
     Title="RegisterPage"
-    x:DataType="vm:RegisterPageVM">
+    x:DataType="vm:RegisterPageVM"
+    IsBusy="{Binding IsBusy}">
 
     <VerticalStackLayout
         Padding="30"
