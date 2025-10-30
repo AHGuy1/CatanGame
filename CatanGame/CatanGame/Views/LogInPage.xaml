@@ -100,25 +100,24 @@
             </Grid>
         </Border>
 
-        <Grid 
-            ColumnDefinitions="*,*,*">
+        <Grid ColumnDefinitions="*,*,*">
             <CheckBox
-                Color="DodgerBlue"
                 Grid.Column="2"
                 HorizontalOptions="Start"
+                IsChecked="{Binding IsRemembered}"
                 VerticalOptions="Center"
-                IsChecked="{Binding IsRemembered}"/>
+                Color="DodgerBlue" />
             <Label
+                Grid.ColumnSpan="2"
                 FontAttributes="Bold"
                 FontSize="25"
-                Grid.ColumnSpan="2"
                 HorizontalOptions="End"
-                VerticalOptions="Center"
                 Text="{x:Static m:Strings.RememberMeLabel}"
-                TextColor="DarkOrange" />
+                TextColor="DarkOrange"
+                VerticalOptions="Center" />
 
         </Grid>
-       
+
         <Grid>
             <Button
                 Background="Transparent"
@@ -159,7 +158,7 @@
             TextColor="DarkOrange" />
 
         <Button
-            Command="{Binding ToggleIsPasswordCommand}"
+            Command="{Binding CreateAcoountPageCommand}"
             FontSize="18"
             HeightRequest="70"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"

@@ -10,7 +10,7 @@ namespace CatanGame.ViewModels
     {
         private readonly  User user = new();
         public ICommand LoginCommand { get; }
-        public ICommand CreateAcoountPage { get; }
+        public ICommand CreateAcoountPageCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand PasswordReset { get; }
         public bool IsBusy { get; set; } = false;
@@ -55,7 +55,7 @@ namespace CatanGame.ViewModels
         public LogInPageVM()
         {
             LoginCommand = new Command(Login, CanLogin);
-            CreateAcoountPage = new Command(GoToRegister);
+            CreateAcoountPageCommand = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             PasswordReset = new Command(GoToResetPassword);
             user.OnAuthFalier += OnAuthFalier;

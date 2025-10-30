@@ -20,7 +20,6 @@
             HorizontalOptions="Center"
             Text="{x:Static m:Strings.RegisterTitle}"
             TextColor="DodgerBlue" />
-
         <Border
             Padding="10"
             Stroke="DodgerBlue"
