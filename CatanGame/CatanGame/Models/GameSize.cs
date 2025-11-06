@@ -1,8 +1,16 @@
 ﻿namespace CatanGame.Models
 {
-    public class GameSize(int size)
+    public class GameSize
     {
-        public int Size { get; set; } = size;
-        public string DisplayName { get; } = $"{size} + {size}";
+        public int Size { get; set; }
+        public string DisplayName => $"{Size}" + Strings.EmptySpace + Strings.PlayersLabel;
+        public GameSize(int size)
+        {
+            Size = size;
+        }
+        public GameSize()
+        {
+            Size = 3;
+        }
     }
 }

@@ -4,10 +4,21 @@ namespace CatanGame.Views;
 
 public partial class HomePage : ContentPage
 {
-	public HomePage()
-	{
-		InitializeComponent();
-		BindingContext = new HomePageVM();
+    private readonly HomePageVM mpVM = new();
+    public HomePage()
+    {
+        InitializeComponent();
+        BindingContext = mpVM;
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        mpVM.AddSnapshotListener();
+    }
 
+    protected override void OnDisappearing()
+    {
+        mpVM.RemoveSnapshotListener();
+        base.OnDisappearing();
     }
 }

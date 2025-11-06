@@ -4,6 +4,7 @@ namespace CatanGame.Models
 {
     public abstract class UserModel
     {
+        public static string LogedInUserName = string.Empty;
         protected FbData fbd = new();
         public bool IsRegistered { get; set; } = false;
         public EventHandler? OnAuthComplete;

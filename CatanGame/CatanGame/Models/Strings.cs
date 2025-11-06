@@ -35,5 +35,10 @@
         public const string ChechSpamFolderPartTwo = "Check Your Spam Folder";
         public const string ChechSpamFolderPartThree = "Or Try Again.)";
         public const string TryAgainLabel = "Try Again";
+        public const string AppTitle = "CatanGame";
+        public const string AddGame = "Add Game";
+        public const string GameSize = "Game Size";
+        public const string SelectAmountOfPlayers = "Select Amount Of Players";
+        public const string PlayersLabel = "Players";
     }
 }

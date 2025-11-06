@@ -45,23 +45,32 @@ namespace CatanGame.ModelsLogic
         }
         private void RegisterOnComplete(Task task)
         {
-                if (task.IsCompletedSuccessfully)
+            if (task.IsCompletedSuccessfully)
+            {
+                SaveToPreferences();
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    SaveToPreferences();
-                    ShowAlert(Strings.AcoountCreated);
-                    OnAuthComplete?.Invoke(this, EventArgs.Empty);
-                }
-                else if (task.Exception != null)
+                    Toast.Make(Strings.AcoountCreated, ToastDuration.Long, 20).Show();
+                });
+                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+            }
+            else if (task.Exception != null)
+            {
+                string msg = task.Exception.Message;
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    string msg = task.Exception.Message;
-                    ShowAlert(msg);
-                    OnAuthFalier?.Invoke(this, EventArgs.Empty);
-                }
-                else
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                });
+                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    OnAuthFalier?.Invoke(this, EventArgs.Empty);
-                    ShowAlert(Strings.UnknownError);
-                }       
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
+                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+            }       
         }
         private void ResetPasswordOnComplete(Task task)
         {
@@ -72,13 +81,19 @@ namespace CatanGame.ModelsLogic
             else if(task.Exception != null) 
             {
                 string msg = task.Exception.Message;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                });
                 OnAuthFalier?.Invoke(this, EventArgs.Empty);
-                ShowAlert(msg);
             }
             else
             {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
                 OnAuthFalier?.Invoke(this, EventArgs.Empty);
-                ShowAlert(Strings.UnknownError);
             }
         }
 
@@ -86,18 +101,28 @@ namespace CatanGame.ModelsLogic
         {
             if (task.IsCompletedSuccessfully)
             {
-                ShowAlert(Strings.LoginSuccessMessage);
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show();
+                });
                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                User.LogedInUserName = fbd.DisplayName;
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                ShowAlert(msg);
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                }); 
                 OnAuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                ShowAlert(Strings.UnknownError);
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
                 OnAuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -105,31 +130,6 @@ namespace CatanGame.ModelsLogic
         private static void SaveToPreferences()
         {
             Preferences.Set(Keys.IsRegisteredKey, true);
-        }
-        public static string ShowAlert(string msg)
-        {
-            if (msg.Contains(Strings.ContainsINVALID_LOGIN_CREDENTIALS))
-                msg = Strings.InvalidCredentialsMessage;
-            else if (msg.Contains(Strings.ContainsReason))
-            {
-                int pos = msg.IndexOf(Strings.ContainsReason);
-                msg = msg.Substring((pos + 7), msg.Length - pos - 8);
-                for (int i = 1; i < msg.Length; i++)
-                {
-                    pos = 0;
-                    if (char.IsUpper(msg[i]))
-                    {
-                        msg = string.Concat(msg.AsSpan(pos, i), Strings.EmptySpace, msg.AsSpan(i));
-                        pos = i + 1;
-                        i++;
-                    }
-                }
-            }          
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Toast.Make(msg, ToastDuration.Long,20).Show();
-            });
-            return msg;
         }
     }
 }

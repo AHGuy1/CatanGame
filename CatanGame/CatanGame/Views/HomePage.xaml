@@ -5,16 +5,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:CatanGame.Models"
     xmlns:vm="clr-namespace:CatanGame.ViewModels"
-    Title="HomePage"
-    x:DataType="vm:HomePageVM">
+    x:DataType="vm:HomePageVM"
+    IsBusy="{Binding IsBusy}">
+    <Shell.TitleView>
+        <HorizontalStackLayout FlowDirection="LeftToRight">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Text="{x:Static m:Strings.AppTitle}"
+                VerticalTextAlignment="Center" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <VerticalStackLayout>
         <Grid
             Padding="5"
-            ColumnDefinitions="*,2*"
+            ColumnDefinitions="*,1.4*"
             ColumnSpacing="5">
             <Picker
-                Title="Selct Size"
-                FontSize="Title"
+                Title="{x:Static m:Strings.SelectAmountOfPlayers}"
+                FontSize="20"
                 HorizontalTextAlignment="Center"
                 ItemDisplayBinding="{Binding DisplayName}"
                 ItemsSource="{Binding GameSizes}"
@@ -22,9 +31,49 @@
             <Button
                 Grid.Column="1"
                 Margin="10"
-                Command="{Binding AddGameComand}"
+                Command="{Binding AddGameCommand}"
+                FontSize="Body"
                 HorizontalOptions="Fill"
-                Text="Add Game" />
+                Text="{x:Static m:Strings.AddGame}" />
         </Grid>
+        <Entry
+            Grid.Row="1"
+            FontSize="18"
+            Keyboard="Numeric"
+            Text="{Binding GameCode}"
+            TextColor="black" />
+        <Button
+            Command="{Binding JoinGameWithCodeCommand}"
+            FontSize="18"
+            HeightRequest="70"
+            Text="{x:Static m:Strings.LoginButton}"
+            TextColor="White" />
+
+        <ListView ItemsSource="{Binding GamesList}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="m:GameModel">
+                    <ViewCell>
+                        <Grid ColumnDefinitions="*,2*,0.5*">
+                            <Label
+                                Grid.Column="0"
+                                Margin="20,0,0,0"
+                                FontAttributes="Bold"
+                                FontSize="20"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding HostName}" />
+                            <Label
+                                Grid.Column="1"
+                                FontSize="20"
+                                Text="{Binding Created}" />
+                            <Label
+                                Grid.Column="2"
+                                FontSize="20"
+                                HorizontalOptions="Center"
+                                Text="{Binding PlayerCount}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </VerticalStackLayout>
 </ContentPage>

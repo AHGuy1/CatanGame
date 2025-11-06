@@ -1,8 +1,6 @@
 ﻿using CatanGame.Models;
-using System;
-using System.Windows.Input;
 using CatanGame.ModelsLogic;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {

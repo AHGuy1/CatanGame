@@ -1,22 +1,70 @@
 ﻿using CatanGame.Models;
-using Firebase.Auth.Requests;
-using System.Windows.Input;
 using CatanGame.ModelsLogic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {
-    internal class HomePageVM
+    public partial class HomePageVM : ObservableObject
     {
         private readonly Games games = new();
-        public static IList<GameSize> GameSizes => [new GameSize(3), new GameSize(4), new GameSize(5)];
-        public GameSize SelectedGameSize { get; set; } = GameSizes[0];
-        public ICommand AddGameComand => new Command(AddGame);
-        public string DisplayName { get; set; } = GameSizes[0].DisplayName;
+        public bool IsBusy => games.IsBusy;
+
+        public string GameCode
+        {
+            get => string.Empty;
+            set
+            {     
+                (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
+                OnPropertyChanged(nameof(JoinGameWithCode));
+
+            }
+        }
+        public ObservableCollection<GameSize>? GameSizes { get => games.GameSizes; set => games.GameSizes = value; }
+        public GameSize SelectedGameSize { get; set; } = new GameSize();
+        public ICommand JoinGameWithCodeCommand { get; }
+        public ICommand AddGameCommand { get; }
         private void AddGame()
         {
-
+            games.AddGame(SelectedGameSize);
+            OnPropertyChanged(nameof(IsBusy));
+        }
+        public ObservableCollection<Game>? GamesList => games.GamesList;
+        public HomePageVM()
+        {
+            games.OnGameAdded += OnGameAdded;
+            games.OnGamesChanged += OnGamesChanged;
+            JoinGameWithCodeCommand = new Command(JoinGameWithCode, CanJoinGameWithCode);
+            AddGameCommand = new Command(AddGame);
         }
 
-        public IList<Game>? GamesList => games.GamesList;
+        private void OnGamesChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(GamesList));
+        }
+
+        private void OnGameAdded(object? sender, bool e)
+        {
+            OnPropertyChanged(nameof(IsBusy));
+        }
+        public void AddSnapshotListener()
+        {
+            games.AddSnapshotListener();
+        }
+
+        public void RemoveSnapshotListener()
+        {
+            games.RemoveSnapshotListener();
+        }
+
+        private bool CanJoinGameWithCode()
+        {
+            return String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
+        }
+
+        private void JoinGameWithCode()
+        {
+            games.JoinGameWithCode(GameCode);
+        }
     }
 }
