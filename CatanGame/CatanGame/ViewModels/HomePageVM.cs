@@ -9,26 +9,20 @@ namespace CatanGame.ViewModels
     {
         private readonly Games games = new();
         public bool IsBusy => games.IsBusy;
-
+        public string GameCodes { get; set; } = string.Empty;
         public string GameCode
         {
-            get => string.Empty;
+            get => GameCodes;
             set
-            {     
+            {      
+                GameCodes = value;
                 (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
-                OnPropertyChanged(nameof(JoinGameWithCode));
-
             }
         }
         public ObservableCollection<GameSize>? GameSizes { get => games.GameSizes; set => games.GameSizes = value; }
         public GameSize SelectedGameSize { get; set; } = new GameSize();
         public ICommand JoinGameWithCodeCommand { get; }
         public ICommand AddGameCommand { get; }
-        private void AddGame()
-        {
-            games.AddGame(SelectedGameSize);
-            OnPropertyChanged(nameof(IsBusy));
-        }
         public ObservableCollection<Game>? GamesList => games.GamesList;
         public HomePageVM()
         {
@@ -36,6 +30,12 @@ namespace CatanGame.ViewModels
             games.OnGamesChanged += OnGamesChanged;
             JoinGameWithCodeCommand = new Command(JoinGameWithCode, CanJoinGameWithCode);
             AddGameCommand = new Command(AddGame);
+        }
+
+        private void AddGame()
+        {
+            games.AddGame(SelectedGameSize);
+            OnPropertyChanged(nameof(IsBusy));
         }
 
         private void OnGamesChanged(object? sender, EventArgs e)
@@ -59,7 +59,7 @@ namespace CatanGame.ViewModels
 
         private bool CanJoinGameWithCode()
         {
-            return String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
+            return !String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
         }
 
         private void JoinGameWithCode()

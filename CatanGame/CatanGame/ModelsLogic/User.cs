@@ -106,7 +106,6 @@ namespace CatanGame.ModelsLogic
                     Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show();
                 });
                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
-                User.LogedInUserName = fbd.DisplayName;
             }
             else if (task.Exception != null)
             {

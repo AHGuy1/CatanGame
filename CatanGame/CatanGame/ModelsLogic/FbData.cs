@@ -1,5 +1,7 @@
 ﻿using CatanGame.Models;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
+using System.Threading.Tasks;
 
 namespace CatanGame.ModelsLogic
 {
@@ -46,10 +48,11 @@ namespace CatanGame.ModelsLogic
             return dr.Id;
         }
 
-        public void GetDocument(string collectonName, string documentName, Action<Task> OnComplete)
+        public async void GetDocument(string collectonName, string documentName, Action<IDocumentSnapshot> OnComplete)
         {
             IDocumentReference dr = fdb.Collection(collectonName).Document(documentName);
-
+            IDocumentSnapshot ds = await dr.GetAsync();
+            OnComplete(ds);
         }
 
         public override IListenerRegistration AddSnapshotListener(string collectonName, QuerySnapshotHandler OnChange)
@@ -79,7 +82,6 @@ namespace CatanGame.ModelsLogic
                 msg = msg.Substring((pos + 7), msg.Length - pos - 8);
                 for (int i = 1; i < msg.Length; i++)
                 {
-                    pos = 0;
                     if (char.IsUpper(msg[i]))
                     {
                         msg = string.Concat(msg.AsSpan(pos, i), Strings.EmptySpace, msg.AsSpan(i));

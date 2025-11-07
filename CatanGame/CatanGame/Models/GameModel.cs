@@ -1,5 +1,6 @@
-﻿using Plugin.CloudFirestore.Attributes;
-using CatanGame.ModelsLogic;
+﻿using CatanGame.ModelsLogic;
+using Plugin.CloudFirestore;
+using Plugin.CloudFirestore.Attributes;
 
 namespace CatanGame.Models
 {
@@ -12,6 +13,8 @@ namespace CatanGame.Models
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
-        public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract void SetDocument(Action<Task> OnComplete);
+        public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
+
     }
 }

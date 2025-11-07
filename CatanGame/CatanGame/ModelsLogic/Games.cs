@@ -17,11 +17,7 @@ namespace CatanGame.ModelsLogic
         {
             IsBusy = true;
             GameCodes gamecode = new();
-            gamecode.GetDocument(gameCode,OnCompleteGetDocument);
-        }
-
-        private void OnCompleteGetDocument(Task task)
-        {
+            gamecode.GetDocument(gameCode,OnCompleteGetCodeDocument);
         }
 
         private void OnComplete(Task task)
@@ -43,10 +39,10 @@ namespace CatanGame.ModelsLogic
         }
         private void OnChange(IQuerySnapshot snapshot, Exception error)
         {
-            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
+            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnCompleteAddGame);
         }
 
-        private void OnComplete(IQuerySnapshot qs)
+        private void OnCompleteAddGame(IQuerySnapshot qs)
         {
             GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)
@@ -59,6 +55,29 @@ namespace CatanGame.ModelsLogic
                 }
             }
             OnGamesChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
+        {
+            {
+                if (ds.Data != null)
+                {
+                    GameCodes? gameCode = ds.ToObject<GameCodes>();
+                    Game? game = new();
+                    game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);  
+                }
+                else
+                {
+                }
+            }   
+        }
+        private void OnCompleteGetGameDocument(IDocumentSnapshot ds)
+        {
+            Game? game = ds.ToObject<Game>();
+            if(game != null && !game.IsFull)
+            {
+            }
+
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using CatanGame.Models;
-using CatanGame.ModelsLogic;
+using Plugin.CloudFirestore;
 
 namespace CatanGame.ModelsLogic
 {
@@ -7,7 +7,7 @@ namespace CatanGame.ModelsLogic
     {
         public Game(GameSize selectedGameSize)
         {
-            HostName = User.LogedInUserName;
+            HostName = fbd.DisplayName;
             PlayerCount = selectedGameSize.Size;
             Created = DateTime.Now;
         }
@@ -17,7 +17,10 @@ namespace CatanGame.ModelsLogic
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
-            GameCodes gamecode = new(Id);
+        }
+        public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
+        {
+            fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
         }
     }
 }

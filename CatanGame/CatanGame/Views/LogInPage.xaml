@@ -119,19 +119,17 @@
         </Grid>
 
         <Grid>
-            <Button
-                Background="Transparent"
-                Command="{Binding PasswordReset}"
-                HeightRequest="20"
-                WidthRequest="215" />
-
             <Label
                 FontSize="20"
                 HorizontalOptions="Center"
                 Text="{x:Static m:Strings.ForgotPassword}"
-                TextColor="#2E2EFF"
+                TextColor="DodgerBlue"
                 TextDecorations="Underline"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PasswordReset}" />
+                </Label.GestureRecognizers>
+            </Label>
         </Grid>
 
 

@@ -1,4 +1,5 @@
 ﻿using CatanGame.Models;
+using Plugin.CloudFirestore;
 
 namespace CatanGame.ModelsLogic
 {
@@ -7,25 +8,31 @@ namespace CatanGame.ModelsLogic
         public GameCodes(string GameId)
         {
             this.GameId = GameId;
+            this.GameCode = RandomCodeGenerator();
         }
         public GameCodes()
         {
         }
 
-        private string RandomCodeGenerator()
+        private static string RandomCodeGenerator()
         {
-            Random random = new Random();
+            Random random = new();
             return Convert.ToString(random.Next(100000, 999999));
         }
 
         public override void SetDocument(Action<Task> OnComplete)
         {
-            fbd.SetDocument(this, Keys.GameCodesCollection,RandomCodeGenerator(), OnComplete);
+            fbd.SetDocument(this, Keys.GameCodesCollection, GameCode, OnComplete);
         }
 
-        public override void GetDocument(string GameCode, Action<Task> OnComplete)
+        public override void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete)
         {
             fbd.GetDocument(Keys.GameCodesCollection, GameCode, OnComplete);
         }
+
+        //public override void GetDocumentsWhereEqualTo(string GameCode, Action<IQuerySnapshot> OnComplete)
+        //{
+        //    fbd.GetDocumentsWhereEqualTo(Keys.GameCodesCollection, "GameCode", GameCode, OnComplete);
+        //}
     }
 }
