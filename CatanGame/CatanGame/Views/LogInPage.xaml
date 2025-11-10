@@ -122,6 +122,7 @@
             <Label
                 FontSize="20"
                 HorizontalOptions="Center"
+                IsEnabled="{Binding IsEnabled}"
                 Text="{x:Static m:Strings.ForgotPassword}"
                 TextColor="DodgerBlue"
                 TextDecorations="Underline"
@@ -137,6 +138,7 @@
             Command="{Binding LoginCommand}"
             FontSize="18"
             HeightRequest="70"
+            IsEnabled="{Binding IsEnabled}"
             Text="{x:Static m:Strings.LoginButton}"
             TextColor="White">
 
@@ -159,6 +161,7 @@
             Command="{Binding CreateAcoountPageCommand}"
             FontSize="18"
             HeightRequest="70"
+            IsEnabled="{Binding IsEnabled}"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
 

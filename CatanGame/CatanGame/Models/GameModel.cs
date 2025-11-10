@@ -9,7 +9,8 @@ namespace CatanGame.Models
         protected FbData fbd = new();
         [Ignored]
         public string Id { get; set; } = string.Empty;
-        public string HostName { get; set; } = string.Empty;
+        public string[] PlayerNames { get; set; } = [string.Empty];
+        //The Name In Index 0 Is The Hosts Name
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }

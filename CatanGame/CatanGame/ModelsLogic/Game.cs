@@ -7,8 +7,9 @@ namespace CatanGame.ModelsLogic
     {
         public Game(GameSize selectedGameSize)
         {
-            HostName = fbd.DisplayName;
             PlayerCount = selectedGameSize.Size;
+            PlayerNames = new string[PlayerCount];
+            PlayerNames[0] = fbd.DisplayName;
             Created = DateTime.Now;
         }
         public Game()

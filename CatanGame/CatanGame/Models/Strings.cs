@@ -40,5 +40,8 @@
         public const string GameSize = "Game Size";
         public const string SelectAmountOfPlayers = "Select Amount Of Players";
         public const string PlayersLabel = "Players";
+        public const string GameDoesNotExiest = "Game Does Not Exiest";
+        public const string GameIsFull = "Game Is Full";
+
     }
 }

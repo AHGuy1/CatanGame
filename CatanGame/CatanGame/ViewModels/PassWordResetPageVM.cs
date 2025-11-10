@@ -1,6 +1,7 @@
 ﻿using CatanGame.Models;
-using System.Windows.Input;
 using CatanGame.ModelsLogic;
+using CatanGame.Views;
+using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {
@@ -72,7 +73,7 @@ namespace CatanGame.ViewModels
             {              
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current.MainPage = new LogInPage();
                 });
             }
         }

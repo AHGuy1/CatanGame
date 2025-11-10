@@ -1,4 +1,6 @@
 ﻿using CatanGame.Models;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 
 namespace CatanGame.ModelsLogic
@@ -59,23 +61,50 @@ namespace CatanGame.ModelsLogic
 
         private void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
         {
+            if (ds.Data != null)
             {
-                if (ds.Data != null)
+                GameCodes? gameCode = ds.ToObject<GameCodes>();
+                Game? game = new();
+                game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    GameCodes? gameCode = ds.ToObject<GameCodes>();
-                    Game? game = new();
-                    game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);  
-                }
-                else
-                {
-                }
-            }   
+                    Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
+                });
+            } 
         }
         private void OnCompleteGetGameDocument(IDocumentSnapshot ds)
         {
-            Game? game = ds.ToObject<Game>();
-            if(game != null && !game.IsFull)
+            if (ds.Data != null)
             {
+                Game? game = ds.ToObject<Game>();
+                game!.Id = ds.Id;
+                if (!game.IsFull)
+                {
+                    if (Application.Current != null)
+                    {
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                        });
+                    }
+                }
+                else
+                {
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.GameIsFull, ToastDuration.Long, 20).Show();
+                    });
+                }
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
+                });
             }
 
         }

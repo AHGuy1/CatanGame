@@ -1,8 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using System;
+using CatanGame.Views;
 using System.Windows.Input;
 
 namespace CatanGame.ViewModels
@@ -17,6 +15,7 @@ namespace CatanGame.ViewModels
         public bool IsPassword { get; set; } = true;
         public bool IsVisibleUserNameMessege { get; set; } = true;
         public bool IsBusy { get; set; } = false;
+        public bool IsEnabled { get; set; } = true;
         public bool IsVisiblePasswordMessege { get; set; } = false;
         public bool IsVisibleConfirmPasswordMessege { get; set; } = false;
         public bool IsVisibleEmailMessege { get; set; } = false;
@@ -88,10 +87,12 @@ namespace CatanGame.ViewModels
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current.MainPage = new LogInPage();
                 });
             }
             IsBusy = false;
+            IsEnabled = true;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
         }
 
@@ -102,19 +103,18 @@ namespace CatanGame.ViewModels
 
         private void ResetFields()
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                Email = string.Empty;
-                UserName = string.Empty;
-                ConfirmPassword = string.Empty;
-                IsBusy = false;
-                Password = string.Empty;
-                OnPropertyChanged(nameof(IsBusy));
-                OnPropertyChanged(nameof(Email));
-                OnPropertyChanged(nameof(Password));
-                OnPropertyChanged(nameof(ConfirmPassword));
-                OnPropertyChanged(nameof(UserName));
-            });
+            Email = string.Empty;
+            UserName = string.Empty;
+            ConfirmPassword = string.Empty;
+            IsBusy = false;
+            IsEnabled = true;
+            Password = string.Empty;
+            OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(IsEnabled));
+            OnPropertyChanged(nameof(Email));
+            OnPropertyChanged(nameof(Password));
+            OnPropertyChanged(nameof(ConfirmPassword));
+            OnPropertyChanged(nameof(UserName));
         }
 
         public bool CanRegister()
@@ -125,6 +125,8 @@ namespace CatanGame.ViewModels
         private void Register()
         {
             IsBusy = true;
+            IsEnabled = false;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
             user.Register();
         }

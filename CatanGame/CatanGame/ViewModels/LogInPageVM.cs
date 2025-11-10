@@ -1,6 +1,7 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
 using System.Windows.Input;
+using CatanGame.Views;
 
 namespace CatanGame.ViewModels
 {
@@ -12,6 +13,7 @@ namespace CatanGame.ViewModels
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand PasswordReset { get; }
         public bool IsBusy { get; set; } = false;
+        public bool IsEnabled { get; set; } = true;
         public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisiblePasswordMessege { get; set; } = false;
         public bool IsPassword { get; set; } = true;
@@ -70,6 +72,8 @@ namespace CatanGame.ViewModels
                 });
             }
             IsBusy = false;
+            IsEnabled = true;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
         }
 
@@ -84,8 +88,10 @@ namespace CatanGame.ViewModels
             {
                 Email = string.Empty;
                 IsBusy = false;
+                IsEnabled = true;
                 Password = string.Empty;
                 OnPropertyChanged(nameof(IsBusy));
+                OnPropertyChanged(nameof(IsEnabled));
                 OnPropertyChanged(nameof(Email));
                 OnPropertyChanged(nameof(Password));
             });
@@ -117,6 +123,8 @@ namespace CatanGame.ViewModels
         private void Login()
         {
             IsBusy = true;
+            IsEnabled = false;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
             user.Login();
         }
@@ -128,22 +136,30 @@ namespace CatanGame.ViewModels
 
         private void GoToResetPassword()
         {
+            IsEnabled = false;
+            OnPropertyChanged(nameof(IsEnabled));
             if (Application.Current != null)
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current.MainPage = new PassWordResetPage();
+                    IsEnabled = true;
+                    OnPropertyChanged(nameof(IsEnabled));
                 });
             }
         }
 
-        public static void GoToRegister()
+        public void GoToRegister()
         {
+            IsEnabled = false;
+            OnPropertyChanged(nameof(IsEnabled));
             if (Application.Current != null)
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current.MainPage = new RegisterPage();
+                    IsEnabled = true;
+                    OnPropertyChanged(nameof(IsEnabled));
                 });
             }
         }

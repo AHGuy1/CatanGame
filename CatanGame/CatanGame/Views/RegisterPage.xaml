@@ -172,6 +172,7 @@
             FontAttributes="Bold"
             FontSize="22"
             HeightRequest="70"
+            IsEnabled="{Binding IsEnabled}"
             Text="{x:Static m:Strings.RegisterTitle}"
             TextColor="White">
 
