@@ -1,5 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
+using CatanGame.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -43,9 +44,13 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(GamesList));
         }
 
-        private void OnGameAdded(object? sender, bool e)
+        private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shell.Current.Navigation.PushAsync(new GamePage(game), true);
+            });
         }
         public void AddSnapshotListener()
         {

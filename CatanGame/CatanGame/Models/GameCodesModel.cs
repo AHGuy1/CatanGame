@@ -3,7 +3,7 @@ using Plugin.CloudFirestore;
 
 namespace CatanGame.Models
 {
-    public abstract class GameCodesModel
+    public abstract class GameCodeModel
     {
         protected FbData fbd = new();
         public string GameId { get; set; } = string.Empty;

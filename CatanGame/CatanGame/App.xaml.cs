@@ -8,7 +8,7 @@ namespace CatanGame
         public App()
         {
             InitializeComponent();
-            MainPage = new RegisterPage();
+            MainPage = new LogInPage();
         }
     }
 }

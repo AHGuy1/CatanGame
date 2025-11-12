@@ -40,13 +40,14 @@
             Grid.Row="1"
             FontSize="18"
             Keyboard="Numeric"
+            Placeholder="{x:Static m:Strings.EnterGameCode}"
             Text="{Binding GameCode}"
             TextColor="black" />
         <Button
             Command="{Binding JoinGameWithCodeCommand}"
             FontSize="18"
             HeightRequest="70"
-            Text="{x:Static m:Strings.LoginButton}"
+            Text="{x:Static m:Strings.JoinGameButton}"
             TextColor="White" />
 
         <ListView ItemsSource="{Binding GamesList}">
@@ -60,7 +61,7 @@
                                 FontAttributes="Bold"
                                 FontSize="20"
                                 HorizontalTextAlignment="Start"
-                                Text="{Binding HostName}" />
+                                Text="{Binding PlayerNames[0]}" />
                             <Label
                                 Grid.Column="1"
                                 FontSize="20"

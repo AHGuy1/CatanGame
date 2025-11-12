@@ -1,4 +1,5 @@
 ﻿using CatanGame.Models;
+using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
@@ -11,21 +12,26 @@ namespace CatanGame.ModelsLogic
         {
             IsBusy = true;
             Game game = new(selectedGameSize);
-            game.SetDocument(OnComplete);
-            GameCodes gameCode = new(game.Id);
-            gameCode.SetDocument(OnComplete);
+            currentGame = game;
+            game.SetDocument(OnCompleteGameAdded);
+
         }
         public void JoinGameWithCode(string gameCode)
         {
             IsBusy = true;
-            GameCodes gamecode = new();
+            GameCode gamecode = new();
             gamecode.GetDocument(gameCode,OnCompleteGetCodeDocument);
         }
-
-        private void OnComplete(Task task)
+        private void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
-            OnGameAdded?.Invoke(this, task.IsCompletedSuccessfully);
+            OnGameAdded?.Invoke(this, currentGame!);
+        }
+        private void OnCompleteGameAdded(Task task)
+        {
+            GameCode gameCode = new(currentGame!.Id);
+            gameCode.SetDocument(OnCompleteGameCodeAdded);
+
         }
         public Games()
         {
@@ -41,10 +47,10 @@ namespace CatanGame.ModelsLogic
         }
         private void OnChange(IQuerySnapshot snapshot, Exception error)
         {
-            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnCompleteAddGame);
+            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnChange);
         }
 
-        private void OnCompleteAddGame(IQuerySnapshot qs)
+        private void OnChange(IQuerySnapshot qs)
         {
             GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)
@@ -63,7 +69,7 @@ namespace CatanGame.ModelsLogic
         {
             if (ds.Data != null)
             {
-                GameCodes? gameCode = ds.ToObject<GameCodes>();
+                GameCode? gameCode = ds.ToObject<GameCode>();
                 Game? game = new();
                 game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);
             }
@@ -87,7 +93,7 @@ namespace CatanGame.ModelsLogic
                     {
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                            Shell.Current.Navigation.PushAsync(new GamePage(game), true);
                         });
                     }
                 }

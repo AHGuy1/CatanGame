@@ -3,10 +3,33 @@
     x:Class="CatanGame.Views.GamePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:CatanGame.Models"
+    xmlns:vm="clr-namespace:CatanGame.ViewModels"
+    x:DataType="vm:GamePageVM"
+    IsBusy="{Binding IsBusy}"
     Title="GamePage">
 
     <VerticalStackLayout>
-        <Label HorizontalOptions="Center" Text="{Binding OpponentName}" />
-        <Label HorizontalOptions="Center" Text="{Binding MyName}" />
+        <Label
+            HorizontalOptions="Center"
+            Text="{Binding GameCode}"/>
+        <Label 
+            HorizontalOptions="Center" 
+            Text="{Binding Playr1Name}"/>
+        <Label 
+            HorizontalOptions="Center" 
+            Text="{Binding Playr2Name}" />
+        <Label 
+            HorizontalOptions="Center" 
+            Text="{Binding Playr3Name}" />
+        <Label 
+            HorizontalOptions="Center" 
+            Text="{Binding Playr4Name}" />
+        <Label 
+            HorizontalOptions="Center"
+            Text="{Binding Playr5Name}" />
+        <Label 
+            HorizontalOptions="Center" 
+            Text="{Binding Playr6Name}" />
     </VerticalStackLayout>
 </ContentPage>

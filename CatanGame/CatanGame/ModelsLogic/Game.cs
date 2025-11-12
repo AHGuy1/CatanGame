@@ -23,5 +23,6 @@ namespace CatanGame.ModelsLogic
         {
             fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
         }
+
     }
 }

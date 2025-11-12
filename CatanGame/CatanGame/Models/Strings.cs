@@ -42,6 +42,9 @@
         public const string PlayersLabel = "Players";
         public const string GameDoesNotExiest = "Game Does Not Exiest";
         public const string GameIsFull = "Game Is Full";
+        public const string JoinGameEror = "Error Joining Game";
+        public const string JoinGameButton = "Join Game";
+        public const string EnterGameCode = "Enter Game Code:";
 
     }
 }
