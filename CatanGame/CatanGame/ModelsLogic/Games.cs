@@ -12,7 +12,7 @@ namespace CatanGame.ModelsLogic
         {
             IsBusy = true;
             Game game = new(selectedGameSize);
-            currentGame = game;
+            CurrentGame = game;
             game.SetDocument(OnCompleteGameAdded);
 
         }
@@ -25,11 +25,12 @@ namespace CatanGame.ModelsLogic
         private void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
-            OnGameAdded?.Invoke(this, currentGame!);
+            OnGameAdded?.Invoke(this, CurrentGame!);
         }
         private void OnCompleteGameAdded(Task task)
         {
-            GameCode gameCode = new(currentGame!.Id);
+            GameCode gameCode = new(CurrentGame!.Id);
+            CurrentGame.GameCode = gameCode.GameCode;
             gameCode.SetDocument(OnCompleteGameCodeAdded);
 
         }

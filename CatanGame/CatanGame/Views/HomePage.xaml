@@ -50,7 +50,7 @@
             Text="{x:Static m:Strings.JoinGameButton}"
             TextColor="White" />
 
-        <ListView ItemsSource="{Binding GamesList}">
+        <ListView ItemsSource="{Binding GamesList}" SelectedItem="{Binding SelectedItem}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="m:GameModel">
                     <ViewCell>

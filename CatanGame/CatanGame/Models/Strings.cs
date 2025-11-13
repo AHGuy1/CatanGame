@@ -45,6 +45,12 @@
         public const string JoinGameEror = "Error Joining Game";
         public const string JoinGameButton = "Join Game";
         public const string EnterGameCode = "Enter Game Code:";
-
+        public const string GameCode = "Game Code:  ";
+        public const string Playr1Host = "Playr1(Host):  ";
+        public const string Playr2 = "Playr2:  ";
+        public const string Playr3 = "Playr3:  ";
+        public const string Playr4 = "Playr4:  ";
+        public const string Playr5 = "Playr5:  ";
+        public const string Playr6 = "Playr6:  ";
     }
 }

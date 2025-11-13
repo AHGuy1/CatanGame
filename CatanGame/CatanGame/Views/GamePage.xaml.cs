@@ -4,9 +4,22 @@ namespace CatanGame.Views;
 
 public partial class GamePage : ContentPage
 {
-	public GamePage(Game game)
+    private readonly GamePageVM gpVM;
+    public GamePage(Game game)
 	{
 		InitializeComponent();
-		BindingContext = new GamePageVM(game);
-	}
+        gpVM = new GamePageVM(game);
+        BindingContext = gpVM;
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        gpVM.AddSnapshotListener();
+    }
+
+    protected override void OnDisappearing()
+    {
+        gpVM.RemoveSnapshotListener();
+        base.OnDisappearing();
+    }
 }

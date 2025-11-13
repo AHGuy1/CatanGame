@@ -5,31 +5,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:CatanGame.Models"
     xmlns:vm="clr-namespace:CatanGame.ViewModels"
+    Title="GamePage"
     x:DataType="vm:GamePageVM"
-    IsBusy="{Binding IsBusy}"
-    Title="GamePage">
+    IsBusy="{Binding IsBusy}">
 
     <VerticalStackLayout>
+        <Label HorizontalOptions="Center" Text="{Binding GameCode}" />
+        <Label HorizontalOptions="Center" Text="{Binding Playr1Name}" />
+        <Label HorizontalOptions="Center" Text="{Binding Playr2Name}" />
         <Label
             HorizontalOptions="Center"
-            Text="{Binding GameCode}"/>
-        <Label 
-            HorizontalOptions="Center" 
-            Text="{Binding Playr1Name}"/>
-        <Label 
-            HorizontalOptions="Center" 
-            Text="{Binding Playr2Name}" />
-        <Label 
-            HorizontalOptions="Center" 
+            IsVisible="{Binding IsVisiblePlayr3Visible}"
             Text="{Binding Playr3Name}" />
-        <Label 
-            HorizontalOptions="Center" 
-            Text="{Binding Playr4Name}" />
-        <Label 
+        <Label
             HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayr4Visible}"
+            Text="{Binding Playr4Name}" />
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayr5Visible}"
             Text="{Binding Playr5Name}" />
-        <Label 
-            HorizontalOptions="Center" 
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayr6Visible}"
             Text="{Binding Playr6Name}" />
     </VerticalStackLayout>
 </ContentPage>

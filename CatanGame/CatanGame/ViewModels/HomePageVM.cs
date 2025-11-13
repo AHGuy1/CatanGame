@@ -25,6 +25,23 @@ namespace CatanGame.ViewModels
         public ICommand JoinGameWithCodeCommand { get; }
         public ICommand AddGameCommand { get; }
         public ObservableCollection<Game>? GamesList => games.GamesList;
+        public Game? SelectedItem
+        {
+            get => games.CurrentGame;
+
+            set
+            {
+                if (value != null)
+                {
+                    games.CurrentGame = value;
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                    });
+                }
+            }
+        }
+
         public HomePageVM()
         {
             games.OnGameAdded += OnGameAdded;
