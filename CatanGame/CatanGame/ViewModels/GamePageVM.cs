@@ -12,16 +12,16 @@ namespace CatanGame.ViewModels
         public bool IsBusy => false;
         public int PlayerCount => game.PlayerCount;
         public string[] PlayerNames => game.PlayerNames;
-        public string Playr1Name =>  PlayerCount > 0 ? Strings.Playr1Host + PlayerNames[0] : string.Empty;
-        public string Playr2Name => PlayerCount > 1 ? Strings.Playr2 + PlayerNames[1] : string.Empty;
-        public string Playr3Name => PlayerCount > 2 ? Strings.Playr3 + PlayerNames[2] : string.Empty;
-        public string Playr4Name => PlayerCount > 3 ? Strings.Playr4 + PlayerNames[3] : string.Empty;
-        public string Playr5Name => PlayerCount > 4 ? Strings.Playr5 + PlayerNames[4] : string.Empty;
-        public string Playr6Name => PlayerCount > 5 ? Strings.Playr6 + PlayerNames[5] : string.Empty;
-        public bool IsVisiblePlayr3Visible => PlayerCount > 2;
-        public bool IsVisiblePlayr4Visible => PlayerCount > 3;
-        public bool IsVisiblePlayr5Visible => PlayerCount > 4;
-        public bool IsVisiblePlayr6Visible => PlayerCount > 5;
+        public string Player1Name =>  PlayerCount > 0 ? Strings.Player1Host + PlayerNames[0] : string.Empty;
+        public string Player2Name => PlayerCount > 1 ? Strings.Player2 + PlayerNames[1] : string.Empty;
+        public string Player3Name => PlayerCount > 2 ? Strings.Player3 + PlayerNames[2] : string.Empty;
+        public string Player4Name => PlayerCount > 3 ? Strings.Player4 + PlayerNames[3] : string.Empty;
+        public string Player5Name => PlayerCount > 4 ? Strings.Player5 + PlayerNames[4] : string.Empty;
+        public string Player6Name => PlayerCount > 5 ? Strings.Player6 + PlayerNames[5] : string.Empty;
+        public bool IsVisiblePlayer3Visible => PlayerCount > 2;
+        public bool IsVisiblePlayer4Visible => PlayerCount > 3;
+        public bool IsVisiblePlayer5Visible => PlayerCount > 4;
+        public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public string GameCode => Strings.GameCode + game.GameCode;
         public GamePageVM(Game game)
         {
@@ -38,17 +38,18 @@ namespace CatanGame.ViewModels
                     i = PlayerCount; 
                 }
             }
+            game.OnGameDeleted =
             game.OnGameChanged += OnGameChanged;
         }
 
         private void OnGameChanged(object? sender, EventArgs e)
         {
-            OnPropertyChanged(nameof(Playr1Name));
-            OnPropertyChanged(nameof(Playr2Name));
-            OnPropertyChanged(nameof(Playr3Name));
-            OnPropertyChanged(nameof(Playr4Name));
-            OnPropertyChanged(nameof(Playr5Name));
-            OnPropertyChanged(nameof(Playr6Name));
+            OnPropertyChanged(nameof(Player1Name));
+            OnPropertyChanged(nameof(Player2Name));
+            OnPropertyChanged(nameof(Player3Name));
+            OnPropertyChanged(nameof(Player4Name));
+            OnPropertyChanged(nameof(Player5Name));
+            OnPropertyChanged(nameof(Player6Name));
         }
 
         private void OnComplete(Task task)

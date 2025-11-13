@@ -11,23 +11,23 @@
 
     <VerticalStackLayout>
         <Label HorizontalOptions="Center" Text="{Binding GameCode}" />
-        <Label HorizontalOptions="Center" Text="{Binding Playr1Name}" />
-        <Label HorizontalOptions="Center" Text="{Binding Playr2Name}" />
+        <Label HorizontalOptions="Center" Text="{Binding Player1Name}" />
+        <Label HorizontalOptions="Center" Text="{Binding Player2Name}" />
         <Label
             HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayr3Visible}"
-            Text="{Binding Playr3Name}" />
+            IsVisible="{Binding IsVisiblePlayer3Visible}"
+            Text="{Binding Player3Name}" />
         <Label
             HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayr4Visible}"
-            Text="{Binding Playr4Name}" />
+            IsVisible="{Binding IsVisiblePlayer4Visible}"
+            Text="{Binding Player4Name}" />
         <Label
             HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayr5Visible}"
-            Text="{Binding Playr5Name}" />
+            IsVisible="{Binding IsVisiblePlayer5Visible}"
+            Text="{Binding Player5Name}" />
         <Label
             HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayr6Visible}"
-            Text="{Binding Playr6Name}" />
+            IsVisible="{Binding IsVisiblePlayer6Visible}"
+            Text="{Binding Player6Name}" />
     </VerticalStackLayout>
 </ContentPage>

@@ -40,7 +40,7 @@ namespace CatanGame.ModelsLogic
                         DeleteDocument(OnComplete);
                     else
                     {
-                        for( int k =0; k<PlayerCount-1; i++)
+                        for( int k =0; k<PlayerCount-1; k++)
                         {
                             if (String.IsNullOrWhiteSpace(PlayerNames[k]))
                             {

@@ -13,9 +13,19 @@ namespace CatanGame.ModelsLogic
             IsBusy = true;
             Game game = new(selectedGameSize);
             CurrentGame = game;
+            CurrentGame.OnGameDeleted += OnGameDeleted;
             game.SetDocument(OnCompleteGameAdded);
 
         }
+
+        private void OnGameDeleted(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(Strings.GameDeleted, CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+            });
+        }
+
         public void JoinGameWithCode(string gameCode)
         {
             IsBusy = true;

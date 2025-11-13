@@ -46,11 +46,12 @@
         public const string JoinGameButton = "Join Game";
         public const string EnterGameCode = "Enter Game Code:";
         public const string GameCode = "Game Code:  ";
-        public const string Playr1Host = "Playr1(Host):  ";
-        public const string Playr2 = "Playr2:  ";
-        public const string Playr3 = "Playr3:  ";
-        public const string Playr4 = "Playr4:  ";
-        public const string Playr5 = "Playr5:  ";
-        public const string Playr6 = "Playr6:  ";
+        public const string Player1Host = "Player1(Host):  ";
+        public const string Player2 = "Player2:  ";
+        public const string Player3 = "Player3:  ";
+        public const string Player4 = "Player4:  ";
+        public const string Player5 = "Player5:  ";
+        public const string Player6 = "Player6:  ";
+        public const string GameDeleted = "Game Deleted";
     }
 }
