@@ -78,6 +78,12 @@ namespace CatanGame.ModelsLogic
             await dr.DeleteAsync().ContinueWith(OnComplete);
         }
 
+        public override async void DeleteDocument(string collectonName, string id)
+        {
+            IDocumentReference dr = fdb.Collection(collectonName).Document(id);
+            await dr.DeleteAsync();
+        }
+
         public static string GetErrorMessage(string msg)
         {
             if (msg.Contains(Strings.ContainsINVALID_LOGIN_CREDENTIALS))

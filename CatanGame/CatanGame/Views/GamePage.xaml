@@ -11,6 +11,10 @@
 
     <VerticalStackLayout>
         <Label HorizontalOptions="Center" Text="{Binding GameCode}" />
+        <Label
+            Margin="50"
+            HorizontalOptions="Center"
+            Text="{Binding StatusMessage}" />
         <Label HorizontalOptions="Center" Text="{Binding Player1Name}" />
         <Label HorizontalOptions="Center" Text="{Binding Player2Name}" />
         <Label

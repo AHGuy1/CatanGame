@@ -1,28 +1,29 @@
-﻿using Android.Content;
-using CatanGame.Models;
+﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 
 namespace CatanGame.ViewModels
 {
-    public class GamePageVM : ObservableObject
+    public partial class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public bool IsBusy => false;
         public int PlayerCount => game.PlayerCount;
+        public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
-        public string Player1Name =>  PlayerCount > 0 ? Strings.Player1Host + PlayerNames[0] : string.Empty;
-        public string Player2Name => PlayerCount > 1 ? Strings.Player2 + PlayerNames[1] : string.Empty;
-        public string Player3Name => PlayerCount > 2 ? Strings.Player3 + PlayerNames[2] : string.Empty;
-        public string Player4Name => PlayerCount > 3 ? Strings.Player4 + PlayerNames[3] : string.Empty;
-        public string Player5Name => PlayerCount > 4 ? Strings.Player5 + PlayerNames[4] : string.Empty;
-        public string Player6Name => PlayerCount > 5 ? Strings.Player6 + PlayerNames[5] : string.Empty;
+        public string StatusMessage => game.StatusMessage;
+        public string GameCode => Strings.GameCode + game.GameCode;
+        public string Player1Name => PlayerCount > 0 ? PlayerIndector == 0 ? Strings.Player1Host + PlayerNames[0] + Strings.You : Strings.Player1Host + PlayerNames[0] : string.Empty;
+        public string Player2Name => PlayerCount > 1 ? PlayerIndector == 1 ? Strings.Player2 + PlayerNames[1] + Strings.You : Strings.Player2 + PlayerNames[1] : string.Empty;
+        public string Player3Name => PlayerCount > 2 ? PlayerIndector == 2 ? Strings.Player3 + PlayerNames[2] + Strings.You : Strings.Player3 + PlayerNames[2] : string.Empty;
+        public string Player4Name => PlayerCount > 3 ? PlayerIndector == 3 ? Strings.Player4 + PlayerNames[3] + Strings.You : Strings.Player4 + PlayerNames[3] : string.Empty;
+        public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
+        public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
+        public bool IsBusy => false;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
-        public string GameCode => Strings.GameCode + game.GameCode;
         public GamePageVM(Game game)
         {
             this.game = game;
@@ -30,15 +31,15 @@ namespace CatanGame.ViewModels
             {
                 if (String.IsNullOrWhiteSpace(PlayerNames[i]))
                 {
-                    FbData fbd = new FbData();
+                    FbData fbd = new();
                     PlayerNames[i] = fbd.DisplayName;
                     if(i+1 == PlayerCount)
                         game.IsFull = true;
                     game.SetDocument(OnComplete);
+                    game.PlayerIndicator = i;
                     i = PlayerCount; 
                 }
             }
-            game.OnGameDeleted =
             game.OnGameChanged += OnGameChanged;
         }
 
@@ -56,7 +57,6 @@ namespace CatanGame.ViewModels
         {
             if (!task.IsCompletedSuccessfully)
                 Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
-
         }
 
         public void AddSnapshotListener()

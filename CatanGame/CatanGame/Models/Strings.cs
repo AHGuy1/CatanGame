@@ -47,11 +47,25 @@
         public const string EnterGameCode = "Enter Game Code:";
         public const string GameCode = "Game Code:  ";
         public const string Player1Host = "Player1(Host):  ";
-        public const string Player2 = "Player2:  ";
-        public const string Player3 = "Player3:  ";
-        public const string Player4 = "Player4:  ";
-        public const string Player5 = "Player5:  ";
-        public const string Player6 = "Player6:  ";
-        public const string GameDeleted = "Game Deleted";
+        public const string Player2 = "Player 2 :  ";
+        public const string Player3 = "Player 3 :  ";
+        public const string Player4 = "Player 4 :  ";
+        public const string Player5 = "Player 5 :  ";
+        public const string Player6 = "Player 6 :  ";
+        public const string Player2Left = "Player 2 Left";
+        public const string Player3Left = "Player 3 Left";
+        public const string Player4Left = "Player 4 Left";
+        public const string Player5Left = "Player 5 Left";
+        public const string Player6Left = "Player 6 Left";
+        public const string Player1Turn = "Player 1 Turn";
+        public const string Player2Turn = "Player 2 Turn";
+        public const string Player3Turn = "Player 3 Turn";
+        public const string Player4Turn = "Player 4 Turn";
+        public const string Player5Turn = "Player 5 Turn";
+        public const string Player6Turn = "Player 5 Turn";
+        public const string YourTurn = "Your Turn";
+        public const string GameDeleted = "Game Deleted Host Left";
+        public const string PleseWait = "Plese Wait";
+        public const string You = "(You)";
     }
 }
