@@ -2,6 +2,7 @@
 using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {
@@ -19,13 +20,15 @@ namespace CatanGame.ViewModels
         public string Player4Name => PlayerCount > 3 ? PlayerIndector == 3 ? Strings.Player4 + PlayerNames[3] + Strings.You : Strings.Player4 + PlayerNames[3] : string.Empty;
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
-        public bool IsBusy => false;
+        public bool IsBusy { get; set; } = false;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
+        public ICommand EndTurnCommand { get; }
         public GamePageVM(Game game)
         {
+            EndTurnCommand = new Command(EndTurn, CanEndTurn);
             this.game = game;
             for (int i = 0; i < PlayerCount; i++)
             {
@@ -43,14 +46,29 @@ namespace CatanGame.ViewModels
             game.OnGameChanged += OnGameChanged;
         }
 
+        private bool CanEndTurn()
+        {
+            return game.PlayerIndicator + 1 == game.PlayerTurn && game.IsFull;
+        }
+
+        private void EndTurn()
+        {
+            IsBusy = true;
+            OnPropertyChanged(nameof(IsBusy));
+            game.EndTurn();
+        }
+
         private void OnGameChanged(object? sender, EventArgs e)
         {
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
             OnPropertyChanged(nameof(Player1Name));
             OnPropertyChanged(nameof(Player2Name));
             OnPropertyChanged(nameof(Player3Name));
             OnPropertyChanged(nameof(Player4Name));
             OnPropertyChanged(nameof(Player5Name));
             OnPropertyChanged(nameof(Player6Name));
+            OnPropertyChanged(nameof(StatusMessage));
         }
 
         private void OnComplete(Task task)

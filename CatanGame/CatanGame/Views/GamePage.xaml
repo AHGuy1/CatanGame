@@ -33,5 +33,6 @@
             HorizontalOptions="Center"
             IsVisible="{Binding IsVisiblePlayer6Visible}"
             Text="{Binding Player6Name}" />
+        <Button Command="{Binding EndTurnCommand}" Text="{x:Static m:Strings.EndTurn}" />
     </VerticalStackLayout>
 </ContentPage>

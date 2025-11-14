@@ -94,5 +94,20 @@ namespace CatanGame.ModelsLogic
             if (task.IsCompletedSuccessfully)
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
+
+        public void EndTurn()
+        {
+            if (PlayerTurn == PlayerCount)
+                PlayerTurn = 1;
+            else
+                PlayerTurn++;
+            SetDocument(OnTurnChanged);
+        }
+
+        private void OnTurnChanged(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

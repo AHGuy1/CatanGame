@@ -67,5 +67,6 @@
         public const string GameDeleted = "Game Deleted Host Left";
         public const string PleseWait = "Plese Wait";
         public const string You = "(You)";
+        public const string EndTurn = "End Turn";
     }
 }
