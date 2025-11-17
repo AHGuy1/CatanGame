@@ -9,6 +9,7 @@ namespace CatanGame.Models
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
         protected abstract GameStatus Status { get; }
+        protected GameStatus _status = new();
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
@@ -29,10 +30,13 @@ namespace CatanGame.Models
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
+        protected abstract void UpdateStatus();
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void RemoveSnapshotListener();
         public abstract void AddSnapshotListener();
         public abstract void DeleteDocument(Action<Task> OnComplete);
+        public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
+
     }
 }

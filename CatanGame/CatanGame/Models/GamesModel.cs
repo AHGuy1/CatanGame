@@ -12,7 +12,7 @@ namespace CatanGame.Models
         public Game? CurrentGame;
         public bool IsBusy { get; set; }
         public ObservableCollection<Game>? GamesList { get; set; } = [];
-        public ObservableCollection<GameSize>? GameSizes { get; set; } = [new GameSize(3), new GameSize(4), new GameSize(5)];
+        public ObservableCollection<GameSize>? GameSizes { get; set; } = [new GameSize(3), new GameSize(4), new GameSize(5), new GameSize(6)];
         public EventHandler<Game>? OnGameAdded;
         public EventHandler? OnGamesChanged;
     }

@@ -10,7 +10,7 @@
         }
         public GameSize()
         {
-            Size = 3;
+            Size = 4;
         }
     }
 }

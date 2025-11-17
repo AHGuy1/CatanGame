@@ -15,6 +15,7 @@ namespace CatanGame.Models
         public abstract void ResetPassword(string email, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void DeleteDocument(string collectonName, string id, Action<Task> onComplete);
         public abstract void DeleteDocument(string collectonName, string id);
+        public abstract void UpdateFields(string collectonName, string id, Dictionary<string, object> dict, Action<Task> OnComplete);
         public abstract string SetDocument(object obj, string collectonName, string id, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract IListenerRegistration AddSnapshotListener(string collectonName, Plugin.CloudFirestore.QuerySnapshotHandler OnChange);
         public abstract IListenerRegistration AddSnapshotListener(string collectonName, string id, Plugin.CloudFirestore.DocumentSnapshotHandler OnChange);

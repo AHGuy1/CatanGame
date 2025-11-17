@@ -2,31 +2,41 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
+using System.Data;
 
 namespace CatanGame.ModelsLogic
 {
     public class Game : GameModel
     {
-        protected override GameStatus Status => IsFull ? PlayerTurn == PlayerIndicator + 1 ? new GameStatus { CurrentStatus = GameStatus.Status.YourTurn } :
-            PlayerTurn == 1 ? new GameStatus { CurrentStatus = GameStatus.Status.Player1Turn } :
-            PlayerTurn == 2 ? new GameStatus { CurrentStatus = GameStatus.Status.Player2Turn } :
-            PlayerTurn == 3 ? new GameStatus { CurrentStatus = GameStatus.Status.Player3Turn } :
-            PlayerTurn == 4 ? new GameStatus { CurrentStatus = GameStatus.Status.Player4Turn } :
-            PlayerTurn == 5 ? new GameStatus { CurrentStatus = GameStatus.Status.Player5Turn } :
-            new GameStatus { CurrentStatus = GameStatus.Status.Player6Turn }
-            : new GameStatus { CurrentStatus = GameStatus.Status.PleseWait };
+        protected override GameStatus Status => _status;
         public Game(GameSize selectedGameSize)
         {
             PlayerCount = selectedGameSize.Size;
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
+            UpdateStatus();
         }
         public Game()
         {
+            UpdateStatus();
+        }
+        protected override void UpdateStatus()
+        {
+            _status.CurrentStatus = PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
+                PlayerTurn == 1 ? GameStatus.Status.Player1Turn :
+                PlayerTurn == 2 ? GameStatus.Status.Player2Turn :
+                PlayerTurn == 3 ? GameStatus.Status.Player3Turn :
+                PlayerTurn == 4 ? GameStatus.Status.Player4Turn :
+                PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
+                GameStatus.Status.Player6Turn;
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
+        }
+        public override void UpdateFields(Action<Task> OnComplete,Dictionary<string,object> dict)
+        {
+            fbd.UpdateFields(Keys.GamesCollection, Id,dict, OnComplete);
         }
         public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
         {
@@ -41,35 +51,35 @@ namespace CatanGame.ModelsLogic
         public override void RemoveSnapshotListener()
         {
             ilr?.Remove();
-            for(int i = 0; i < PlayerCount; i++)
+            PlayerNames[PlayerIndicator] = string.Empty;
+            if (PlayerIndicator == 0)
+                DeleteDocument(OnComplete);
+            else
             {
-                if (PlayerNames[i] == fbd.DisplayName)
+                for (int i = 0; i < PlayerCount - 1; i++)
                 {
-                    PlayerNames[i] = string.Empty;
-                    if(i == 0)
-                        DeleteDocument(OnComplete);
-                    else
+                    if (String.IsNullOrWhiteSpace(PlayerNames[i]))
                     {
-                        for( int k =0; k<PlayerCount-1; k++)
-                        {
-                            if (String.IsNullOrWhiteSpace(PlayerNames[k]))
-                            {
-                                PlayerNames[k] = PlayerNames[k + 1];
-                                PlayerNames[k + 1] = string.Empty;
-                            }
-                        }
-                        IsFull = false;
-                        PlayerLeft = i;
-                        SetDocument(OnCompletePlayerLeft);
+                        PlayerNames[i] = PlayerNames[i + 1];
+                        PlayerNames[i + 1] = string.Empty;
                     }
-                    i = PlayerCount;
                 }
+                IsFull = false;
+                PlayerLeft = PlayerIndicator;
+                Dictionary<string, object> dict = new()
+                {
+
+                    { nameof(IsFull), IsFull },
+                    { nameof(PlayerNames), PlayerNames },
+
+                };
+                UpdateFields(OnCompletePlayerLeft, dict);
             }
         }
 
         private void OnCompletePlayerLeft(Task task)
         {
-            OnPlayerLeft?.Invoke(this,PlayerLeft);
+            OnPlayerLeft?.Invoke(this,PlayerIndicator);
         }
 
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
@@ -77,9 +87,20 @@ namespace CatanGame.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
+                for(int i = 1;i < PlayerCount - 1;i++)
+                {
+                    if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]) )
+                        OnPlayerLeft?.Invoke(this, i);
+                }
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
+                PlayerTurn = updatedGame.PlayerTurn;
+                UpdateStatus();
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -101,7 +122,12 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn = 1;
             else
                 PlayerTurn++;
-            SetDocument(OnTurnChanged);
+            UpdateStatus();
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(PlayerTurn), PlayerTurn },
+            };
+            UpdateFields(OnTurnChanged, dict);
         }
 
         private void OnTurnChanged(Task task)
