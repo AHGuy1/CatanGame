@@ -36,7 +36,7 @@ namespace CatanGame.ViewModels
                     games.CurrentGame = value;
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
-                        Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                        Shell.Current.Navigation.PushAsync(new WaitingRoomPage(value), true);
                     });
                 }
             }
@@ -66,7 +66,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsBusy));
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Shell.Current.Navigation.PushAsync(new GamePage(game), true);
+                Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
             });
         }
         public void AddSnapshotListener()

@@ -68,5 +68,7 @@
         public const string PleseWait = "Plese Wait";
         public const string You = "(You)";
         public const string EndTurn = "End Turn";
+        public const string StartGame = "Start Game";
+        public const string GameStartedLabel = "GameStarted";
     }
 }

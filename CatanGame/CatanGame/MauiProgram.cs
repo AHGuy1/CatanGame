@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace CatanGame
@@ -7,6 +8,7 @@ namespace CatanGame
     {
         public static MauiApp CreateMauiApp()
         {
+
             MauiAppBuilder builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

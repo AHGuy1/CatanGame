@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CatanGame.Views.WaitingRoomPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:CatanGame.Models"
+    xmlns:vm="clr-namespace:CatanGame.ViewModels"
+    Title="WaitingRoom"
+    x:DataType="vm:WaitingRoomPageVM"
+    IsBusy="{Binding IsBusy}">
+
+    <VerticalStackLayout>
+        <Label HorizontalOptions="Center" Text="{Binding GameCode}" />
+        <Label
+            Margin="50"
+            HorizontalOptions="Center"
+            Text="{Binding StatusMessage}" />
+        <Label HorizontalOptions="Center" Text="{Binding Player1Name}" />
+        <Label HorizontalOptions="Center" Text="{Binding Player2Name}" />
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayer3Visible}"
+            Text="{Binding Player3Name}" />
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayer4Visible}"
+            Text="{Binding Player4Name}" />
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayer5Visible}"
+            Text="{Binding Player5Name}" />
+        <Label
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsVisiblePlayer6Visible}"
+            Text="{Binding Player6Name}" />
+        <Button Command="{Binding StartGameCommand}" Text="{x:Static m:Strings.EndTurn}" />
+    </VerticalStackLayout>
+</ContentPage>

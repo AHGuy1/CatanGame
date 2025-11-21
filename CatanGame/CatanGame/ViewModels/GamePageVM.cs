@@ -30,7 +30,9 @@ namespace CatanGame.ViewModels
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             this.game = game;
+            //potentily useless
             this.game.OnGameDeleted += OnGameDeleted;
+            //potentily useless
             this.game.OnPlayerLeft += OnPlayerLeft;
             for (int i = 0; i < PlayerCount; i++)
             {
@@ -48,14 +50,13 @@ namespace CatanGame.ViewModels
             game.OnGameChanged += OnGameChanged;
         }
 
+        //potentily useless
         private void OnGameDeleted(object? sender, EventArgs e)
         {
-
         }
-
+        //potentily useless
         private void OnPlayerLeft(object? sender, int e)
         {
-
         }
 
         private bool CanEndTurn()

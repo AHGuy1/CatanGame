@@ -1,6 +1,4 @@
-﻿using CatanGame.ModelsLogic;
-using CatanGame.Views;
-
+﻿using CatanGame.Views;
 namespace CatanGame
 {
     public partial class App : Application

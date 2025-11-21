@@ -1,8 +1,6 @@
 ﻿using CatanGame.Models;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+using CatanGame.Views;
 using Plugin.CloudFirestore;
-using System.Data;
 
 namespace CatanGame.ModelsLogic
 {
@@ -22,7 +20,8 @@ namespace CatanGame.ModelsLogic
         }
         protected override void UpdateStatus()
         {
-            _status.CurrentStatus = PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
+            _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
+                PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
                 PlayerTurn == 1 ? GameStatus.Status.Player1Turn :
                 PlayerTurn == 2 ? GameStatus.Status.Player2Turn :
                 PlayerTurn == 3 ? GameStatus.Status.Player3Turn :
@@ -77,46 +76,13 @@ namespace CatanGame.ModelsLogic
             }
         }
 
-        private void OnCompletePlayerLeft(Task task)
-        {
-            OnPlayerLeft?.Invoke(this,PlayerIndicator);
-        }
-
-        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
-        {
-            Game? updatedGame = snapshot?.ToObject<Game>();
-            if (updatedGame != null)
-            {
-                for(int i = 1;i < PlayerCount - 1;i++)
-                {
-                    if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]) )
-                        OnPlayerLeft?.Invoke(this, i);
-                }
-                IsFull = updatedGame.IsFull;
-                PlayerNames = updatedGame.PlayerNames;
-                PlayerTurn = updatedGame.PlayerTurn;
-                UpdateStatus();
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id);
             fbd.DeleteDocument(Keys.GameCodesCollection,GameCode,OnComplete);
         }
 
-        private void OnComplete(Task task)
-        {
-            if (task.IsCompletedSuccessfully)
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void EndTurn()
+        public override void EndTurn()
         {
             if (PlayerTurn == PlayerCount)
                 PlayerTurn = 1;
@@ -128,6 +94,58 @@ namespace CatanGame.ModelsLogic
                 { nameof(PlayerTurn), PlayerTurn },
             };
             UpdateFields(OnTurnChanged, dict);
+        }
+        public override void StartGame()
+        {
+            GameStarted = true;
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(GameStarted), GameStarted },
+            };
+            UpdateFields(OnTurnChanged, dict);
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shell.Current.Navigation.PushAsync(new GamePage(this), true);
+            });
+        }
+
+        private void OnCompletePlayerLeft(Task task)
+        {
+            OnPlayerLeft?.Invoke(this, PlayerIndicator);
+        }
+
+        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
+        {
+            Game? updatedGame = snapshot?.ToObject<Game>();
+            if (updatedGame != null)
+            {
+                for (int i = 1; i < PlayerCount - 1; i++)
+                {
+                    if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
+                        OnPlayerLeft?.Invoke(this, i);
+                }
+                IsFull = updatedGame.IsFull;
+                PlayerNames = updatedGame.PlayerNames;
+                PlayerTurn = updatedGame.PlayerTurn;
+                if (updatedGame.GameStarted && !GameStarted)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Shell.Current.Navigation.PushAsync(new GamePage(this), true);
+                    });
+                GameStarted = updatedGame.GameStarted;
+                UpdateStatus();
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnTurnChanged(Task task)

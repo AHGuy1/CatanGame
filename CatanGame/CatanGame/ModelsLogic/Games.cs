@@ -133,7 +133,7 @@ namespace CatanGame.ModelsLogic
                     {
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            Shell.Current.Navigation.PushAsync(new GamePage(game), true);
+                            Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
                         });
                     }
                 }
