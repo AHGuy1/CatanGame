@@ -1,5 +1,7 @@
 ﻿using CatanGame.Models;
 using CatanGame.Views;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 
 namespace CatanGame.ModelsLogic
@@ -51,8 +53,8 @@ namespace CatanGame.ModelsLogic
         {
             ilr?.Remove();
             PlayerNames[PlayerIndicator] = string.Empty;
-            if (PlayerIndicator == 0)
-                DeleteDocument(OnComplete);
+            if (PlayerIndicator == 0 || GameStarted)
+                DeleteDocument(OnCompleteDeleted);
             else
             {
                 for (int i = 0; i < PlayerCount - 1; i++)
@@ -88,16 +90,18 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn = 1;
             else
                 PlayerTurn++;
-            UpdateStatus();
+            //UpdateStatus();
             Dictionary<string, object> dict = new()
             {
                 { nameof(PlayerTurn), PlayerTurn },
             };
             UpdateFields(OnTurnChanged, dict);
+            OnEndedTurn?.Invoke(this, EventArgs.Empty);
         }
         public override void StartGame()
         {
             GameStarted = true;
+            //UpdateStatus();
             Dictionary<string, object> dict = new()
             {
                 { nameof(GameStarted), GameStarted },
@@ -105,8 +109,31 @@ namespace CatanGame.ModelsLogic
             UpdateFields(OnTurnChanged, dict);
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Shell.Current.Navigation.PushAsync(new GamePage(this), true);
+                Application.Current!.MainPage = new GamePage(this);
             });
+        }
+
+        public override void AddPlayerName()
+        {
+            for (int i = 0; i < PlayerCount; i++)
+            {
+                if (String.IsNullOrWhiteSpace(PlayerNames[i]))
+                {
+                    PlayerNames[i] = fbd.DisplayName;
+                    if (i + 1 == PlayerCount)
+                        IsFull = true;
+                    Dictionary<string, object> dict = new()
+                    {
+
+                        { nameof(IsFull), IsFull },
+                        { nameof(PlayerNames), PlayerNames },
+
+                    };
+                    UpdateFields(OnCompleteAddPlayerName, dict);
+                    PlayerIndicator = i;
+                    i = PlayerCount;
+                }
+            }
         }
 
         private void OnCompletePlayerLeft(Task task)
@@ -122,7 +149,13 @@ namespace CatanGame.ModelsLogic
                 for (int i = 1; i < PlayerCount - 1; i++)
                 {
                     if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
+                    {
                         OnPlayerLeft?.Invoke(this, i);
+                        if(i < PlayerIndicator)
+                        {
+                            PlayerIndicator--;
+                        }
+                    }
                 }
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
@@ -130,9 +163,11 @@ namespace CatanGame.ModelsLogic
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
-                        Shell.Current.Navigation.PushAsync(new GamePage(this), true);
+                        GameStarted = updatedGame.GameStarted;
+                        Application.Current!.MainPage = new GamePage(this);
                     });
-                GameStarted = updatedGame.GameStarted;
+                else
+                    GameStarted = updatedGame.GameStarted;
                 UpdateStatus();
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -142,10 +177,16 @@ namespace CatanGame.ModelsLogic
             }
         }
 
-        private void OnComplete(Task task)
+        private void OnCompleteDeleted(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnCompleteAddPlayerName(Task task)
+        {
+            if (!task.IsCompletedSuccessfully)
+                Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
         }
 
         private void OnTurnChanged(Task task)

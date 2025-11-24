@@ -21,6 +21,7 @@ namespace CatanGame.ViewModels
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
         public bool IsBusy { get; set; } = false;
+        public bool ShouldGameBeDeleted { get; set; } = true;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
@@ -30,43 +31,34 @@ namespace CatanGame.ViewModels
         {
             StartGameCommand = new Command(StartGame, CanStartGame);
             this.game = game;
+            this.game.AddPlayerName();
+            //Potentiliy Useless
             this.game.OnGameDeleted += OnGameDeleted;
+            //Potentiliy Useless
             this.game.OnPlayerLeft += OnPlayerLeft;
-            for (int i = 0; i < PlayerCount; i++)
-            {
-                if (String.IsNullOrWhiteSpace(PlayerNames[i]))
-                {
-                    FbData fbd = new();
-                    PlayerNames[i] = fbd.DisplayName;
-                    if (i + 1 == PlayerCount)
-                        game.IsFull = true;
-                    game.SetDocument(OnComplete);
-                    game.PlayerIndicator = i;
-                    i = PlayerCount;
-                }
-            }
-            game.OnGameChanged += OnGameChanged;
+            this.game.OnGameChanged += OnGameChanged;
         }
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
-
+            //Potentiliy Useless
         }
 
         private void OnPlayerLeft(object? sender, int e)
         {
-
+            //Potentiliy Useless
         }
 
         private bool CanStartGame()
         {
-            return !String.IsNullOrWhiteSpace(game.PlayerNames[PlayerNames.Length-1]);
+            return !String.IsNullOrWhiteSpace(game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;
         }
 
         private void StartGame()
         {
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
+            ShouldGameBeDeleted = false;
             game.StartGame();
         }
 
@@ -84,12 +76,6 @@ namespace CatanGame.ViewModels
             (StartGameCommand as Command)?.ChangeCanExecute();
         }
 
-        private void OnComplete(Task task)
-        {
-            if (!task.IsCompletedSuccessfully)
-                Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
-        }
-
         public void AddSnapshotListener()
         {
             game.AddSnapshotListener();
@@ -97,7 +83,8 @@ namespace CatanGame.ViewModels
 
         public void RemoveSnapshotListener()
         {
-            game.RemoveSnapshotListener();
+            if (ShouldGameBeDeleted)
+                game.RemoveSnapshotListener();
         }
     }
 }

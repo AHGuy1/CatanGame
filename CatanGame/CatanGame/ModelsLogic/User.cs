@@ -103,7 +103,7 @@ namespace CatanGame.ModelsLogic
             {
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show();
+                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Short, 20).Show();
                 });
                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
             }

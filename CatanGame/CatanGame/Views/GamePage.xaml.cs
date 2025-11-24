@@ -11,11 +11,6 @@ public partial class GamePage : ContentPage
         gpVM = new GamePageVM(game);
         BindingContext = gpVM;
     }
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        gpVM.AddSnapshotListener();
-    }
 
     protected override void OnDisappearing()
     {

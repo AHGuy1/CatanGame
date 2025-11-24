@@ -17,6 +17,8 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
+        public EventHandler? OnEndedTurn;
+        [Ignored]
         public EventHandler<int>? OnPlayerLeft;
         [Ignored]
         public string Id { get; set; } = string.Empty;
@@ -33,6 +35,7 @@ namespace CatanGame.Models
         public bool IsFull { get; set; }
         protected abstract void UpdateStatus();
         public abstract void StartGame();
+        public abstract void AddPlayerName();
         public abstract void EndTurn();
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
