@@ -21,7 +21,6 @@ namespace CatanGame.ViewModels
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
         public bool IsBusy { get; set; } = false;
-        public bool ShouldGameBeDeleted { get; set; } = true;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
@@ -32,21 +31,50 @@ namespace CatanGame.ViewModels
             StartGameCommand = new Command(StartGame, CanStartGame);
             this.game = game;
             this.game.AddPlayerName();
-            //Potentiliy Useless
             this.game.OnGameDeleted += OnGameDeleted;
-            //Potentiliy Useless
             this.game.OnPlayerLeft += OnPlayerLeft;
             this.game.OnGameChanged += OnGameChanged;
         }
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
-            //Potentiliy Useless
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(Strings.GameDeleted, ToastDuration.Long, 20).Show();
+                Application.Current!.MainPage = new AppShell();
+            });
         }
 
-        private void OnPlayerLeft(object? sender, int e)
+        private void OnPlayerLeft(object? sender, int Player)
         {
-            //Potentiliy Useless
+            if (PlayerIndector != Player)
+            {
+                if (Player == 1)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.Player2Left, ToastDuration.Long, 20).Show();
+                    });
+                else if (Player == 2)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.Player3Left, ToastDuration.Long, 20).Show();
+                    });
+                else if (Player == 3)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.Player4Left, ToastDuration.Long, 20).Show();
+                    });
+                else if (Player == 4)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.Player5Left, ToastDuration.Long, 20).Show();
+                    });
+                else if (Player == 5)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
+                    });
+            }
         }
 
         private bool CanStartGame()
@@ -58,7 +86,6 @@ namespace CatanGame.ViewModels
         {
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
-            ShouldGameBeDeleted = false;
             game.StartGame();
         }
 
@@ -83,7 +110,7 @@ namespace CatanGame.ViewModels
 
         public void RemoveSnapshotListener()
         {
-            if (ShouldGameBeDeleted)
+            if (!game.GameStarted)
                 game.RemoveSnapshotListener();
         }
     }

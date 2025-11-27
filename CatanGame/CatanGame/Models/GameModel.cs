@@ -8,8 +8,8 @@ namespace CatanGame.Models
     {
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
-        protected abstract GameStatus Status { get; }
         protected GameStatus _status = new();
+        protected abstract GameStatus Status { get; }
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]

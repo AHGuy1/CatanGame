@@ -13,46 +13,8 @@ namespace CatanGame.ModelsLogic
             IsBusy = true;
             Game game = new(selectedGameSize);
             CurrentGame = game;
-            CurrentGame.OnGameDeleted += OnGameDeleted;
-            CurrentGame.OnPlayerLeft += OnPlayerLeft;
             game.SetDocument(OnCompleteGameAdded);
 
-        }
-
-        private void OnGameDeleted(object? sender, EventArgs e)
-        {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Toast.Make(Strings.GameDeleted, ToastDuration.Long, 20).Show();
-            });
-        }
-        private void OnPlayerLeft(object? sender, int Player)
-        {
-            if (Player == 1)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player2Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 2)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player3Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 3)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player4Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 4)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player5Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 5)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
-                });
         }
 
         public void JoinGameWithCode(string gameCode)

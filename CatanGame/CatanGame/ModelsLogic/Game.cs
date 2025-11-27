@@ -90,7 +90,6 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn = 1;
             else
                 PlayerTurn++;
-            //UpdateStatus();
             Dictionary<string, object> dict = new()
             {
                 { nameof(PlayerTurn), PlayerTurn },
@@ -101,7 +100,6 @@ namespace CatanGame.ModelsLogic
         public override void StartGame()
         {
             GameStarted = true;
-            //UpdateStatus();
             Dictionary<string, object> dict = new()
             {
                 { nameof(GameStarted), GameStarted },
@@ -146,15 +144,21 @@ namespace CatanGame.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                for (int i = 1; i < PlayerCount - 1; i++)
+                for (int i = 1; i < PlayerCount; i++)
                 {
                     if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
                     {
-                        OnPlayerLeft?.Invoke(this, i);
-                        if(i < PlayerIndicator)
+                        for(int j = 1; j < PlayerCount; j++)
                         {
-                            PlayerIndicator--;
+                            if (PlayerNames[j] != updatedGame.PlayerNames[j])
+                            {
+                                OnPlayerLeft?.Invoke(this, j);
+                                if (j < PlayerIndicator)
+                                    PlayerIndicator--;
+                                j = PlayerCount;
+                            }
                         }
+                        i = PlayerCount;
                     }
                 }
                 IsFull = updatedGame.IsFull;
@@ -166,8 +170,6 @@ namespace CatanGame.ModelsLogic
                         GameStarted = updatedGame.GameStarted;
                         Application.Current!.MainPage = new GamePage(this);
                     });
-                else
-                    GameStarted = updatedGame.GameStarted;
                 UpdateStatus();
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }

@@ -12,7 +12,7 @@ namespace CatanGame.ViewModels
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
-        public string StatusMessage => game.StatusMessage;
+        public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn-1] + game.StatusMessage;
         public string GameCode => Strings.GameCode + game.GameCode;
         public string Player1Name => PlayerCount > 0 ? PlayerIndector == 0 ? Strings.Player1Host + PlayerNames[0] + Strings.You : Strings.Player1Host + PlayerNames[0] : string.Empty;
         public string Player2Name => PlayerCount > 1 ? PlayerIndector == 1 ? Strings.Player2 + PlayerNames[1] + Strings.You : Strings.Player2 + PlayerNames[1] : string.Empty;
@@ -31,29 +31,45 @@ namespace CatanGame.ViewModels
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             this.game = game;
-            //potentily useless
             this.game.OnGameDeleted += OnGameDeleted;
-            //potentily useless
             this.game.OnPlayerLeft += OnPlayerLeft;
-            //this.game.OnEndedTurn += OnEndedTurn;
             this.game.OnGameChanged += OnGameChanged;
         }
 
-        //private void OnEndedTurn(object? sender, EventArgs e)
-        //{
-        //    IsBusy = false;
-        //    OnPropertyChanged(nameof(IsBusy));
-        //    OnPropertyChanged(nameof(StatusMessage));
-        //    (EndTurnCommand as Command)?.ChangeCanExecute();
-        //}
-
-        //potentily useless
         private void OnGameDeleted(object? sender, EventArgs e)
         {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(Strings.GameDeleted, ToastDuration.Long, 20).Show();
+            });
         }
-        //potentily useless
-        private void OnPlayerLeft(object? sender, int e)
+        private void OnPlayerLeft(object? sender, int Player)
         {
+            if (Player == 1)
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.Player2Left, ToastDuration.Long, 20).Show();
+                });
+            else if (Player == 2)
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.Player3Left, ToastDuration.Long, 20).Show();
+                });
+            else if (Player == 3)
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.Player4Left, ToastDuration.Long, 20).Show();
+                });
+            else if (Player == 4)
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.Player5Left, ToastDuration.Long, 20).Show();
+                });
+            else if (Player == 5)
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
+                });
         }
 
         private bool CanEndTurn()
