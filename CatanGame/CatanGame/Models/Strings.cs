@@ -39,6 +39,7 @@
         public const string AddGame = "Add Game";
         public const string GameSize = "Game Size";
         public const string SelectAmountOfPlayers = "Select Amount Of Players";
+        public const string SelectAmountOfPointsNeeded = "Select Amount Of Points Needed to Win";
         public const string PlayersLabel = "Players";
         public const string GameDoesNotExiest = "Game Does Not Exiest";
         public const string GameIsFull = "Game Is Full";
@@ -70,5 +71,9 @@
         public const string EndTurn = "End Turn";
         public const string StartGame = "Start Game";
         public const string GameStartedLabel = "GameStarted";
+        public const string OutOfTime = "Out Of Time, Turn Passed";
+        public const string SecondsLabel = "Seconds";
+        public const string MinutesLabel = "Minutes";
+        public const string SetTimeOfTurn = "Set Time OF Turn";
     }
 }

@@ -47,13 +47,13 @@ namespace CatanGame.ModelsLogic
             await dr.UpdateAsync(dict).ContinueWith(OnComplete);
         }
 
-        public async void GetDocument(string collectonName, string documentName, Action<IDocumentSnapshot> OnComplete)
+        public override async void GetDocument(string collectonName, string documentName, Action<IDocumentSnapshot> OnComplete)
         {
             IDocumentReference dr = fdb.Collection(collectonName).Document(documentName);
             IDocumentSnapshot ds = await dr.GetAsync();
             OnComplete(ds);
         }
-        public async void GetDocumentsWhereEqualTo(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete)
+        public override async void GetDocumentsWhereEqualTo(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete)
         {
             ICollectionReference cr = fdb.Collection(collectonName);
             IQuerySnapshot qs = await cr.WhereEqualsTo(fName, fValue).GetAsync();

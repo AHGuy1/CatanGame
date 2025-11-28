@@ -20,11 +20,16 @@ namespace CatanGame.ViewModels
                 (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
             }
         }
-        public ObservableCollection<GameSize>? GameSizes { get => games.GameSizes; set => games.GameSizes = value; }
-        public GameSize SelectedGameSize { get; set; } = new GameSize();
+        public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
+        public static string DisplayName => string.Empty;
+        public int SlectedAmountOfPointsNeeded { get; set; }
         public ICommand JoinGameWithCodeCommand { get; }
         public ICommand AddGameCommand { get; }
+        public ObservableCollection<GameSize>? AmountOfPlayers { get => games.AmountOfPlayers; set => games.AmountOfPlayers = value; }
+        public ObservableCollection<TurnTime> TurnTimes { get => games.TurnTimes; set => games.TurnTimes = value; }
         public ObservableCollection<Game>? GamesList => games.GamesList;
+        public GameSize SlectedAmountOfPlayers { get; set; } = new GameSize();
+        public TurnTime SelectedTurnTime { get; set; } = new TurnTime();
         public Game? SelectedItem
         {
             get => games.CurrentGame;
@@ -52,7 +57,7 @@ namespace CatanGame.ViewModels
 
         private void AddGame()
         {
-            games.AddGame(SelectedGameSize);
+            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time);
             OnPropertyChanged(nameof(IsBusy));
         }
 

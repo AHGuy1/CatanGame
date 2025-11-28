@@ -3,23 +3,38 @@ using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
+using System.Collections.ObjectModel;
+using System.Timers;
 
 namespace CatanGame.ModelsLogic
 {
     public class Game : GameModel
     {
         protected override GameStatus Status => _status;
-        public Game(GameSize selectedGameSize)
+        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime)
         {
-            PlayerCount = selectedGameSize.Size;
+            TurnTime = turnTime;
+            timer = new(TurnTime * 1000);
+            PlayerCount = slectedAmountOfPlayers.Size;
+            AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
+            timer.Elapsed += TurnTimerElapsed;
             UpdateStatus();
         }
         public Game()
         {
+            if(TurnTime != 0)
+            timer = new(TurnTime * 1000);
+            timer.Elapsed += TurnTimerElapsed;
             UpdateStatus();
         }
+
+        private void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
+        {
+            EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
+        }
+
         protected override void UpdateStatus()
         {
             _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
@@ -30,6 +45,8 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn == 4 ? GameStatus.Status.Player4Turn :
                 PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
                 GameStatus.Status.Player6Turn;
+            if (PlayerTurn == PlayerIndicator + 1)
+                timer.Start();
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -86,6 +103,7 @@ namespace CatanGame.ModelsLogic
 
         public override void EndTurn()
         {
+            timer.Stop();
             if (PlayerTurn == PlayerCount)
                 PlayerTurn = 1;
             else
@@ -164,6 +182,8 @@ namespace CatanGame.ModelsLogic
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
                 PlayerTurn = updatedGame.PlayerTurn;
+                TurnTime = updatedGame.TurnTime;
+                timer = new(TurnTime);
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {

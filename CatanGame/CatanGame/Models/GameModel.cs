@@ -1,6 +1,7 @@
 ﻿using CatanGame.ModelsLogic;
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
+using System.Collections.ObjectModel;
 
 namespace CatanGame.Models
 {
@@ -11,7 +12,11 @@ namespace CatanGame.Models
         protected GameStatus _status = new();
         protected abstract GameStatus Status { get; }
         [Ignored]
+        public System.Timers.Timer timer = new();
+        [Ignored]
         public string StatusMessage => Status.StatusMessage;
+        [Ignored]
+        public EventHandler? EndTurnOutOfTime;
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
@@ -26,6 +31,8 @@ namespace CatanGame.Models
         public int PlayerLeft { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
+        public int TurnTime { get; set; }
+        public int AmountOfPointsNeeded { get; set; }
         public bool GameStarted { get; set; } = false;
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;

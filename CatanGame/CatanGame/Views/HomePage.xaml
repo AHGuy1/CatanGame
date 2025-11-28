@@ -19,17 +19,38 @@
     <VerticalStackLayout>
         <Grid
             Padding="5"
-            ColumnDefinitions="*,1.4*"
-            ColumnSpacing="5">
+            ColumnDefinitions="1.22*,*"
+            ColumnSpacing="5"
+            RowDefinitions="*,*,*">
             <Picker
                 Title="{x:Static m:Strings.SelectAmountOfPlayers}"
-                FontSize="20"
+                FontAttributes="Bold"
+                FontSize="18"
                 HorizontalTextAlignment="Center"
                 ItemDisplayBinding="{Binding DisplayName}"
-                ItemsSource="{Binding GameSizes}"
-                SelectedItem="{Binding SelectedGameSize}" />
-            <Button
+                ItemsSource="{Binding AmountOfPlayers}"
+                SelectedItem="{Binding SlectedAmountOfPlayers}" />
+            <Picker
+                Title="{x:Static m:Strings.SetTimeOfTurn}"
                 Grid.Column="1"
+                FontAttributes="Bold"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                ItemDisplayBinding="{Binding DisplayName}"
+                ItemsSource="{Binding TurnTimes}"
+                SelectedItem="{Binding SelectedTurnTime}" />
+            <Picker
+                Title="{x:Static m:Strings.SelectAmountOfPointsNeeded}"
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                FontAttributes="Bold"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                ItemsSource="{Binding Source={x:Static vm:HomePageVM.AmountOfPointsNeeded}}"
+                SelectedItem="{Binding SlectedAmountOfPointsNeeded}" />
+            <Button
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
                 Margin="10"
                 Command="{Binding AddGameCommand}"
                 FontSize="Body"
@@ -38,11 +59,12 @@
         </Grid>
         <Entry
             Grid.Row="1"
+            FontAttributes="Bold"
             FontSize="18"
+            HorizontalTextAlignment="Center"
             Keyboard="Numeric"
             Placeholder="{x:Static m:Strings.EnterGameCode}"
-            Text="{Binding GameCode}"
-            TextColor="black" />
+            Text="{Binding GameCode}" />
         <Button
             Command="{Binding JoinGameWithCodeCommand}"
             FontSize="18"

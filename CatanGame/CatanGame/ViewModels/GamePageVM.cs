@@ -2,6 +2,7 @@
 using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using System.Timers;
 using System.Windows.Input;
 
 namespace CatanGame.ViewModels
@@ -31,9 +32,19 @@ namespace CatanGame.ViewModels
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             this.game = game;
+            this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.OnGameDeleted += OnGameDeleted;
             this.game.OnPlayerLeft += OnPlayerLeft;
             this.game.OnGameChanged += OnGameChanged;
+        }
+
+        private void OutOfTimeEndTurn(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(Strings.OutOfTime, ToastDuration.Long, 20).Show();
+            });
+            EndTurn();
         }
 
         private void OnGameDeleted(object? sender, EventArgs e)
