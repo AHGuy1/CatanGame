@@ -12,7 +12,7 @@ namespace CatanGame.Models
         protected GameStatus _status = new();
         protected abstract GameStatus Status { get; }
         [Ignored]
-        public System.Timers.Timer timer = new();
+        public System.Timers.Timer Timer = new();
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
@@ -21,8 +21,6 @@ namespace CatanGame.Models
         public EventHandler? OnGameChanged;
         [Ignored]
         public EventHandler? OnGameDeleted;
-        [Ignored]
-        public EventHandler? OnEndedTurn;
         [Ignored]
         public EventHandler<int>? OnPlayerLeft;
         [Ignored]
@@ -44,11 +42,14 @@ namespace CatanGame.Models
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
+        public abstract void Init(Grid board);
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void RemoveSnapshotListener();
         public abstract void AddSnapshotListener();
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
+        public abstract void UpdateFields(Dictionary<string, object> dict);
+
     }
 }

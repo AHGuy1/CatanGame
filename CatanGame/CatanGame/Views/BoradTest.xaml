@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:CatanGame.Models"
+             xmlns:vm="clr-namespace:CatanGame.ViewModels"
+             x:Class="CatanGame.Views.BoradTest"
+             x:DataType="vm:BoradTestVM"
+             Title="BoradTest">
+    <HorizontalStackLayout
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+            <Image
+            Source="boradframe.png"
+            WidthRequest="430"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"/>
+            <Grid VerticalOptions="Center" HorizontalOptions="Center" x:Name="grdBoard">
+                
+            </Grid>
+        </Grid>
+    </HorizontalStackLayout>
+</ContentPage>

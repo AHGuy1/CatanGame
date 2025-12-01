@@ -164,9 +164,6 @@
             IsEnabled="{Binding IsEnabled}"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
-
-
-
     </VerticalStackLayout>
 
 </ContentPage>

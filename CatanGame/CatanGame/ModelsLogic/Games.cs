@@ -37,7 +37,11 @@ namespace CatanGame.ModelsLogic
             GameCode gameCode = new(CurrentGame!.Id);
             CurrentGame.GameCode = gameCode.GameCode;
             gameCode.SetDocument(OnCompleteGameCodeAdded);
-
+            Dictionary<string, object> dict = new()
+            {
+                {nameof(CurrentGame.GameCode),gameCode.GameCode }
+            };
+            CurrentGame.UpdateFields(dict);
         }
         public Games()
         {

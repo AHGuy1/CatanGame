@@ -46,6 +46,11 @@ namespace CatanGame.ModelsLogic
             IDocumentReference dr = fdb.Collection(collectonName).Document(id);
             await dr.UpdateAsync(dict).ContinueWith(OnComplete);
         }
+        public override async void UpdateFields(string collectonName, string id, Dictionary<string, object> dict)
+        {
+            IDocumentReference dr = fdb.Collection(collectonName).Document(id);
+            await dr.UpdateAsync(dict);
+        }
 
         public override async void GetDocument(string collectonName, string documentName, Action<IDocumentSnapshot> OnComplete)
         {

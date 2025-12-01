@@ -14,20 +14,14 @@ namespace CatanGame.ModelsLogic
         public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime)
         {
             TurnTime = turnTime;
-            timer = new(TurnTime * 1000);
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
-            timer.Elapsed += TurnTimerElapsed;
             UpdateStatus();
         }
         public Game()
         {
-            if(TurnTime != 0)
-            timer = new(TurnTime * 1000);
-            timer.Elapsed += TurnTimerElapsed;
-            UpdateStatus();
         }
 
         private void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
@@ -45,8 +39,14 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn == 4 ? GameStatus.Status.Player4Turn :
                 PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
                 GameStatus.Status.Player6Turn;
-            if (PlayerTurn == PlayerIndicator + 1)
-                timer.Start();
+            if (PlayerTurn == PlayerIndicator + 1 && !Timer.Enabled && GameStarted)
+            {
+                Timer = new(TurnTime * 1000);
+                Timer.Start();
+                Timer.Elapsed += TurnTimerElapsed;
+            }
+            else if ((PlayerTurn != PlayerIndicator + 1 && Timer.Enabled) || !GameStarted) 
+                Timer.Stop();
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -56,9 +56,100 @@ namespace CatanGame.ModelsLogic
         {
             fbd.UpdateFields(Keys.GamesCollection, Id,dict, OnComplete);
         }
+        public override void UpdateFields(Dictionary<string, object> dict)
+        {
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict);
+        }
         public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
         {
             fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
+        }
+        public override void Init(Grid board)
+        {
+            GridLength gridLength = new(0.8, GridUnitType.Star);
+            board.RowDefinitions.Add(new RowDefinition { Height = gridLength });
+            for (int i = 0; i < 5; i++)
+            {
+                board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            }
+            gridLength = new(0.86, GridUnitType.Star);
+            board.RowDefinitions.Add(new RowDefinition { Height = gridLength  });
+            Grid Row = new()
+            {
+            };
+            Image image;
+            for(int i = 1; i < 6; i++)
+            {
+                if( i == 1 || i == 5)
+                {
+                    gridLength = new(0.78, GridUnitType.Star);
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int j = 1; j < 4; j++)
+                    {
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < 4; k++)
+                    {
+                        image = new()
+                        {
+                            Source = "fieldsone",
+                            HeightRequest = 79,
+                            VerticalOptions = LayoutOptions.Center,
+                            HorizontalOptions = LayoutOptions.Center
+                        };
+                        Row.Add(image, k);
+                    }
+                }
+                else if(i == 2 || i ==4)
+                {
+                    gridLength = new(0.78, GridUnitType.Star);
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int j = 1; j < 5; j++)
+                    {
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < 5; k++)
+                    {
+                        image = new()
+                        {
+                            Source = "fieldsone",
+                            HeightRequest = 79,
+                            VerticalOptions = LayoutOptions.Center,
+                            HorizontalOptions = LayoutOptions.Center
+                        };
+                        Row.Add(image, k);
+                    }
+                }
+                else
+                {
+                    gridLength = new(0.79, GridUnitType.Star);
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int j = 1; j < 6; j++)
+                    {
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < 6; k++)
+                    {
+                        image = new()
+                        {
+                            Source = "fieldsone",
+                            HeightRequest = 79,
+                            VerticalOptions = LayoutOptions.Center,
+                            HorizontalOptions = LayoutOptions.Center
+                        };
+                        Row.Add(image, k);
+                    }
+                }
+                board.Add(Row, 0, i);
+                Row = new()
+                {
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center
+                };
+            }         
         }
 
         public override void AddSnapshotListener()
@@ -103,7 +194,7 @@ namespace CatanGame.ModelsLogic
 
         public override void EndTurn()
         {
-            timer.Stop();
+            Timer.Stop();
             if (PlayerTurn == PlayerCount)
                 PlayerTurn = 1;
             else
@@ -113,7 +204,6 @@ namespace CatanGame.ModelsLogic
                 { nameof(PlayerTurn), PlayerTurn },
             };
             UpdateFields(OnTurnChanged, dict);
-            OnEndedTurn?.Invoke(this, EventArgs.Empty);
         }
         public override void StartGame()
         {
@@ -183,7 +273,6 @@ namespace CatanGame.ModelsLogic
                 PlayerNames = updatedGame.PlayerNames;
                 PlayerTurn = updatedGame.PlayerTurn;
                 TurnTime = updatedGame.TurnTime;
-                timer = new(TurnTime);
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
