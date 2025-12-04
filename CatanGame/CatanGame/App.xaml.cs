@@ -6,7 +6,7 @@ namespace CatanGame
         public App()
         {
             InitializeComponent();
-            MainPage = new BoradTest();
+            MainPage = new LogInPage();
         }
     }
 }

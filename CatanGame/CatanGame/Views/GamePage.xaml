@@ -9,30 +9,16 @@
     x:DataType="vm:GamePageVM"
     IsBusy="{Binding IsBusy}">
 
-    <VerticalStackLayout>
-        <Label HorizontalOptions="Center" Text="{Binding GameCode}" />
-        <Label
-            Margin="50"
-            HorizontalOptions="Center"
-            Text="{Binding StatusMessage}" />
-        <Label HorizontalOptions="Center" Text="{Binding Player1Name}" />
-        <Label HorizontalOptions="Center" Text="{Binding Player2Name}" />
-        <Label
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayer3Visible}"
-            Text="{Binding Player3Name}" />
-        <Label
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayer4Visible}"
-            Text="{Binding Player4Name}" />
-        <Label
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayer5Visible}"
-            Text="{Binding Player5Name}" />
-        <Label
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsVisiblePlayer6Visible}"
-            Text="{Binding Player6Name}" />
+    <HorizontalStackLayout>
+        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+            <Image
+                Source="boradframe.png"
+                WidthRequest="430"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+            <Grid VerticalOptions="Center" HorizontalOptions="Center" x:Name="grdBoard">
+            </Grid>
+        </Grid>
         <Button Command="{Binding EndTurnCommand}" Text="{x:Static m:Strings.EndTurn}" />
-    </VerticalStackLayout>
+    </HorizontalStackLayout>
 </ContentPage>

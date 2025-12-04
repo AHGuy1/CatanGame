@@ -1,5 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
+using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using System.Windows.Input;
@@ -86,7 +87,10 @@ namespace CatanGame.ViewModels
         {
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
-            game.StartGame();
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Application.Current!.MainPage = new GamePage(game);
+            });
         }
 
         private void OnGameChanged(object? sender, EventArgs e)

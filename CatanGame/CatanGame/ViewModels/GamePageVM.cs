@@ -1,5 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
+using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using System.Timers;
@@ -28,7 +29,7 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public ICommand EndTurnCommand { get; }
-        public GamePageVM(Game game)
+        public GamePageVM(Game game, Grid grdBoard)
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             this.game = game;
@@ -36,6 +37,9 @@ namespace CatanGame.ViewModels
             this.game.OnGameDeleted += OnGameDeleted;
             this.game.OnPlayerLeft += OnPlayerLeft;
             this.game.OnGameChanged += OnGameChanged;
+            game.Init(grdBoard);
+            OnPropertyChanged(nameof(grdBoard));
+            game.StartGame();
         }
 
         private void OutOfTimeEndTurn(object? sender, EventArgs e)

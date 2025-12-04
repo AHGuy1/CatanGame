@@ -9,10 +9,9 @@ public partial class GamePage : ContentPage
     public GamePage(Game game)
 	{
 		InitializeComponent();
-        gpVM = new GamePageVM(game);
+        gpVM = new GamePageVM(game, grdBoard);
         BindingContext = gpVM;
     }
-
     protected override void OnAppearing()
     {
 #if ANDROID

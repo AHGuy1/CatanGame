@@ -75,5 +75,22 @@
         public const string SecondsLabel = "Seconds";
         public const string MinutesLabel = "Minutes";
         public const string SetTimeOfTurn = "Set Time OF Turn";
+        public const string FieldsOne = "fieldsone";
+        public const string FieldsTwo = "fieldsthree";
+        public const string Mountien = "mountienthree";
+        public const string Forest = "forestfour";
+        public const string Hill = "mountienthree";
+        public const string Pasture = "pasturethree";
+        public const string Desert = "fieldsfour";
+        public const string TwoImage = "twoimage";
+        public const string ThreeImage = "threeimage";
+        public const string FourImage = "fourimage";
+        public const string FiveImage = "fiveimage";
+        public const string SixImage = "siximage";
+        public const string EightImage = "eightimage";
+        public const string NineImage = "nineimage";
+        public const string TenImage = "tenimage";
+        public const string ElevenImage = "elevenimage";
+        public const string TwelveImage = "twelveimage";
     }
 }

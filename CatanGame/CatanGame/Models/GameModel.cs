@@ -29,12 +29,16 @@ namespace CatanGame.Models
         public int PlayerLeft { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
+        [Ignored]
+        public bool ISRandomBoard { get; set; } = true;
         public int TurnTime { get; set; }
         public int AmountOfPointsNeeded { get; set; }
         public bool GameStarted { get; set; } = false;
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;
         public string[] PlayerNames { get; set; } = [string.Empty];
+        public string[] TileNumbers { get; set; } = new string[25];
+        public string[] TileTypes { get; set; } = new string[25];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
