@@ -8,14 +8,14 @@ namespace CatanGame.ModelsLogic
 {
     public class Games : GamesModel
     {
-        public void AddGame(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int TurnTime)
+        public void AddGame(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int TurnTime, bool isRandomBorad)
         {
             IsBusy = true;
             if (selectedAmountOfPoints == 0)
                 selectedAmountOfPoints = 10;
             if (TurnTime == 0)
                 TurnTime = 60;
-            Game game = new(slectedAmountOfPlayers,selectedAmountOfPoints, TurnTime);
+            Game game = new(slectedAmountOfPlayers,selectedAmountOfPoints, TurnTime, isRandomBorad);
             CurrentGame = game;
             game.SetDocument(OnCompleteGameAdded);
 

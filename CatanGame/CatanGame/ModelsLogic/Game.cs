@@ -12,9 +12,10 @@ namespace CatanGame.ModelsLogic
     public class Game : GameModel
     {
         protected override GameStatus Status => _status;
-        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime)
+        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime,bool isRandomBorad)
         {
             TurnTime = turnTime;
+            ISRandomBoard = isRandomBorad;
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
@@ -265,9 +266,17 @@ namespace CatanGame.ModelsLogic
                                 }
                                 else
                                 {
-                                    curent = random.Next(0, numbers.Length - count);
-                                    sourceNumber = numbers[curent];
-                                    numbers[curent] = String.Empty;
+                                    sourceNumber = String.Empty;
+                                    while(sourceNumber == String.Empty)
+                                    {
+                                        curent = random.Next(0, numbers.Length - count);
+                                        if(numbers[curent] != String.Empty)
+                                        {
+                                            sourceNumber = numbers[curent];
+                                            numbers[curent] = String.Empty;
+                                        }
+                                    }
+
                                 }
                                 count++;
                                 for (int n = 0; n < tiles.Length - 1; n++)
@@ -512,12 +521,12 @@ namespace CatanGame.ModelsLogic
                         HorizontalOptions = LayoutOptions.Center
                     };
                 }
-                Dictionary<string, object> dict = new()
-                {
-                    {nameof(TileNumbers), TileNumbers },
-                    {nameof(TileTypes), TileTypes }
-                };
-                UpdateFields(dict);
+                //Dictionary<string, object> dict = new()
+                //{
+                //    {nameof(TileNumbers), TileNumbers },
+                //    {nameof(TileTypes), TileTypes }
+                //};
+                //UpdateFields(dict);
             }            
         }
 

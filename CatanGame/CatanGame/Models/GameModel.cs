@@ -30,7 +30,7 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerIndicator { get; set; }
         [Ignored]
-        public bool ISRandomBoard { get; set; } = true;
+        public bool ISRandomBoard { get; set; }
         public int TurnTime { get; set; }
         public int AmountOfPointsNeeded { get; set; }
         public bool GameStarted { get; set; } = false;

@@ -9,18 +9,30 @@ namespace CatanGame.ViewModels
     public partial class HomePageVM : ObservableObject
     {
         private readonly Games games = new();
+        private string GameCodePri { get; set; } = string.Empty;
+        private string SelectedBoradTypePri = string.Empty;
+        public bool IsRandomBorad { get; set; }
         public bool IsBusy => games.IsBusy;
-        public string GameCodes { get; set; } = string.Empty;
         public string GameCode
         {
-            get => GameCodes;
+            get => GameCodePri;
             set
-            {      
-                GameCodes = value;
+            {
+                GameCodePri = value;
                 (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
             }
         }
+        public string SelectedBoradType
+        {
+            get => SelectedBoradTypePri;
+            set
+            {
+                IsRandomBorad = value == Strings.RandomBoradLabel;
+                SelectedBoradTypePri = value;
+            }
+        }
         public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
+        public static ObservableCollection<string> BoradTypes => Games.BoradTypes;
         public static string DisplayName => string.Empty;
         public int SlectedAmountOfPointsNeeded { get; set; }
         public ICommand JoinGameWithCodeCommand { get; }
@@ -57,7 +69,7 @@ namespace CatanGame.ViewModels
 
         private void AddGame()
         {
-            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time);
+            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBorad);
             OnPropertyChanged(nameof(IsBusy));
         }
 
