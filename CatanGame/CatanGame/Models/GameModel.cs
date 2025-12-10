@@ -33,7 +33,7 @@ namespace CatanGame.Models
         public bool ISRandomBoard { get; set; }
         public int TurnTime { get; set; }
         public int AmountOfPointsNeeded { get; set; }
-        public bool GameStarted { get; set; } = false;
+        public bool GameStarted { get; set; }
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;
         public string[] PlayerNames { get; set; } = [string.Empty];

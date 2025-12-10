@@ -2,6 +2,7 @@
 using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Microsoft.Maui.Controls;
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 using System.Timers;
@@ -66,30 +67,27 @@ namespace CatanGame.ModelsLogic
         {
             fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
         }
-        public override void Init(Grid board)
+        public override void Init(Grid gameBorad)
         {
-                GridLength gridLength = new(0.8, GridUnitType.Star);
-                board.RowDefinitions.Add(new RowDefinition { Height = gridLength });
-                for (int i = 0; i < 5; i++)
-                {
-                    board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                }
-                gridLength = new(0.86, GridUnitType.Star);
-                board.RowDefinitions.Add(new RowDefinition { Height = gridLength });
-                Grid Row = [];
-                Image image;
-
+            Grid board = [];
+            board.RowDefinitions.Add(new RowDefinition { Height = new(0.8, GridUnitType.Star) });
+            for (int i = 0; i < 5; i++)
+            {
+                board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            }
+            board.RowDefinitions.Add(new RowDefinition { Height = new(0.86, GridUnitType.Star) });
+            Grid Row = [];
+            Image image;
             if (PlayerIndicator != 0)
             {
                 for (int i = 1; i < 6; i++)
                 {
                     if (i == 1 || i == 5)
                     {
-                        gridLength = new(0.78, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 4; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 4; k++)
@@ -114,11 +112,10 @@ namespace CatanGame.ModelsLogic
                     }
                     else if (i == 2 || i == 4)
                     {
-                        gridLength = new(0.78, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 5; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 5; k++)
@@ -143,11 +140,10 @@ namespace CatanGame.ModelsLogic
                     }
                     else
                     {
-                        gridLength = new(0.79, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 6; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.79, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 6; k++)
@@ -206,11 +202,10 @@ namespace CatanGame.ModelsLogic
                 {
                     if (i == 1 || i == 5)
                     {
-                        gridLength = new(0.78, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 4; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 4; k++)
@@ -315,11 +310,10 @@ namespace CatanGame.ModelsLogic
                     }
                     else if (i == 2 || i == 4)
                     {
-                        gridLength = new(0.78, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 5; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 5; k++)
@@ -426,11 +420,10 @@ namespace CatanGame.ModelsLogic
                     }
                     else
                     {
-                        gridLength = new(0.79, GridUnitType.Star);
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int j = 1; j < 6; j++)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = gridLength });
+                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.79, GridUnitType.Star) });
                         }
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         for (int k = 1; k < 6; k++)
@@ -527,7 +520,50 @@ namespace CatanGame.ModelsLogic
                 //    {nameof(TileTypes), TileTypes }
                 //};
                 //UpdateFields(dict);
-            }            
+            }
+            gameBorad.Add(board);
+            Grid picesLocations = [];
+            picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
+            for (int i = 0; i < 11; i++)
+            {
+                if(i % 2 != 0)
+                {
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                }
+                else
+                {
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.2, GridUnitType.Star) });
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.2, GridUnitType.Star) });
+                }
+
+            }
+            picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
+            Button button;
+            for (int i = 1; i < 34; i++)
+            {
+                if(i == 1 || i == 33)
+                {
+                    Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
+                    for (int j = 1; j < 4; j++)
+                    {
+                        Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                        button = new()
+                        {
+                            Background = Colors.Transparent,
+                            BorderColor = Colors.White,
+                            BorderWidth = 1,
+                            HeightRequest = 10,
+                            HorizontalOptions = LayoutOptions.Center,
+                            WidthRequest = 10
+                        };
+                        Row.Add(button,j,0);
+                    }
+                    Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
+                }
+            }
         }
 
         public override void AddSnapshotListener()
