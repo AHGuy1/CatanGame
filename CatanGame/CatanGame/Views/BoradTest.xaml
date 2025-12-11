@@ -19,7 +19,7 @@
                   VerticalOptions="Center" />
             <Grid HeightRequest="430"
                   HorizontalOptions="Center"
-                  RowDefinitions="7.75*,*,1.1*,*,1.2*,*,1.2*,*,1.1*,*,1.2*,*,1.2*,*,1.1*,*,1.2*,*,1.2*,*,1.1*,*,1.2*,*,1.2*,*,1.1*,*,1.2*,*,1.2*,*,1.1*,*,7.75*"
+                  RowDefinitions="7.75*,*,1.1*,*,3.4*,*,1.1*,*,3.4*,*,1.1*,*,3.4*,*,1.1*,*,3.4*,*,1.1*,*,3.4*,*,1.1*,*,7.75*"
                   VerticalOptions="Center"
                   WidthRequest="430">
                 <Grid Grid.Row="1"
@@ -128,47 +128,47 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
+                <Grid Grid.Row="4"
+                      ColumnDefinitions="1.5*,*,*,*,*,1.5*">
+                    <Button Grid.Column="1"
+                            Background="Transparent"
+                            BorderColor="White"
+                            BorderWidth="1"
+                            HeightRequest="6"
+                            Rotation="90"
+                            HorizontalOptions="Center"
+                            WidthRequest="18" />
+                    <Button Grid.Column="2"
+                            Background="Transparent"
+                            BorderColor="White"
+                            BorderWidth="1"
+                            HeightRequest="6"
+                            Rotation="90"
+                            HorizontalOptions="Center"
+                            WidthRequest="18" />
+                    <Button Grid.Column="3"
+                            Background="Transparent"
+                            BorderColor="White"
+                            BorderWidth="1"
+                            HeightRequest="6"
+                            Rotation="90"
+                            HorizontalOptions="Center"
+                            WidthRequest="18" />
+                    <Button Grid.Column="4"
+                            Background="Transparent"
+                            BorderColor="White"
+                            BorderWidth="1"
+                            HeightRequest="6"
+                            Rotation="90"
+                            HorizontalOptions="Center"
+                            WidthRequest="18" />
+                </Grid>
                 <Grid Grid.Row="5"
                       ColumnDefinitions="1.5*,*,*,*,*,1.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
                             BorderColor="White"
                             BorderWidth="1"
-                            HeightRequest="6"
-                            Rotation="90"
-                            HorizontalOptions="Center"
-                            WidthRequest="18" />
-                    <Button Grid.Column="2"
-                            Background="Transparent"
-                            BorderColor="White"
-                            BorderWidth="1"
-                            HeightRequest="6"
-                            Rotation="90"
-                            HorizontalOptions="Center"
-                            WidthRequest="18" />
-                    <Button Grid.Column="3"
-                            Background="Transparent"
-                            BorderColor="White"
-                            BorderWidth="1"
-                            HeightRequest="6"
-                            Rotation="90"
-                            HorizontalOptions="Center"
-                            WidthRequest="18" />
-                    <Button Grid.Column="4"
-                            Background="Transparent"
-                            BorderColor="White"
-                            BorderWidth="1"
-                            HeightRequest="6"
-                            Rotation="90"
-                            HorizontalOptions="Center"
-                            WidthRequest="18" />
-                </Grid>
-                <Grid Grid.Row="7"
-                      ColumnDefinitions="1.5*,*,*,*,*,1.5*">
-                    <Button Grid.Column="1"
-                            Background="Transparent"
-                            BorderColor="White"
-                            BorderWidth="1"
                             HeightRequest="10"
                             HorizontalOptions="Center"
                             WidthRequest="10" />
@@ -194,7 +194,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="8"
+                <Grid Grid.Row="6"
                       ColumnDefinitions="3*,*,*,*,*,*,*,*,*,3*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -261,7 +261,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="9"
+                <Grid Grid.Row="7"
                       ColumnDefinitions="1.05*,*,*,*,*,*,1.05*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -299,7 +299,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="11"
+                <Grid Grid.Row="8"
                       ColumnDefinitions="*,*,*,*,*,*,*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -342,7 +342,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="13"
+                <Grid Grid.Row="9"
                       ColumnDefinitions="1.05*,*,*,*,*,*,1.05*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -380,7 +380,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="14"
+                <Grid Grid.Row="10"
                       ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,2*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -463,7 +463,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="15"
+                <Grid Grid.Row="11"
                       ColumnDefinitions="0.5*,*,*,*,*,*,*,0.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -508,7 +508,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="17"
+                <Grid Grid.Row="12"
                       ColumnDefinitions="0.45*,*,*,*,*,*,*,0.45*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -559,7 +559,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="19"
+                <Grid Grid.Row="13"
                       ColumnDefinitions="0.5*,*,*,*,*,*,*,0.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -604,7 +604,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="20"
+                <Grid Grid.Row="14"
                       Rotation="180"
                       ColumnDefinitions="2*,*,*,*,*,*,*,*,*,*,*,2*">
                     <Button Grid.Column="1"
@@ -688,7 +688,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="21"
+                <Grid Grid.Row="15"
                       ColumnDefinitions="1.05*,*,*,*,*,*,1.05*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -726,7 +726,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="23"
+                <Grid Grid.Row="16"
                       ColumnDefinitions="*,*,*,*,*,*,*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -769,7 +769,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="25"
+                <Grid Grid.Row="17"
                       ColumnDefinitions="1.05*,*,*,*,*,*,1.05*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -807,7 +807,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="26"
+                <Grid Grid.Row="18"
                       Rotation="180"
                       ColumnDefinitions="3*,*,*,*,*,*,*,*,*,3*">
                     <Button Grid.Column="1"
@@ -875,7 +875,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="27"
+                <Grid Grid.Row="19"
                       ColumnDefinitions="1.5*,*,*,*,*,1.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -906,7 +906,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="29"
+                <Grid Grid.Row="20"
                       ColumnDefinitions="1.5*,*,*,*,*,1.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -941,7 +941,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="31"
+                <Grid Grid.Row="21"
                       ColumnDefinitions="1.5*,*,*,*,*,1.5*">
                     <Button Grid.Column="1"
                             Background="Transparent"
@@ -972,7 +972,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="10" />
                 </Grid>
-                <Grid Grid.Row="32"
+                <Grid Grid.Row="22"
                       Rotation="180"
                       ColumnDefinitions="4*,*,*,*,*,*,*,4*">
                     <Button Grid.Column="1"
@@ -1024,7 +1024,7 @@
                             HorizontalOptions="Center"
                             WidthRequest="18" />
                 </Grid>
-                <Grid Grid.Row="33"
+                <Grid Grid.Row="23"
                       ColumnDefinitions="2*,*,*,*,2*">
                     <Button Grid.Column="1"
                             Background="Transparent"

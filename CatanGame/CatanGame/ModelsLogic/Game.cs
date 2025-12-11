@@ -13,25 +13,121 @@ namespace CatanGame.ModelsLogic
     public class Game : GameModel
     {
         protected override GameStatus Status => _status;
-        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime,bool isRandomBorad)
+
+        private static Button CreateRoadButton(int rotation)
         {
-            TurnTime = turnTime;
-            ISRandomBoard = isRandomBorad;
-            PlayerCount = slectedAmountOfPlayers.Size;
-            AmountOfPointsNeeded = selectedAmountOfPoints;
-            PlayerNames = new string[PlayerCount];
-            Created = DateTime.Now;
-            UpdateStatus();
+            return new()
+            {
+                Background = Colors.Transparent,
+                BorderColor = Colors.White,
+                BorderWidth = 1,
+                Rotation = rotation,
+                HeightRequest = 6,
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = 18
+            };
         }
-        public Game()
+        private static Image CreateTileImage(string imageSource)
         {
+            return new Image
+            {
+                Source = imageSource,
+                HeightRequest = 79,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+        }
+        private static Image CreateNumberImage(string imageSource)
+        {
+            return new Image
+            {
+                Source = imageSource,
+                HeightRequest = 22,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+        }
+        private static Button CreateApexButton()
+        {
+            return new()
+            {
+                Background = Colors.Transparent,
+                BorderColor = Colors.White,
+                BorderWidth = 1,
+                HeightRequest = 10,
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = 10  
+            };
+        }
+        private void OnCompletePlayerLeft(Task task)
+        {
+            OnPlayerLeft?.Invoke(this, PlayerIndicator);
+        }
+        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
+        {
+            Game? updatedGame = snapshot?.ToObject<Game>();
+            if (updatedGame != null)
+            {
+                for (int i = 1; i < PlayerCount; i++)
+                {
+                    if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
+                    {
+                        for (int j = 1; j < PlayerCount; j++)
+                        {
+                            if (PlayerNames[j] != updatedGame.PlayerNames[j])
+                            {
+                                OnPlayerLeft?.Invoke(this, j);
+                                if (j < PlayerIndicator)
+                                    PlayerIndicator--;
+                                j = PlayerCount;
+                            }
+                        }
+                        i = PlayerCount;
+                    }
+                }
+                IsFull = updatedGame.IsFull;
+                PlayerNames = updatedGame.PlayerNames;
+                PlayerTurn = updatedGame.PlayerTurn;
+                TurnTime = updatedGame.TurnTime;
+                if (TileTypes[0] == null)
+                {
+                    TileNumbers = updatedGame.TileNumbers;
+                    TileTypes = updatedGame.TileTypes;
+                }
+                if (updatedGame.GameStarted && !GameStarted)
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        GameStarted = updatedGame.GameStarted;
+                        Application.Current!.MainPage = new GamePage(this);
+                    });
+                UpdateStatus();
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        private void OnCompleteDeleted(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+        }
+        private void OnCompleteAddPlayerName(Task task)
+        {
+            if (!task.IsCompletedSuccessfully)
+                Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
+        }
+        private void OnTurnChanged(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
             EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
         }
-
         protected override void UpdateStatus()
         {
             _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
@@ -48,9 +144,23 @@ namespace CatanGame.ModelsLogic
                 Timer.Start();
                 Timer.Elapsed += TurnTimerElapsed;
             }
-            else if ((PlayerTurn != PlayerIndicator + 1 && Timer.Enabled) || !GameStarted) 
+            else if ((PlayerTurn != PlayerIndicator + 1 && Timer.Enabled) || !GameStarted)
                 Timer.Stop();
         }
+
+        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime,bool isRandomBorad)
+        {
+            TurnTime = turnTime;
+            ISRandomBoard = isRandomBorad;
+            PlayerCount = slectedAmountOfPlayers.Size;
+            AmountOfPointsNeeded = selectedAmountOfPoints;
+            PlayerNames = new string[PlayerCount];
+            Created = DateTime.Now;
+            UpdateStatus();
+        }
+        public Game()
+        {
+        } 
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
@@ -77,95 +187,18 @@ namespace CatanGame.ModelsLogic
             }
             board.RowDefinitions.Add(new RowDefinition { Height = new(0.86, GridUnitType.Star) });
             Grid Row = [];
-            Image image;
             if (PlayerIndicator != 0)
             {
                 for (int i = 1; i < 6; i++)
                 {
-                    if (i == 1 || i == 5)
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 4; j++)
-                        {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 4; k++)
-                        {
-                            image = new()
-                            {
-                                Source = TileTypes[(i-1)*5 + k-1],
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = TileNumbers[(i - 1) * 5 + k - 1],
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                        }
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
+                        Row.Add(CreateTileImage(TileTypes[(i - 1) * 5 + k - 1]), k);
+                        Row.Add(CreateNumberImage(TileNumbers[(i - 1) * 5 + k - 1]), k);
                     }
-                    else if (i == 2 || i == 4)
-                    {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 5; j++)
-                        {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 5; k++)
-                        {
-                            image = new()
-                            {
-                                Source = TileTypes[(i - 1) * 5 + k - 1],
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = TileNumbers[(i - 1) * 5 + k - 1],
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                        }
-                    }
-                    else
-                    {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 6; j++)
-                        {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.79, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 6; k++)
-                        {
-                            image = new()
-                            {
-                                Source = TileTypes[(i - 1) * 5 + k - 1],
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = TileNumbers[(i - 1) * 5 + k - 1],
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            Row.Add(image, k);
-                        }
-                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     board.Add(Row, 0, i);
                     Row = new()
                     {
@@ -200,235 +233,57 @@ namespace CatanGame.ModelsLogic
                 ];
                 for (int i = 1; i < 6; i++)
                 {
-                    if (i == 1 || i == 5)
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for(int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 4; j++)
-                        {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 4; k++)
-                        {
-                            if (!ISRandomBoard)
-                            {
-                                if (i == 1)
-                                {
-                                    if (k == 1)
-                                    {
-                                        sourceTile = Strings.Mountien;
-                                        sourceNumber = Strings.TenImage;
-                                    }
-                                    else if (k == 2)
-                                    {
-                                        sourceTile = Strings.Pasture;
-                                        sourceNumber = Strings.TwoImage;
-                                    }
-                                    else
-                                    {
-                                        sourceTile = Strings.Forest;
-                                        sourceNumber = Strings.NineImage;
-                                    }
-                                }
-                                else
-                                {
-                                    if (k == 1)
-                                    {
-                                        sourceTile = Strings.Hill;
-                                        sourceNumber = Strings.FiveImage;
-                                    }
-                                    else if (k == 2)
-                                    {
-                                        sourceTile = Strings.FieldsTwo;
-                                        sourceNumber = Strings.SixImage;
-                                    }
-                                    else
-                                    {
-                                        sourceTile = Strings.Pasture;
-                                        sourceNumber = Strings.ElevenImage;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                int curent = random.Next(0, tiles.Length - count);
-                                sourceTile = tiles[curent];
-                                tiles[curent] = String.Empty;
-                                if (sourceTile == Strings.Desert)
-                                {
-                                    sourceNumber = numbers[numbers.Length - 1 - count];
-                                    numbers[numbers.Length - 1 - count] = String.Empty;
-                                }
-                                else
-                                {
-                                    sourceNumber = String.Empty;
-                                    while(sourceNumber == String.Empty)
-                                    {
-                                        curent = random.Next(0, numbers.Length - count);
-                                        if(numbers[curent] != String.Empty)
-                                        {
-                                            sourceNumber = numbers[curent];
-                                            numbers[curent] = String.Empty;
-                                        }
-                                    }
-
-                                }
-                                count++;
-                                for (int n = 0; n < tiles.Length - 1; n++)
-                                {
-                                    if (tiles[n] == String.Empty)
-                                    {
-                                        tiles[n] = tiles[n + 1];
-                                        tiles[n + 1] = String.Empty;
-                                    }
-                                    if (numbers[n] == String.Empty)
-                                    {
-                                        numbers[n] = numbers[n + 1];
-                                        numbers[n + 1] = String.Empty;
-                                    }
-                                }
-                            }
-                            image = new()
-                            {
-                                Source = sourceTile,
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = sourceNumber,
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileNumbers[(i - 1) * 5 + k - 1] = sourceNumber;
-                            Row.Add(image, k);
-                        }
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
                     }
-                    else if (i == 2 || i == 4)
+                    for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 5; j++)
+                        if (!ISRandomBoard)
                         {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 5; k++)
-                        {
-                            if (!ISRandomBoard)
+                            if (i == 1)
                             {
-                                if (i == 2)
+                                if (k == 1)
                                 {
-                                    if (k == 1)
-                                    {
-                                        sourceTile = Strings.FieldsOne;
-                                        sourceNumber = Strings.TwelveImage;
-                                    }
-                                    else if (k == 2)
-                                    {
-                                        sourceTile = Strings.Hill;
-                                        sourceNumber = Strings.SixImage;
-                                    }
-                                    else if (k == 3)
-                                    {
-                                        sourceTile = Strings.Pasture;
-                                        sourceNumber = Strings.FourImage;
-                                    }
-                                    else
-                                    {
-                                        sourceTile = Strings.Hill;
-                                        sourceNumber = Strings.TenImage;
-                                    }
+                                    sourceTile = Strings.Mountien;
+                                    sourceNumber = Strings.TenImage;
+                                }
+                                else if (k == 2)
+                                {
+                                    sourceTile = Strings.Pasture;
+                                    sourceNumber = Strings.TwoImage;
                                 }
                                 else
                                 {
-                                    if (k == 1)
-                                    {
-                                        sourceTile = Strings.Forest;
-                                        sourceNumber = Strings.EightImage;
-                                    }
-                                    else if (k == 2)
-                                    {
-                                        sourceTile = Strings.Mountien;
-                                        sourceNumber = Strings.ThreeImage;
-                                    }
-                                    else if (k == 3)
-                                    {
-                                        sourceTile = Strings.FieldsTwo;
-                                        sourceNumber = Strings.FourImage;
-                                    }
-                                    else
-                                    {
-                                        sourceTile = Strings.Pasture;
-                                        sourceNumber = Strings.FiveImage;
-                                    }
+                                    sourceTile = Strings.Forest;
+                                    sourceNumber = Strings.NineImage;
                                 }
                             }
-                            else
+                            else if(i==2)
                             {
-                                int curent = random.Next(0, tiles.Length - count);
-                                sourceTile = tiles[curent];
-                                tiles[curent] = String.Empty;
-                                if (sourceTile == Strings.Desert)
+                                if (k == 1)
                                 {
-                                    sourceNumber = numbers[numbers.Length - 1 - count];
-                                    numbers[numbers.Length - 1 - count] = String.Empty;
+                                    sourceTile = Strings.FieldsOne;
+                                    sourceNumber = Strings.TwelveImage;
+                                }
+                                else if (k == 2)
+                                {
+                                    sourceTile = Strings.Hill;
+                                    sourceNumber = Strings.SixImage;
+                                }
+                                else if (k == 3)
+                                {
+                                    sourceTile = Strings.Pasture;
+                                    sourceNumber = Strings.FourImage;
                                 }
                                 else
                                 {
-                                    curent = random.Next(0, numbers.Length - count);
-                                    sourceNumber = numbers[curent];
-                                    numbers[curent] = String.Empty;
-                                }
-                                count++;
-                                for (int n = 0; n < tiles.Length - 1; n++)
-                                {
-                                    if (tiles[n] == String.Empty)
-                                    {
-                                        tiles[n] = tiles[n + 1];
-                                        tiles[n + 1] = String.Empty;
-                                    }
-                                    if (numbers[n] == String.Empty)
-                                    {
-                                        numbers[n] = numbers[n + 1];
-                                        numbers[n + 1] = String.Empty;
-                                    }
+                                    sourceTile = Strings.Hill;
+                                    sourceNumber = Strings.TenImage;
                                 }
                             }
-                            image = new()
-                            {
-                                Source = sourceTile,
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = sourceNumber,
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileNumbers[(i - 1) * 5 + k - 1] = sourceNumber;
-                            Row.Add(image, k);
-                        }
-                    }
-                    else
-                    {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int j = 1; j < 6; j++)
-                        {
-                            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.79, GridUnitType.Star) });
-                        }
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        for (int k = 1; k < 6; k++)
-                        {
-                            if (!ISRandomBoard)
+                            else if(i==3)
                             {
                                 if (k == 1)
                                 {
@@ -456,57 +311,92 @@ namespace CatanGame.ModelsLogic
                                     sourceNumber = Strings.EightImage;
                                 }
                             }
-                            else
+                            else if(i==4)
                             {
-                                int curent = random.Next(0, tiles.Length - count);
-                                sourceTile = tiles[curent];
-                                tiles[curent] = String.Empty;
-                                if (sourceTile == Strings.Desert)
+                                if (k == 1)
                                 {
-                                    sourceNumber = numbers[numbers.Length - 1 - count];
-                                    numbers[numbers.Length - 1 - count] = String.Empty;
+                                    sourceTile = Strings.Forest;
+                                    sourceNumber = Strings.EightImage;
+                                }
+                                else if (k == 2)
+                                {
+                                    sourceTile = Strings.Mountien;
+                                    sourceNumber = Strings.ThreeImage;
+                                }
+                                else if (k == 3)
+                                {
+                                    sourceTile = Strings.FieldsTwo;
+                                    sourceNumber = Strings.FourImage;
                                 }
                                 else
                                 {
-                                    curent = random.Next(0, numbers.Length - count);
-                                    sourceNumber = numbers[curent];
-                                    numbers[curent] = String.Empty;
+                                    sourceTile = Strings.Pasture;
+                                    sourceNumber = Strings.FiveImage;
                                 }
-                                count++;
-                                for (int n = 0; n < tiles.Length - 1; n++)
+                            }
+                            else
+                            {
+                                if (k == 1)
                                 {
-                                    if (tiles[n] == String.Empty)
+                                    sourceTile = Strings.Hill;
+                                    sourceNumber = Strings.FiveImage;
+                                }
+                                else if (k == 2)
+                                {
+                                    sourceTile = Strings.FieldsTwo;
+                                    sourceNumber = Strings.SixImage;
+                                }
+                                else
+                                {
+                                    sourceTile = Strings.Pasture;
+                                    sourceNumber = Strings.ElevenImage;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            int curent = random.Next(0, tiles.Length - count);
+                            sourceTile = tiles[curent];
+                            tiles[curent] = String.Empty;
+                            if (sourceTile == Strings.Desert)
+                            {
+                                sourceNumber = numbers[numbers.Length - 1 - count];
+                                numbers[numbers.Length - 1 - count] = String.Empty;
+                            }
+                            else
+                            {
+                                sourceNumber = String.Empty;
+                                while (sourceNumber == String.Empty)
+                                {
+                                    curent = random.Next(0, numbers.Length - count);
+                                    if (numbers[curent] != String.Empty)
                                     {
-                                        tiles[n] = tiles[n + 1];
-                                        tiles[n + 1] = String.Empty;
-                                    }
-                                    if (numbers[n] == String.Empty)
-                                    {
-                                        numbers[n] = numbers[n + 1];
-                                        numbers[n + 1] = String.Empty;
+                                        sourceNumber = numbers[curent];
+                                        numbers[curent] = String.Empty;
                                     }
                                 }
                             }
-                            image = new()
+                            count++;
+                            for (int n = 0; n < tiles.Length - 1; n++)
                             {
-                                Source = sourceTile,
-                                HeightRequest = 79,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
-                            Row.Add(image, k);
-                            image = new()
-                            {
-                                Source = sourceNumber,
-                                HeightRequest = 22,
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center
-                            };
-                            TileNumbers[(i - 1) * 5 + k - 1] = sourceNumber;
-                            Row.Add(image, k);
+                                if (tiles[n] == String.Empty)
+                                {
+                                    tiles[n] = tiles[n + 1];
+                                    tiles[n + 1] = String.Empty;
+                                }
+                                if (numbers[n] == String.Empty)
+                                {
+                                    numbers[n] = numbers[n + 1];
+                                    numbers[n + 1] = String.Empty;
+                                }
+                            }
                         }
+                        TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
+                        Row.Add(CreateTileImage(sourceTile), k);
+                        TileNumbers[(i - 1) * 5 + k - 1] = sourceNumber;
+                        Row.Add(CreateNumberImage(sourceNumber), k);
                     }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });            
                     board.Add(Row, 0, i);
                     Row = new()
                     {
@@ -521,49 +411,58 @@ namespace CatanGame.ModelsLogic
                 //};
                 //UpdateFields(dict);
             }
-            gameBorad.Add(board);
-            Grid picesLocations = [];
-            picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
-            for (int i = 0; i < 11; i++)
-            {
-                if(i % 2 != 0)
-                {
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                }
-                else
-                {
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.2, GridUnitType.Star) });
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                    picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.2, GridUnitType.Star) });
-                }
+            //Grid picesLocations = [];
+            //picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
+            //for (int i = 0; i < 11; i++)
+            //{
+            //    if(i % 2 != 0)
+            //    {
+            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
+            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            //    }
+            //    else
+            //    {
+            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
+            //    }
 
-            }
-            picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
-            Button button;
-            for (int i = 1; i < 34; i++)
-            {
-                if(i == 1 || i == 33)
-                {
-                    Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
-                    for (int j = 1; j < 4; j++)
-                    {
-                        Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                        button = new()
-                        {
-                            Background = Colors.Transparent,
-                            BorderColor = Colors.White,
-                            BorderWidth = 1,
-                            HeightRequest = 10,
-                            HorizontalOptions = LayoutOptions.Center,
-                            WidthRequest = 10
-                        };
-                        Row.Add(button,j,0);
-                    }
-                    Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
-                }
-            }
+            //}
+            //picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
+            //for (int i = 1; i < 24; i++)
+            //{
+            //    if(i == 1 || i == 23)
+            //    {
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
+            //        for (int j = 1; j < 4; j++)
+            //        {
+            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            //            Row.Add(CreateApexButton(),j,0);
+            //        }
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
+            //    }
+            //    else if(i == 2)
+            //    {
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
+            //        for (int j = 1; j < 7; j++)
+            //        {
+            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            //            Row.Add(CreateRoadButton(j % 2 != 0 ? -30 : 30), j, 0);
+            //        }
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
+            //    }
+            //    else if(i == 22)
+            //    {
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
+            //        for (int j = 1; j < 7; j++)
+            //        {
+            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+            //            Row.Add(CreateRoadButton(j % 2 != 0 ? -30 : 30), j, 0);
+            //        }
+            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
+            //        Row.Rotation = 180;
+            //    }
+            //    picesLocations.Add(Row, 0, i);
+            //}
         }
 
         public override void AddSnapshotListener()
@@ -650,75 +549,6 @@ namespace CatanGame.ModelsLogic
                     i = PlayerCount;
                 }
             }
-        }
-
-        private void OnCompletePlayerLeft(Task task)
-        {
-            OnPlayerLeft?.Invoke(this, PlayerIndicator);
-        }
-
-        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
-        {
-            Game? updatedGame = snapshot?.ToObject<Game>();
-            if (updatedGame != null)
-            {
-                for (int i = 1; i < PlayerCount; i++)
-                {
-                    if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
-                    {
-                        for(int j = 1; j < PlayerCount; j++)
-                        {
-                            if (PlayerNames[j] != updatedGame.PlayerNames[j])
-                            {
-                                OnPlayerLeft?.Invoke(this, j);
-                                if (j < PlayerIndicator)
-                                    PlayerIndicator--;
-                                j = PlayerCount;
-                            }
-                        }
-                        i = PlayerCount;
-                    }
-                }
-                IsFull = updatedGame.IsFull;
-                PlayerNames = updatedGame.PlayerNames;
-                PlayerTurn = updatedGame.PlayerTurn;
-                TurnTime = updatedGame.TurnTime;
-                if (TileTypes[0] == null)
-                {
-                    TileNumbers = updatedGame.TileNumbers;
-                    TileTypes = updatedGame.TileTypes; 
-                }
-                if (updatedGame.GameStarted && !GameStarted)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        GameStarted = updatedGame.GameStarted;
-                        Application.Current!.MainPage = new GamePage(this);
-                    });
-                UpdateStatus();
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        private void OnCompleteDeleted(Task task)
-        {
-            if (task.IsCompletedSuccessfully)
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnCompleteAddPlayerName(Task task)
-        {
-            if (!task.IsCompletedSuccessfully)
-                Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
-        }
-
-        private void OnTurnChanged(Task task)
-        {
-            if (task.IsCompletedSuccessfully)
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

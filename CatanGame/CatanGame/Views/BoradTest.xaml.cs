@@ -5,6 +5,6 @@ public partial class BoradTest : ContentPage
 	public BoradTest()
 	{
 		InitializeComponent();
-		BindingContext = new ViewModels.BoradTestVM(grdBoard);
+		//BindingContext = new ViewModels.BoradTestVM(grdBoard);
     }
 }
