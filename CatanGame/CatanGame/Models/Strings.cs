@@ -92,8 +92,8 @@
         public const string TenImage = "tenimage";
         public const string ElevenImage = "elevenimage";
         public const string TwelveImage = "twelveimage";
-        public const string BoradTypeLabel = "Borad Type";
-        public const string RandomBoradLabel = "Random Borad";
-        public const string ClasicBoradLabel = "Clasic Borad";
+        public const string BoardTypeLabel = "Board Type";
+        public const string RandomBoardLabel = "Random Board";
+        public const string ClasicBoardLabel = "Clasic Board";
     }
 }

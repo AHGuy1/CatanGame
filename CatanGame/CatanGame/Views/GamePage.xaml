@@ -12,7 +12,7 @@
     <HorizontalStackLayout>
         <Grid VerticalOptions="Center" HorizontalOptions="Center">
             <Image
-                Source="boradframe.png"
+                Source="Boardframe.png"
                 WidthRequest="430"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"/>

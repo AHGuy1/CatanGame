@@ -37,7 +37,7 @@ namespace CatanGame.ViewModels
             this.game.OnGameDeleted += OnGameDeleted;
             this.game.OnPlayerLeft += OnPlayerLeft;
             this.game.OnGameChanged += OnGameChanged;
-            game.Init(grdBoard);
+            //game.Init(grdBoard);
             OnPropertyChanged(nameof(grdBoard));
             game.StartGame();
         }

@@ -4,13 +4,14 @@ using CatanGame.ModelsLogic;
 
 namespace CatanGame.ViewModels
 {
-    public partial class BoradTestVM : ObservableObject
+    public partial class BoardTestVM : ObservableObject
     {
-        public BoradTestVM(Grid grdBorad)
+        public BoardTestVM(Grid grdBoard, Grid grdPices)
         {
             Game game = new();
-            game.Init(grdBorad);
-            OnPropertyChanged(nameof(grdBorad));
+            game.Init(grdBoard,grdPices);
+            OnPropertyChanged(nameof(grdBoard));
+            OnPropertyChanged(nameof(grdPices));
         }
     }
 }

@@ -61,6 +61,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\BoardTest.xaml.cs">
+	    <DependentUpon>BoardTest.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Resources\Styles\Converters.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -70,7 +76,7 @@
 	  <MauiXaml Update="Resources\Styles\MyStyles.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\BoradTest.xaml">
+	  <MauiXaml Update="Views\BoardTest.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\GamePage.xaml">

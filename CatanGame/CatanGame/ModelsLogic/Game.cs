@@ -29,7 +29,7 @@ namespace CatanGame.ModelsLogic
         }
         private static Image CreateTileImage(string imageSource)
         {
-            return new Image
+            return new()
             {
                 Source = imageSource,
                 HeightRequest = 79,
@@ -39,7 +39,7 @@ namespace CatanGame.ModelsLogic
         }
         private static Image CreateNumberImage(string imageSource)
         {
-            return new Image
+            return new()
             {
                 Source = imageSource,
                 HeightRequest = 22,
@@ -56,6 +56,7 @@ namespace CatanGame.ModelsLogic
                 BorderWidth = 1,
                 HeightRequest = 10,
                 HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
                 WidthRequest = 10  
             };
         }
@@ -148,10 +149,10 @@ namespace CatanGame.ModelsLogic
                 Timer.Stop();
         }
 
-        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime,bool isRandomBorad)
+        public Game(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int turnTime,bool isRandomBoard)
         {
             TurnTime = turnTime;
-            ISRandomBoard = isRandomBorad;
+            ISRandomBoard = isRandomBoard;
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
@@ -177,15 +178,14 @@ namespace CatanGame.ModelsLogic
         {
             fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
         }
-        public override void Init(Grid gameBorad)
+        public override void Init(Grid gameBoard, Grid grdPices)
         {
-            Grid board = [];
-            board.RowDefinitions.Add(new RowDefinition { Height = new(0.8, GridUnitType.Star) });
+            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0.55, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
             {
-                board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
             }
-            board.RowDefinitions.Add(new RowDefinition { Height = new(0.86, GridUnitType.Star) });
+            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1.15, GridUnitType.Star) });
             Grid Row = [];
             if (PlayerIndicator != 0)
             {
@@ -194,12 +194,12 @@ namespace CatanGame.ModelsLogic
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.78, GridUnitType.Star) });
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(0.785 + (i== 3? 0.05 : 0), GridUnitType.Star) });
                         Row.Add(CreateTileImage(TileTypes[(i - 1) * 5 + k - 1]), k);
                         Row.Add(CreateNumberImage(TileNumbers[(i - 1) * 5 + k - 1]), k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    board.Add(Row, 0, i);
+                    gameBoard.Add(Row, 0, i);
                     Row = new()
                     {
                         VerticalOptions = LayoutOptions.Center,
@@ -397,7 +397,7 @@ namespace CatanGame.ModelsLogic
                         Row.Add(CreateNumberImage(sourceNumber), k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });            
-                    board.Add(Row, 0, i);
+                    gameBoard.Add(Row, 0, i);
                     Row = new()
                     {
                         VerticalOptions = LayoutOptions.Center,
@@ -411,58 +411,54 @@ namespace CatanGame.ModelsLogic
                 //};
                 //UpdateFields(dict);
             }
-            //Grid picesLocations = [];
-            //picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
-            //for (int i = 0; i < 11; i++)
-            //{
-            //    if(i % 2 != 0)
-            //    {
-            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
-            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            //    }
-            //    else
-            //    {
-            //        picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
-            //    }
+            grdPices.RowDefinitions.Add(new RowDefinition { Height = new(7.85, GridUnitType.Star) });
+            for (int i = 0; i < 11; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    grdPices.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                    grdPices.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
+                    grdPices.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                }
+                else
+                {
+                    grdPices.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
+                }
 
-            //}
-            //picesLocations.RowDefinitions.Add(new RowDefinition { Height = new(7.75, GridUnitType.Star) });
-            //for (int i = 1; i < 24; i++)
-            //{
-            //    if(i == 1 || i == 23)
-            //    {
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
-            //        for (int j = 1; j < 4; j++)
-            //        {
-            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            //            Row.Add(CreateApexButton(),j,0);
-            //        }
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(2, GridUnitType.Star) });
-            //    }
-            //    else if(i == 2)
-            //    {
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
-            //        for (int j = 1; j < 7; j++)
-            //        {
-            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            //            Row.Add(CreateRoadButton(j % 2 != 0 ? -30 : 30), j, 0);
-            //        }
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
-            //    }
-            //    else if(i == 22)
-            //    {
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
-            //        for (int j = 1; j < 7; j++)
-            //        {
-            //            Row.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            //            Row.Add(CreateRoadButton(j % 2 != 0 ? -30 : 30), j, 0);
-            //        }
-            //        Row.RowDefinitions.Add(new RowDefinition { Height = new(4, GridUnitType.Star) });
-            //        Row.Rotation = 180;
-            //    }
-            //    picesLocations.Add(Row, 0, i);
-            //}
+            }
+            grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.2, GridUnitType.Star) });
+            for (int i = 1; i < 24; i++)
+            {
+                Row = new()
+                {
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                };
+                if (i == 1 || i == 3 || i == 5 || i == 7 || i == 9 || i == 11 || i == 13 || i == 15 || i == 17 || i == 19 || i == 21 || i == 23)
+                {
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < (i == 1 || i == 23 ? 4 : i == 3 || i == 5 || i == 19 || i == 21 ? 5 : i == 7 || i == 9 || i == 15 || i == 17 ? 6 : 7); k++)
+                    {
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                        Row.Add(CreateApexButton(), k);
+                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    Row.ColumnSpacing = 50;
+                }
+                else
+                {
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    for (int k = 1; k < (i == 2 || i == 22 ? 7 : i == 4 || i == 20 ? 5 : i == 6 || i == 18 ? 9 : i == 8 || i == 16 ? 6 : i == 10 || i == 14 ? 11 : 7); k++)
+                    {
+                        Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                        Row.Add(CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30), k);
+                    }
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    Row.ColumnSpacing = i % 4 != 0 ? 12 : i == 12 ? 60.5 : 43.5;
+                    Row.Rotation = i > 12 ? 180 : 0;
+                }
+                grdPices.Add(Row, 0, i);
+            }
         }
 
         public override void AddSnapshotListener()

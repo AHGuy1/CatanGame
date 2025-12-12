@@ -46,7 +46,7 @@ namespace CatanGame.Models
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
-        public abstract void Init(Grid board);
+        public abstract void Init(Grid board,Grid grdPices);
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void RemoveSnapshotListener();

@@ -10,8 +10,8 @@ namespace CatanGame.ViewModels
     {
         private readonly Games games = new();
         private string GameCodePri { get; set; } = string.Empty;
-        private string SelectedBoradTypePri = string.Empty;
-        public bool IsRandomBorad { get; set; }
+        private string SelectedBoardTypePri = string.Empty;
+        public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
         public string GameCode
         {
@@ -22,17 +22,17 @@ namespace CatanGame.ViewModels
                 (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
             }
         }
-        public string SelectedBoradType
+        public string SelectedBoardType
         {
-            get => SelectedBoradTypePri;
+            get => SelectedBoardTypePri;
             set
             {
-                IsRandomBorad = value == Strings.RandomBoradLabel;
-                SelectedBoradTypePri = value;
+                IsRandomBoard = value == Strings.RandomBoardLabel;
+                SelectedBoardTypePri = value;
             }
         }
         public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
-        public static ObservableCollection<string> BoradTypes => Games.BoradTypes;
+        public static ObservableCollection<string> BoardTypes => Games.BoardTypes;
         public static string DisplayName => string.Empty;
         public int SlectedAmountOfPointsNeeded { get; set; }
         public ICommand JoinGameWithCodeCommand { get; }
@@ -69,7 +69,7 @@ namespace CatanGame.ViewModels
 
         private void AddGame()
         {
-            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBorad);
+            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBoard);
             OnPropertyChanged(nameof(IsBusy));
         }
 
