@@ -11,14 +11,34 @@
 
     <HorizontalStackLayout>
         <Grid VerticalOptions="Center" HorizontalOptions="Center">
-            <Image
-                Source="Boardframe.png"
-                WidthRequest="430"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"/>
-            <Grid VerticalOptions="Center" HorizontalOptions="Center" x:Name="grdBoard">
-            </Grid>
+            <Button ImageSource="boardframe.png"
+                    WidthRequest="445"
+                    HeightRequest="445"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
+            <Grid VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  x:Name="grdBoard" />
+            <Grid x:Name="grdPices"
+                  HeightRequest="430"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center"
+                  WidthRequest="430" />
         </Grid>
-        <Button Command="{Binding EndTurnCommand}" Text="{x:Static m:Strings.EndTurn}" />
+        <Grid RowDefinitions="auto,auto,auto"
+              VerticalOptions="Center">
+            <Label Text="{Binding Time}"
+                   HorizontalOptions="Center" />
+            <Label 
+                   Text="{Binding StatusMessage}"
+                   HorizontalOptions="Center"
+                   Grid.Row="1" />
+            <Button Command="{Binding EndTurnCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.EndTurn}"
+                    Grid.Row="2" />
+        </Grid>
     </HorizontalStackLayout>
 </ContentPage>

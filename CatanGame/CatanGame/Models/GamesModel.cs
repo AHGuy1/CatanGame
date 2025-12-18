@@ -1,10 +1,11 @@
 ﻿using CatanGame.ModelsLogic;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 
 namespace CatanGame.Models
 {
-    public class GamesModel
+    public abstract class GamesModel
     {
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
@@ -18,5 +19,15 @@ namespace CatanGame.Models
         public static ObservableCollection<string> BoardTypes { get; set; } = [Strings.RandomBoardLabel, Strings.ClasicBoardLabel];
         public EventHandler<Game>? OnGameAdded;
         public EventHandler? OnGamesChanged;
+        protected abstract void OnCompleteGameCodeAdded(Task task);
+        protected abstract void OnCompleteGameAdded(Task task);
+        protected abstract void OnChange(IQuerySnapshot snapshot, Exception error);
+        protected abstract void OnChange(IQuerySnapshot qs);
+        protected abstract void OnCompleteGetCodeDocument(IDocumentSnapshot ds);
+        protected abstract void OnCompleteGetGameDocument(IDocumentSnapshot ds);
+        public abstract void AddSnapshotListener();
+        public abstract void RemoveSnapshotListener();
+        public abstract void AddGame(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int TurnTime, bool isRandomBoard);
+        public abstract void JoinGameWithCode(string gameCode);
     }
 }

@@ -1,7 +1,8 @@
 ﻿using CatanGame.ModelsLogic;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
-using System.Collections.ObjectModel;
+using System.Timers;
 
 namespace CatanGame.Models
 {
@@ -14,7 +15,11 @@ namespace CatanGame.Models
         [Ignored]
         public System.Timers.Timer Timer = new();
         [Ignored]
+        public System.Timers.Timer OneSecondTimer = new();
+        [Ignored]
         public string StatusMessage => Status.StatusMessage;
+        [Ignored]
+        public EventHandler? TimePssedUpdated;
         [Ignored]
         public EventHandler? EndTurnOutOfTime;
         [Ignored]
@@ -24,7 +29,11 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler<int>? OnPlayerLeft;
         [Ignored]
+        public IndexedButton[,] BoardPices = new IndexedButton[24, 12];
+        [Ignored]
         public string Id { get; set; } = string.Empty;
+        [Ignored]
+        public int TimePassed { get; set;} = 0;
         [Ignored]
         public int PlayerLeft { get; set; }
         [Ignored]
@@ -42,7 +51,16 @@ namespace CatanGame.Models
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
+        protected abstract IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex);
+        protected abstract IndexedButton CreateApexButton(int colmnIndex, int rowIndex);
         protected abstract void UpdateStatus();
+        protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
+        protected abstract void OnCompletePlayerLeft(Task task);
+        protected abstract void OnCompleteDeleted(Task task);
+        protected abstract void OnCompleteAddPlayerName(Task task);
+        protected abstract void OnTurnChanged(Task task);
+        protected abstract void TurnTimerElapsed(object? sender, ElapsedEventArgs e);
+        public abstract void OneSecondElapsed(object? sender, ElapsedEventArgs e);
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

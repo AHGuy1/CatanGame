@@ -9,7 +9,7 @@ public partial class GamePage : ContentPage
     public GamePage(Game game)
 	{
 		InitializeComponent();
-        gpVM = new GamePageVM(game, grdBoard);
+        gpVM = new GamePageVM(game, grdBoard, grdPices);
         BindingContext = gpVM;
     }
     protected override void OnAppearing()

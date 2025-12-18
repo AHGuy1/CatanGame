@@ -12,7 +12,7 @@
             <Image
                 Aspect="AspectFill"
                 HorizontalOptions="Center"
-                Source="Boardframe.png"
+                   Source="boradframe.png"
                 VerticalOptions="Center" />
             <Grid
                 x:Name="grdBoard"
@@ -26,4 +26,4 @@
                 WidthRequest="430" />
         </Grid>
     </HorizontalStackLayout>
-</ContentPage>
+</ContentPage>    

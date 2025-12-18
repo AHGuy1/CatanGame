@@ -8,31 +8,12 @@ namespace CatanGame.ModelsLogic
 {
     public class Games : GamesModel
     {
-        public void AddGame(GameSize slectedAmountOfPlayers,int selectedAmountOfPoints,int TurnTime, bool isRandomBoard)
-        {
-            IsBusy = true;
-            if (selectedAmountOfPoints == 0)
-                selectedAmountOfPoints = 10;
-            if (TurnTime == 0)
-                TurnTime = 60;
-            Game game = new(slectedAmountOfPlayers,selectedAmountOfPoints, TurnTime, isRandomBoard);
-            CurrentGame = game;
-            game.SetDocument(OnCompleteGameAdded);
-
-        }
-
-        public void JoinGameWithCode(string gameCode)
-        {
-            IsBusy = true;
-            GameCode gamecode = new();
-            gamecode.GetDocument(gameCode,OnCompleteGetCodeDocument);
-        }
-        private void OnCompleteGameCodeAdded(Task task)
+        protected override void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
             OnGameAdded?.Invoke(this, CurrentGame!);
         }
-        private void OnCompleteGameAdded(Task task)
+        protected override void OnCompleteGameAdded(Task task)
         {
             GameCode gameCode = new(CurrentGame!.Id);
             CurrentGame.GameCode = gameCode.GameCode;
@@ -43,24 +24,11 @@ namespace CatanGame.ModelsLogic
             };
             CurrentGame.UpdateFields(dict);
         }
-        public Games()
-        {
-
-        }
-        public void AddSnapshotListener()
-        {
-            ilr = fbd.AddSnapshotListener(Keys.GamesCollection, OnChange!);
-        }
-        public void RemoveSnapshotListener()
-        {
-            ilr?.Remove();
-        }
-        private void OnChange(IQuerySnapshot snapshot, Exception error)
+        protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnChange);
         }
-
-        private void OnChange(IQuerySnapshot qs)
+        protected override void OnChange(IQuerySnapshot qs)
         {
             GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)
@@ -74,8 +42,7 @@ namespace CatanGame.ModelsLogic
             }
             OnGamesChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        private void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
+        protected override void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
         {
             if (ds.Data != null)
             {
@@ -89,9 +56,9 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
                 });
-            } 
+            }
         }
-        private void OnCompleteGetGameDocument(IDocumentSnapshot ds)
+        protected override void OnCompleteGetGameDocument(IDocumentSnapshot ds)
         {
             if (ds.Data != null)
             {
@@ -122,6 +89,37 @@ namespace CatanGame.ModelsLogic
                     Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
                 });
             }
+
+        }
+
+        public override void AddSnapshotListener()
+        {
+            ilr = fbd.AddSnapshotListener(Keys.GamesCollection, OnChange!);
+        }
+        public override void RemoveSnapshotListener()
+        {
+            ilr?.Remove();
+        }
+        public override void AddGame(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int TurnTime, bool isRandomBoard)
+        {
+            IsBusy = true;
+            if (selectedAmountOfPoints == 0)
+                selectedAmountOfPoints = 10;
+            if (TurnTime == 0)
+                TurnTime = 60;
+            Game game = new(slectedAmountOfPlayers, selectedAmountOfPoints, TurnTime, isRandomBoard);
+            CurrentGame = game;
+            game.SetDocument(OnCompleteGameAdded);
+        }
+        public override void JoinGameWithCode(string gameCode)
+        {
+            IsBusy = true;
+            GameCode gamecode = new();
+            gamecode.GetDocument(gameCode, OnCompleteGetCodeDocument);
+        }
+
+        public Games()
+        {
 
         }
     }

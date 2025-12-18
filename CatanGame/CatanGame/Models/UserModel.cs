@@ -1,4 +1,5 @@
 ﻿using CatanGame.ModelsLogic;
+using CommunityToolkit.Maui.Core;
 
 namespace CatanGame.Models
 {
@@ -12,6 +13,9 @@ namespace CatanGame.Models
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        protected abstract void RegisterOnComplete(Task task);
+        protected abstract void ResetPasswordOnComplete(Task task);
+        protected abstract void LoginOnComplete(Task task);
         public abstract void Register();
         public abstract void Login();
         public abstract void ResetPassword();
