@@ -39,6 +39,11 @@
                     HorizontalOptions="Center"
                     Text="{x:Static m:Strings.EndTurn}"
                     Grid.Row="2" />
+            <Button Command="{Binding EndTurnCommand}"
+                    HeightRequest="50"
+                    HorizontalOptions="Center"
+                    Text="{x:Static m:Strings.EndTurn}"
+                    Grid.Row="2" />
         </Grid>
     </HorizontalStackLayout>
 </ContentPage>

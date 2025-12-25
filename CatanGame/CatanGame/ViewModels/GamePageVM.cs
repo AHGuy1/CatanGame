@@ -30,10 +30,13 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public ICommand EndTurnCommand { get; }
+        public ICommand BuildOptionsCommand { get; }
+
 
         public GamePageVM(Game game, Grid grdBoard, Grid grdPices)
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
+            BuildOptionsCommand = new Command(ShowBuildOptions);
             this.game = game;
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.OnGameDeleted += OnGameDeleted;
@@ -46,6 +49,11 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(grdBoard));
             OnPropertyChanged(nameof(grdPices));
             game.StartGame();
+        }
+
+        private void ShowBuildOptions()
+        {
+            game.ShowBuildOptions(Strings.All);
         }
 
         private void UpdateTurnTime(object? sender, EventArgs e)

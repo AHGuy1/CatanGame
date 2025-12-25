@@ -99,5 +99,9 @@
         public const string BoardTypeLabel = "Board Type";
         public const string RandomBoardLabel = "Random Board";
         public const string ClasicBoardLabel = "Clasic Board";
+        public const string Town = "Town";
+        public const string City = "City";
+        public const string Road = "Road";
+        public const string All = "All";
     }
 }

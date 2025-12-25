@@ -12,7 +12,7 @@
             <Image
                 Aspect="AspectFill"
                 HorizontalOptions="Center"
-                   Source="boradframe.png"
+                Source="boardframe.png"
                 VerticalOptions="Center" />
             <Grid
                 x:Name="grdBoard"

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-android</TargetFrameworks>
-
+		<CheckEolWorkloads>false</CheckEolWorkloads>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>CatanGame</RootNamespace>

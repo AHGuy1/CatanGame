@@ -11,15 +11,28 @@ namespace CatanGame.ModelsLogic
     {
         protected override GameStatus Status => _status;
 
-        private static Image CreateTileImage(string imageSource)
+        private static Grid CreateTileImage(string imageSource)
         {
-            return new()
+            Grid grid = [];
+            Image image = new()
             {
                 Source = imageSource,
                 HeightRequest = 71,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
             };
+            Button button = new() 
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                HeightRequest = 50,
+                WidthRequest = 50,
+                BackgroundColor = Colors.Transparent,
+                IsEnabled = false
+            };
+            grid.Add(button);
+            grid.Add(image);
+            return grid;
         }
         private static Image CreateNumberImage(string imageSource)
         {
@@ -35,13 +48,13 @@ namespace CatanGame.ModelsLogic
         protected override IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
             IndexedButton indexedButton = new(rowIndex, colmnIndex, 6, 18, rotation);
-            BoardPices[rowIndex, colmnIndex] = indexedButton;
+            BoardPiceButtons[rowIndex, colmnIndex] = indexedButton;
             return indexedButton;
         }
         protected override IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
-            IndexedButton indexedButton = new(rowIndex,colmnIndex,10,10);
-            BoardPices[rowIndex, colmnIndex] = indexedButton;
+            IndexedButton indexedButton = new(rowIndex, colmnIndex, 10, 10);
+            BoardPiceButtons[rowIndex, colmnIndex] = indexedButton;
             return indexedButton;
         }
         protected override void OnCompletePlayerLeft(Task task)
@@ -148,9 +161,9 @@ namespace CatanGame.ModelsLogic
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
-        public override void UpdateFields(Action<Task> OnComplete,Dictionary<string,object> dict)
+        public override void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict)
         {
-            fbd.UpdateFields(Keys.GamesCollection, Id,dict, OnComplete);
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
         public override void UpdateFields(Dictionary<string, object> dict)
         {
@@ -158,7 +171,7 @@ namespace CatanGame.ModelsLogic
         }
         public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
         {
-            fbd.GetDocument(Keys.GamesCollection, Id , OnComplete);
+            fbd.GetDocument(Keys.GamesCollection, Id, OnComplete);
         }
         public override void Init(Grid gameBoard, Grid grdPices)
         {
@@ -221,7 +234,7 @@ namespace CatanGame.ModelsLogic
                 for (int i = 1; i < 6; i++)
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    for(int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
+                    for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(2, GridUnitType.Star) });
                     }
@@ -248,7 +261,7 @@ namespace CatanGame.ModelsLogic
                                     sourceNumber = Strings.NineImage;
                                 }
                             }
-                            else if(i==2)
+                            else if (i == 2)
                             {
                                 if (k == 1)
                                 {
@@ -271,7 +284,7 @@ namespace CatanGame.ModelsLogic
                                     sourceNumber = Strings.TenImage;
                                 }
                             }
-                            else if(i==3)
+                            else if (i == 3)
                             {
                                 if (k == 1)
                                 {
@@ -299,7 +312,7 @@ namespace CatanGame.ModelsLogic
                                     sourceNumber = Strings.EightImage;
                                 }
                             }
-                            else if(i==4)
+                            else if (i == 4)
                             {
                                 if (k == 1)
                                 {
@@ -349,7 +362,7 @@ namespace CatanGame.ModelsLogic
                             if (sourceTile == Strings.Desert)
                             {
                                 sourceNumber = numbers[numbers.Length - 1 - count];
-                                 numbers[numbers.Length - 1 - count] = String.Empty;
+                                numbers[numbers.Length - 1 - count] = String.Empty;
                             }
                             else
                             {
@@ -391,12 +404,12 @@ namespace CatanGame.ModelsLogic
                         HorizontalOptions = LayoutOptions.Center
                     };
                 }
-                Dictionary<string, object> dict = new()
-                {
-                    {nameof(TileNumbers), TileNumbers },
-                    {nameof(TileTypes), TileTypes }
-                };
-                UpdateFields(dict);
+                //Dictionary<string, object> dict = new()
+                //{
+                //    {nameof(TileNumbers), TileNumbers },
+                //    {nameof(TileTypes), TileTypes }
+                //};
+                //UpdateFields(dict);
             }
             grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
@@ -427,10 +440,11 @@ namespace CatanGame.ModelsLogic
                     for (int k = 1; k < (i == 1 || i == 23 ? 4 : i == 3 || i == 5 || i == 19 || i == 21 ? 5 : i == 7 || i == 9 || i == 15 || i == 17 ? 6 : 7); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        Row.Add(CreateApexButton(k,i), k);
+                        BoardPiceButtons[i, k] = CreateApexButton(k, i);
+                        Row.Add(BoardPiceButtons[i,k], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    Row.ColumnSpacing = i == 11 || i == 13? 62 : 52;
+                    Row.ColumnSpacing = i == 11 || i == 13 ? 62 : 52;
                 }
                 else
                 {
@@ -438,8 +452,9 @@ namespace CatanGame.ModelsLogic
                     for (int k = 1; k < (i == 2 || i == 22 ? 7 : i == 4 || i == 20 ? 5 : i == 6 || i == 18 ? 9 : i == 8 || i == 16 ? 6 : i == 10 || i == 14 ? 11 : 7); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        Row.Add(CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30,k,i), k);
-                    }   
+                        BoardPiceButtons[i, k] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
+                        Row.Add(BoardPiceButtons[i, k], k);
+                    }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     Row.ColumnSpacing = i % 4 != 0 ? 12.6 : i == 12 ? 62.3 : 44;
                     Row.Rotation = i > 12 ? 180 : 0;
@@ -482,7 +497,7 @@ namespace CatanGame.ModelsLogic
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id);
-            fbd.DeleteDocument(Keys.GameCodesCollection,GameCode,OnComplete);
+            fbd.DeleteDocument(Keys.GameCodesCollection, GameCode, OnComplete);
         }
         public override void EndTurn()
         {
@@ -491,14 +506,16 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn = 1;
             else
                 PlayerTurn++;
+            Turn++;
             Dictionary<string, object> dict = new()
             {
                 { nameof(PlayerTurn), PlayerTurn },
+                { nameof(Turn), Turn }
             };
             UpdateFields(OnTurnChanged, dict);
         }
         public override void StartGame()
-        {    
+        {
             GameStarted = true;
             Dictionary<string, object> dict = new()
             {
@@ -525,6 +542,61 @@ namespace CatanGame.ModelsLogic
                     UpdateFields(OnCompleteAddPlayerName, dict);
                     PlayerIndicator = i;
                     i = PlayerCount;
+                }
+            }
+        }
+        public override void ShowBuildOptions(string PiceType)
+        {
+            if( Status.CurrentStatus == GameStatus.Status.YourTurn)
+            {
+                if(PiceType == Strings.Road || PiceType == Strings.All)
+                {
+                    for (int i = 1; i < 24; i = i + 2)
+                    {
+                        for (int k = (i - 1) * 12; k < (i - 1) * 12 + (i == 1 || i == 23 ? 3 : i == 3 || i == 5 || i == 19 || i == 21 ? 4 : i == 7 || i == 9 || i == 15 || i == 17 ? 5 : 6); k++)
+                        {
+                            if (BoardPices[k] / 2 == PlayerIndicator + 1 || BoardPices[k] / 3 == PlayerIndicator + 1)
+                            {
+                                if (i == 1)
+                                {
+                                    if (BoardPices[(k * 2) + 12] == 0)
+                                    {
+                                        BoardPiceButtons[2, (k * 2) + 1].BorderWidth = 1;
+                                    }
+                                    if (BoardPices[(k * 2) + 13] == 0)
+                                    {
+                                        BoardPiceButtons[2, (k * 2) + 2].BorderWidth = 1;
+                                    }
+                                }
+                                else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
+                                {
+                                    if (BoardPices[((k % 12) * 2) + ((i - 2) * 12)] == 0)
+                                        BoardPiceButtons[i - 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+
+                                    if (k % 12 != 0 && BoardPices[((k % 12) * 2) + ((i - 2) * 12) - 1] == 0)
+                                        BoardPiceButtons[i - 1, ((k % 12) * 2)].BorderWidth = 1;
+
+                                    if (BoardPices[k + 12] == 0)
+                                        BoardPiceButtons[i + 1, (k % 12) + 1].BorderWidth = 1;
+                                }
+                                else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
+                                {
+                                    if (BoardPices[((k % 12) * 2) + (i * 12)] == 0)
+                                    {
+                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+                                    }
+                                    if (BoardPices[((k % 12) * 2) + (i * 12) + 1] == 0)
+                                    {
+                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 2].BorderWidth = 1;
+                                    }
+                                    if (BoardPices[k - 12] == 0)
+                                    {
+                                        BoardPiceButtons[i - 1, (k % 12) + 1].BorderWidth = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

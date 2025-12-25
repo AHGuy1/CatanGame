@@ -29,7 +29,7 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler<int>? OnPlayerLeft;
         [Ignored]
-        public IndexedButton[,] BoardPices = new IndexedButton[24, 12];
+        public IndexedButton[,] BoardPiceButtons = new IndexedButton[24, 12];
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
@@ -41,6 +41,7 @@ namespace CatanGame.Models
         [Ignored]
         public bool ISRandomBoard { get; set; }
         public int TurnTime { get; set; }
+        public int Turn { get; set; } = 1;
         public int AmountOfPointsNeeded { get; set; }
         public bool GameStarted { get; set; }
         public int PlayerTurn { get; set; } = 1;
@@ -48,6 +49,7 @@ namespace CatanGame.Models
         public string[] PlayerNames { get; set; } = [string.Empty];
         public string[] TileNumbers { get; set; } = new string[25];
         public string[] TileTypes { get; set; } = new string[25];
+        public int[] BoardPices { get; set; } = new int[276];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
@@ -72,6 +74,6 @@ namespace CatanGame.Models
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
         public abstract void UpdateFields(Dictionary<string, object> dict);
-
+        public abstract void ShowBuildOptions(string PiceType);
     }
 }
