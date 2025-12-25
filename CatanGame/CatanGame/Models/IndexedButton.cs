@@ -20,10 +20,5 @@ namespace CatanGame.Models
             CornerRadius = 30;
             Clicked += OnClicked;
         }
-
-        private void OnClicked(object? sender, EventArgs e)
-        {
-
-        }
     }
 }

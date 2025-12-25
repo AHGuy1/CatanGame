@@ -11,7 +11,8 @@ namespace CatanGame.Models
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
         protected GameStatus _status = new();
-        protected abstract GameStatus Status { get; }
+        [Ignored]
+        public abstract GameStatus Status { get; }
         [Ignored]
         public System.Timers.Timer Timer = new();
         [Ignored]
@@ -28,8 +29,6 @@ namespace CatanGame.Models
         public EventHandler? OnGameDeleted;
         [Ignored]
         public EventHandler<int>? OnPlayerLeft;
-        [Ignored]
-        public IndexedButton[,] BoardPiceButtons = new IndexedButton[24, 12];
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
@@ -49,12 +48,10 @@ namespace CatanGame.Models
         public string[] PlayerNames { get; set; } = [string.Empty];
         public string[] TileNumbers { get; set; } = new string[25];
         public string[] TileTypes { get; set; } = new string[25];
-        public int[] BoardPices { get; set; } = new int[276];
+        public string[] BoardPeices { get; set; } = new string[276];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
-        protected abstract IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex);
-        protected abstract IndexedButton CreateApexButton(int colmnIndex, int rowIndex);
         protected abstract void UpdateStatus();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void OnCompletePlayerLeft(Task task);
@@ -66,7 +63,6 @@ namespace CatanGame.Models
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
-        public abstract void Init(Grid board,Grid grdPices);
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void RemoveSnapshotListener();
@@ -74,6 +70,5 @@ namespace CatanGame.Models
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
         public abstract void UpdateFields(Dictionary<string, object> dict);
-        public abstract void ShowBuildOptions(string PiceType);
     }
 }
