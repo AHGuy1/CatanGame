@@ -2,6 +2,7 @@
 using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
 using System.Timers;
 
@@ -10,9 +11,47 @@ namespace CatanGame.ModelsLogic
     public class Game : GameModel
     {
         public override GameStatus Status => _status;
+
+        public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
+        {
+            TurnTime = turnTime;
+            ISRandomBoard = isRandomBoard;
+            PlayerCount = slectedAmountOfPlayers.Size;
+            AmountOfPointsNeeded = selectedAmountOfPoints;
+            PlayerNames = new string[PlayerCount];
+            Created = DateTime.Now;
+            UpdateStatus();
+            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, n) =>
+            {
+                OnMessageReceived(n.Value);
+            });
+        }
+        public Game()
+        {
+            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, n) =>
+            {
+                OnMessageReceived(n.Value);
+            });
+        }
+
+        private void OnMessageReceived(long timeleft)
+        {
+           
+            if (timeleft == Keys.FinishedSignal)
+            {
+                TimeLeft = Strings.TimeUp;
+                EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                TimeLeft = Strings.TimeLeft + double.Round(timeleft / 1000, 2).ToString();
+                TimeLeftChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         protected override void OnCompletePlayerLeft(Task task)
         {
-            OnPlayerLeft?.Invoke(this, PlayerIndicator);
+            PlayerLeft?.Invoke(this, PlayerIndicator);
         }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
@@ -27,7 +66,7 @@ namespace CatanGame.ModelsLogic
                         {
                             if (PlayerNames[j] != updatedGame.PlayerNames[j])
                             {
-                                OnPlayerLeft?.Invoke(this, j);
+                                PlayerLeft?.Invoke(this, j);
                                 if (j < PlayerIndicator)
                                     PlayerIndicator--;
                                 j = PlayerCount;
@@ -38,31 +77,36 @@ namespace CatanGame.ModelsLogic
                 }
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
-                PlayerTurn = updatedGame.PlayerTurn;
                 TurnTime = updatedGame.TurnTime;
                 if (TileTypes[0] == null)
                 {
                     TileNumbers = updatedGame.TileNumbers;
                     TileTypes = updatedGame.TileTypes;
                 }
+                if(PlayerTurn != updatedGame.PlayerTurn)
+                {
+                    PlayerTurn = updatedGame.PlayerTurn;
+                    StartTimer();
+                }
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
+                        StartTimer();
                         GameStarted = updatedGame.GameStarted;
                         Application.Current!.MainPage = new GamePage(this);
                     });
                 UpdateStatus();
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
+                GameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+                GameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }
         protected override void OnCompleteDeleted(Task task)
         {
             if (task.IsCompletedSuccessfully)
-                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+                GameDeleted?.Invoke(this, EventArgs.Empty);
         }
         protected override void OnCompleteAddPlayerName(Task task)
         {
@@ -72,12 +116,7 @@ namespace CatanGame.ModelsLogic
         protected override void OnTurnChanged(Task task)
         {
             if (task.IsCompletedSuccessfully)
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected override void TurnTimerElapsed(object? sender, ElapsedEventArgs e)
-        {
-            EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
+                GameChanged?.Invoke(this, EventArgs.Empty);
         }
         protected override void UpdateStatus()
         {
@@ -89,26 +128,17 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn == 4 ? GameStatus.Status.Player4Turn :
                 PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
                 GameStatus.Status.Player6Turn;
-            TimePassed = 0;
-            OneSecondTimer.Stop();
-            OneSecondTimer = new(1000);
-            OneSecondTimer.Elapsed += OneSecondElapsed;
-            OneSecondTimer.Start();
-            if (PlayerTurn == PlayerIndicator + 1 && !Timer.Enabled && GameStarted)
-            {
-                Timer = new(TurnTime * 1000);
-                Timer.Start();
-                Timer.Elapsed += TurnTimerElapsed;
-            }
-            else if ((PlayerTurn != PlayerIndicator + 1 && Timer.Enabled) || !GameStarted)
-                Timer.Stop();
+        }
+        protected override void StartTimer()
+        {
+            WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
+            TimerSettings ts = new(TurnTime + 1, 1000);
+            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
         }
 
         public override void OneSecondElapsed(object? sender, ElapsedEventArgs e)
         {
-            OneSecondTimer.Stop();
-            TimePassed++;
-            TimePssedUpdated?.Invoke(this, EventArgs.Empty);
+            TimeLeftChanged?.Invoke(this, EventArgs.Empty);
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -148,7 +178,7 @@ namespace CatanGame.ModelsLogic
                     }
                 }
                 IsFull = false;
-                PlayerLeft = PlayerIndicator;
+                PlayerLeftIndex = PlayerIndicator;
                 Dictionary<string, object> dict = new()
                 {
 
@@ -166,7 +196,6 @@ namespace CatanGame.ModelsLogic
         }
         public override void EndTurn()
         {
-            Timer.Stop();
             if (PlayerTurn == PlayerCount)
                 PlayerTurn = 1;
             else
@@ -187,6 +216,7 @@ namespace CatanGame.ModelsLogic
                 { nameof(GameStarted), GameStarted },
             };
             UpdateFields(OnTurnChanged, dict);
+            StartTimer();
         }
         public override void AddPlayerName()
         {
@@ -209,19 +239,6 @@ namespace CatanGame.ModelsLogic
                     i = PlayerCount;
                 }
             }
-        }
-        public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
-        {
-            TurnTime = turnTime;
-            ISRandomBoard = isRandomBoard;
-            PlayerCount = slectedAmountOfPlayers.Size;
-            AmountOfPointsNeeded = selectedAmountOfPoints;
-            PlayerNames = new string[PlayerCount];
-            Created = DateTime.Now;
-            UpdateStatus();
-        }
-        public Game()
-        {
         }
     }
 }

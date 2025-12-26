@@ -14,29 +14,25 @@ namespace CatanGame.Models
         [Ignored]
         public abstract GameStatus Status { get; }
         [Ignored]
-        public System.Timers.Timer Timer = new();
-        [Ignored]
-        public System.Timers.Timer OneSecondTimer = new();
-        [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
-        public EventHandler? TimePssedUpdated;
+        public EventHandler? TimeLeftChanged;
         [Ignored]
         public EventHandler? EndTurnOutOfTime;
         [Ignored]
-        public EventHandler? OnGameChanged;
+        public EventHandler? GameChanged;
         [Ignored]
-        public EventHandler? OnGameDeleted;
+        public EventHandler? GameDeleted;
         [Ignored]
-        public EventHandler<int>? OnPlayerLeft;
+        public EventHandler<int>? PlayerLeft;
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
-        public int TimePassed { get; set;} = 0;
-        [Ignored]
-        public int PlayerLeft { get; set; }
+        public int PlayerLeftIndex { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
+        [Ignored]
+        public string TimeLeft { get; protected set; } = string.Empty;
         [Ignored]
         public bool ISRandomBoard { get; set; }
         public int TurnTime { get; set; }
@@ -58,7 +54,7 @@ namespace CatanGame.Models
         protected abstract void OnCompleteDeleted(Task task);
         protected abstract void OnCompleteAddPlayerName(Task task);
         protected abstract void OnTurnChanged(Task task);
-        protected abstract void TurnTimerElapsed(object? sender, ElapsedEventArgs e);
+        protected abstract void StartTimer();
         public abstract void OneSecondElapsed(object? sender, ElapsedEventArgs e);
         public abstract void StartGame();
         public abstract void AddPlayerName();

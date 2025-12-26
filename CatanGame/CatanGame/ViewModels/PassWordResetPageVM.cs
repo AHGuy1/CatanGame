@@ -32,8 +32,8 @@ namespace CatanGame.ViewModels
             ResetPassWordCommand = new Command(ResetPassWord, CanResetPassWord);
             SwitchPageBackCommand = new Command(ChangePage);
             SwitchToLogInPageCommand = new Command(SwitchToLogInPage);
-            user.OnAuthComplete += OnAuthComplete;
-            user.OnAuthFalier += OnAuthFalier;
+            user.AuthComplete += OnAuthComplete;
+            user.AuthFalier += OnAuthFalier;
         }
 
         private void OnAuthComplete(object? sender, EventArgs e)

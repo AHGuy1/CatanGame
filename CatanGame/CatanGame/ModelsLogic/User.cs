@@ -20,7 +20,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.AcoountCreated, ToastDuration.Long, 20).Show();
                 });
-                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
@@ -29,7 +29,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
@@ -37,14 +37,14 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
         protected override void ResetPasswordOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
             {
-                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
@@ -53,7 +53,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
@@ -61,7 +61,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
         protected override void LoginOnComplete(Task task)
@@ -72,7 +72,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Short, 20).Show();
                 });
-                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
@@ -81,7 +81,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
@@ -89,7 +89,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
                 });
-                OnAuthFalier?.Invoke(this, EventArgs.Empty);
+                AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
 

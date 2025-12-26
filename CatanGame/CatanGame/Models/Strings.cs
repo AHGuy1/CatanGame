@@ -29,9 +29,9 @@
         public const string PasswordResetLabel = "Reset Password";
         public const string ReturnToLogInLabl = "Return To Log In Page";
         public const string PassWordResetLinkSentPartOne = "If The Email Matches An";
-        public const string PassWordResetLinkSentPartTwo =  "Existing Acoount A Password" ;
+        public const string PassWordResetLinkSentPartTwo = "Existing Acoount A Password";
         public const string PassWordResetLinkSentPartThree = "Reset Link Has Been Sent.";
-        public const string ChechSpamFolderPartOne = "(If You havent Recived An Email Please" ;
+        public const string ChechSpamFolderPartOne = "(If You havent Recived An Email Please";
         public const string ChechSpamFolderPartTwo = "Check Your Spam Folder";
         public const string ChechSpamFolderPartThree = "Or Try Again.)";
         public const string TryAgainLabel = "Try Again";
@@ -75,7 +75,7 @@
         public const string SecondsLabel = "Seconds";
         public const string MinutesLabel = "Minutes";
         public const string SetTimeOfTurn = "Set Time OF Turn";
-        public const string TimeLeftLabel = "Time Left: ";
+        public const string TimeLeft = "Time Left: ";
         public const string FieldsOne = "fieldsone";
         public const string FieldsTwo = "fieldstwo";
         public const string MountienOne = "mountienone";
@@ -103,5 +103,6 @@
         public const string City = "City";
         public const string Road = "Road";
         public const string All = "All";
+        public const string TimeUp = "Time Up";
     }
 }

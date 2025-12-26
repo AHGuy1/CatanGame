@@ -7,8 +7,8 @@ namespace CatanGame.Models
     {
         protected FbData fbd = new();
         public bool IsRegistered { get; set; } = false;
-        public EventHandler? OnAuthComplete;
-        public EventHandler? OnAuthFalier;
+        public EventHandler? AuthComplete;
+        public EventHandler? AuthFalier;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;

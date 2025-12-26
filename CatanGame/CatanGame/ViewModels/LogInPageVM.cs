@@ -58,8 +58,8 @@ namespace CatanGame.ViewModels
             CreateAcoountPageCommand = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             PasswordReset = new Command(GoToResetPassword);
-            user.OnAuthFalier += OnAuthFalier;
-            user.OnAuthComplete += OnAuthComplete;
+            user.AuthFalier += OnAuthFalier;
+            user.AuthComplete += OnAuthComplete;
         }
         private void OnAuthComplete(object? sender, EventArgs e)
         {

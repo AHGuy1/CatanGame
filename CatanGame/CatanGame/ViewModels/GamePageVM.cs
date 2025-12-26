@@ -23,7 +23,7 @@ namespace CatanGame.ViewModels
         public string Player4Name => PlayerCount > 3 ? PlayerIndector == 3 ? Strings.Player4 + PlayerNames[3] + Strings.You : Strings.Player4 + PlayerNames[3] : string.Empty;
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
-        public string Time { get; set; } = string.Empty;
+        public string TimeLeft => game.TimeLeft;
         public bool IsBusy { get; set; } = false;
         public bool ShouldGameBeDeleted { get; set; } = true;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
@@ -32,38 +32,28 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public ICommand EndTurnCommand { get; }
         public ICommand BuildOptionsCommand { get; }
-
-
         public GamePageVM(Game game, Grid grdBoard, Grid grdPices)
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             BuildOptionsCommand = new Command(ShowBuildOptions);
             this.game = game;
             board.Init(grdBoard, grdPices, game);
-            board.
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
-            this.game.OnGameDeleted += OnGameDeleted;
-            this.game.OnPlayerLeft += OnPlayerLeft;
-            this.game.OnGameChanged += OnGameChanged;
-            this.game.TimePssedUpdated += UpdateTurnTime;
-            Time = Strings.TimeLeftLabel + game.TurnTime + Strings.EmptySpace + Strings.SecondsLabel;
-            OnPropertyChanged(nameof(game.TurnTime));
-
+            this.game.GameDeleted += OnGameDeleted;
+            this.game.PlayerLeft += OnPlayerLeft;
+            this.game.GameChanged += OnGameChanged;
+            this.game.TimeLeftChanged += UpdateTimeLeft;
+            OnPropertyChanged(nameof(game.TimeLeft));
             game.StartGame();
         }
 
         private void ShowBuildOptions()
         {
-            game.ShowBuildOptions(Strings.All);
+            board.ShowBuildOptions(Strings.All, game);
         }
-
-        private void UpdateTurnTime(object? sender, EventArgs e)
+        private void UpdateTimeLeft(object? sender, EventArgs e)
         {
-            Time = Strings.TimeLeftLabel + (game.TurnTime - game.TimePassed) + Strings.EmptySpace + Strings.SecondsLabel;
-            OnPropertyChanged(nameof(Time));
-            game.OneSecondTimer = new(1000);
-            game.OneSecondTimer.Elapsed += game.OneSecondElapsed;
-            game.OneSecondTimer.Start();
+            OnPropertyChanged(nameof(TimeLeft));
         }
 
         private void OutOfTimeEndTurn(object? sender, EventArgs e)
@@ -134,7 +124,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(Player5Name));
             OnPropertyChanged(nameof(Player6Name));
             OnPropertyChanged(nameof(StatusMessage));
-            OnPropertyChanged(nameof(Time));
+            OnPropertyChanged(nameof(TimeLeft));
             (EndTurnCommand as Command)?.ChangeCanExecute();
         }
 

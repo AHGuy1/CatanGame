@@ -61,8 +61,8 @@ namespace CatanGame.ViewModels
 
         public HomePageVM()
         {
-            games.OnGameAdded += OnGameAdded;
-            games.OnGamesChanged += OnGamesChanged;
+            games.GameAdded += OnGameAdded;
+            games.GamesChanged += OnGamesChanged;
             JoinGameWithCodeCommand = new Command(JoinGameWithCode, CanJoinGameWithCode);
             AddGameCommand = new Command(AddGame);
         }

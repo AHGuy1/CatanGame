@@ -50,7 +50,7 @@ namespace CatanGame.ModelsLogic
             BoardPiceButtons[rowIndex, colmnIndex] = indexedButton;
             return indexedButton;
         }
-        public override void Init(Grid gameBoard, Grid grdPices, Game game )
+        public override void Init(Grid gameBoard, Grid grdPices, Game game)
         {
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
@@ -281,14 +281,13 @@ namespace CatanGame.ModelsLogic
                         HorizontalOptions = LayoutOptions.Center
                     };
                 }
-                //Dictionary<string, object> dict = new()
-                //{
-                //    {nameof(game.TileNumbers), game.TileNumbers },
-                //    {nameof(game.TileTypes), game.TileTypes }
-                //};
-                //UpdateFields(dict);
+                Dictionary<string, object> dict = new()
+                {
+                    {nameof(game.TileNumbers), game.TileNumbers },
+                    {nameof(game.TileTypes), game.TileTypes }
+                };
+                game.UpdateFields(dict);
             }
-            IndexedButton btn;
             grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
             {
@@ -348,67 +347,67 @@ namespace CatanGame.ModelsLogic
         }
         public override void ShowBuildOptions(string peiceType, Game game)
         {
-            string[,] BoardPeices = new string[24, 12];
-            for(int i = 1; i<24; i++)
-            {
-                for(int k = 0; k < 12; k++)
-                {
-                    if(game.BoardPeices[(i*12) + k] != null)
-                        BoardPeices[i, k] = game.BoardPeices[(i*12) + k];
-                }
-            }
-            if (game.Status.CurrentStatus == GameStatus.Status.YourTurn)
-            {
-                if (peiceType == Strings.Road || peiceType == Strings.All)
-                {
-                    for (int i = 1; i < 24; i = i + 2)
-                    {
-                        for (int k = 0; k < 12; k++)
-                        {
-                            if (BoardPeices == (ToString(game.PlayerIndicator + 1) + Strings.City) || BoardPeices == (ToString(game.PlayerIndicator + 1) + Strings.Town))
-                            {
-                                if (i == 1)
-                                {
-                                    if (game.BoardPeices[(k * 2) + 12] == 0)
-                                    {
-                                        BoardPiceButtons[2, (k * 2) + 1].BorderWidth = 1;
-                                    }
-                                    if (game.BoardPeices[(k * 2) + 13] == 0)
-                                    {
-                                        BoardPiceButtons[2, (k * 2) + 2].BorderWidth = 1;
-                                    }
-                                }
-                                else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
-                                {
-                                    if (game.BoardPeices[((k % 12) * 2) + ((i - 2) * 12)] == 0)
-                                        BoardPiceButtons[i - 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+            //    string[,] BoardPeices = new string[24, 12];
+            //    for (int i = 1; i < 24; i++)
+            //    {
+            //        for (int k = 0; k < 12; k++)
+            //        {
+            //            if (game.BoardPeices[(i * 12) + k] != null)
+            //                BoardPeices[i, k] = game.BoardPeices[(i * 12) + k];
+            //        }
+            //    }
+            //    if (game.Status.CurrentStatus == GameStatus.Status.YourTurn)
+            //    {
+            //        if (peiceType == Strings.Road || peiceType == Strings.All)
+            //        {
+            //            for (int i = 1; i < 24; i = i + 2)
+            //            {
+            //                for (int k = 0; k < 12; k++)
+            //                {
+            //                    if (BoardPeices == (ToString(game.PlayerIndicator + 1) + Strings.City) || BoardPeices == (ToString(game.PlayerIndicator + 1) + Strings.Town))
+            //                    {
+            //                        if (i == 1)
+            //                        {
+            //                            if (game.BoardPeices[(k * 2) + 12] == 0)
+            //                            {
+            //                                BoardPiceButtons[2, (k * 2) + 1].BorderWidth = 1;
+            //                            }
+            //                            if (game.BoardPeices[(k * 2) + 13] == 0)
+            //                            {
+            //                                BoardPiceButtons[2, (k * 2) + 2].BorderWidth = 1;
+            //                            }
+            //                        }
+            //                        else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
+            //                        {
+            //                            if (game.BoardPeices[((k % 12) * 2) + ((i - 2) * 12)] == 0)
+            //                                BoardPiceButtons[i - 1, ((k % 12) * 2) + 1].BorderWidth = 1;
 
-                                    if (k % 12 != 0 && game.BoardPeices[((k % 12) * 2) + ((i - 2) * 12) - 1] == 0)
-                                        BoardPiceButtons[i - 1, ((k % 12) * 2)].BorderWidth = 1;
+            //                            if (k % 12 != 0 && game.BoardPeices[((k % 12) * 2) + ((i - 2) * 12) - 1] == 0)
+            //                                BoardPiceButtons[i - 1, ((k % 12) * 2)].BorderWidth = 1;
 
-                                    if (game.BoardPeices[k + 12] == 0)
-                                        BoardPiceButtons[i + 1, (k % 12) + 1].BorderWidth = 1;
-                                }
-                                else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
-                                {
-                                    if (game.BoardPeices[((k % 12) * 2) + (i * 12)] == 0)
-                                    {
-                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 1].BorderWidth = 1;
-                                    }
-                                    if (game.BoardPeices[((k % 12) * 2) + (i * 12) + 1] == 0)
-                                    {
-                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 2].BorderWidth = 1;
-                                    }
-                                    if (game.BoardPeices[k - 12] == 0)
-                                    {
-                                        BoardPiceButtons[i - 1, (k % 12) + 1].BorderWidth = 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //                            if (game.BoardPeices[k + 12] == 0)
+            //                                BoardPiceButtons[i + 1, (k % 12) + 1].BorderWidth = 1;
+            //                        }
+            //                        else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
+            //                        {
+            //                            if (game.BoardPeices[((k % 12) * 2) + (i * 12)] == 0)
+            //                            {
+            //                                BoardPiceButtons[i + 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+            //                            }
+            //                            if (game.BoardPeices[((k % 12) * 2) + (i * 12) + 1] == 0)
+            //                            {
+            //                                BoardPiceButtons[i + 1, ((k % 12) * 2) + 2].BorderWidth = 1;
+            //                            }
+            //                            if (game.BoardPeices[k - 12] == 0)
+            //                            {
+            //                                BoardPiceButtons[i - 1, (k % 12) + 1].BorderWidth = 1;
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
         }
     }
 }

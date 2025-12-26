@@ -18,7 +18,6 @@ namespace CatanGame.Models
             BorderWidth = 0;
             HorizontalOptions = LayoutOptions.Center;
             CornerRadius = 30;
-            Clicked += OnClicked;
         }
     }
 }

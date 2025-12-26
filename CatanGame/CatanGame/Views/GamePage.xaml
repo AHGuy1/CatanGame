@@ -10,40 +10,43 @@
     IsBusy="{Binding IsBusy}">
 
     <HorizontalStackLayout>
-        <Grid VerticalOptions="Center" HorizontalOptions="Center">
-            <Button ImageSource="boardframe.png"
-                    WidthRequest="445"
-                    HeightRequest="445"
-                    BackgroundColor="Transparent"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"/>
-            <Grid VerticalOptions="Center"
-                  HorizontalOptions="Center"
-                  x:Name="grdBoard" />
-            <Grid x:Name="grdPices"
-                  HeightRequest="430"
-                  HorizontalOptions="Center"
-                  VerticalOptions="Center"
-                  WidthRequest="430" />
+        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+            <Button
+                BackgroundColor="Transparent"
+                HeightRequest="445"
+                HorizontalOptions="Center"
+                ImageSource="boardframe.png"
+                VerticalOptions="Center"
+                WidthRequest="445" />
+            <Grid
+                x:Name="grdBoard"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+            <Grid
+                x:Name="grdPices"
+                HeightRequest="430"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="430" />
         </Grid>
-        <Grid RowDefinitions="auto,auto,auto"
-              VerticalOptions="Center">
-            <Label Text="{Binding Time}"
-                   HorizontalOptions="Center" />
-            <Label 
-                   Text="{Binding StatusMessage}"
-                   HorizontalOptions="Center"
-                   Grid.Row="1" />
-            <Button Command="{Binding EndTurnCommand}"
-                    HeightRequest="50"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.EndTurn}"
-                    Grid.Row="2" />
-            <Button Command="{Binding EndTurnCommand}"
-                    HeightRequest="50"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.EndTurn}"
-                    Grid.Row="2" />
+        <Grid RowDefinitions="auto,auto,auto" VerticalOptions="Center">
+            <Label HorizontalOptions="Center" Text="{Binding TimeLeft}" />
+            <Label
+                Grid.Row="1"
+                HorizontalOptions="Center"
+                Text="{Binding StatusMessage}" />
+            <Button
+                Grid.Row="2"
+                Command="{Binding EndTurnCommand}"
+                HeightRequest="50"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.EndTurn}" />
+            <Button
+                Grid.Row="2"
+                Command="{Binding EndTurnCommand}"
+                HeightRequest="50"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.EndTurn}" />
         </Grid>
     </HorizontalStackLayout>
 </ContentPage>

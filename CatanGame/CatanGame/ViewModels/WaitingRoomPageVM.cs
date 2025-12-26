@@ -32,9 +32,9 @@ namespace CatanGame.ViewModels
             StartGameCommand = new Command(StartGame, CanStartGame);
             this.game = game;
             this.game.AddPlayerName();
-            this.game.OnGameDeleted += OnGameDeleted;
-            this.game.OnPlayerLeft += OnPlayerLeft;
-            this.game.OnGameChanged += OnGameChanged;
+            this.game.GameDeleted += OnGameDeleted;
+            this.game.PlayerLeft += OnPlayerLeft;
+            this.game.GameChanged += OnGameChanged;
         }
 
         private void OnGameDeleted(object? sender, EventArgs e)

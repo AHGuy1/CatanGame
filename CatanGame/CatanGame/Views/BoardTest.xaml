@@ -25,5 +25,9 @@
                 VerticalOptions="Center"
                 WidthRequest="430" />
         </Grid>
+        <Label
+            FontSize="30"
+            Text="{Binding TimeLeft}"
+            TextColor="DodgerBlue" />
     </HorizontalStackLayout>
 </ContentPage>    

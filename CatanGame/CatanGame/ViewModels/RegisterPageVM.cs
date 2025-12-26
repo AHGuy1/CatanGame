@@ -77,8 +77,8 @@ namespace CatanGame.ViewModels
             RegisterCommand = new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             ToggleIsPasswordCommandConfirmPassword = new Command(ToggleIsPasswordConfirmPassword);
-            user.OnAuthComplete += OnAuthComplete;
-            user.OnAuthFalier += OnAuthFalier;
+            user.AuthComplete += OnAuthComplete;
+            user.AuthFalier += OnAuthFalier;
         }
 
         private void OnAuthComplete(object? sender, EventArgs e)

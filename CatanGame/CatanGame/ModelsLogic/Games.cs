@@ -11,7 +11,7 @@ namespace CatanGame.ModelsLogic
         protected override void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
-            OnGameAdded?.Invoke(this, CurrentGame!);
+            GameAdded?.Invoke(this, CurrentGame!);
         }
         protected override void OnCompleteGameAdded(Task task)
         {
@@ -40,7 +40,7 @@ namespace CatanGame.ModelsLogic
                     GamesList.Add(game);
                 }
             }
-            OnGamesChanged?.Invoke(this, EventArgs.Empty);
+            GamesChanged?.Invoke(this, EventArgs.Empty);
         }
         protected override void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
         {
