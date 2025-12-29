@@ -47,9 +47,11 @@ namespace CatanGame.ModelsLogic
             return msg;
         }
 
+
         public override async void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<Task> OnComplete)
         {
             await facl.CreateUserWithEmailAndPasswordAsync(email, password, name).ContinueWith(OnComplete);
+
         }
         public override async void SignInWithEmailAndPasswordAsync(string email, string password, Action<Task> OnComplete)
         {
@@ -79,6 +81,12 @@ namespace CatanGame.ModelsLogic
         {
             ICollectionReference cr = fdb.Collection(collectonName);
             IQuerySnapshot qs = await cr.WhereEqualsTo(fName, fValue).GetAsync();
+            OnComplete(qs);
+        }
+        public override async void GetDocumentsWhereLessThan(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete)
+        {
+            ICollectionReference cr = fdb.Collection(collectonName);
+            IQuerySnapshot qs = await cr.WhereLessThan(fName, fValue).GetAsync();
             OnComplete(qs);
         }
         public override async void DeleteDocument(string collectonName, string id, Action<Task> OnComplete)

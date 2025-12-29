@@ -5,7 +5,7 @@ namespace CatanGame.Models
 {
     public abstract class GameGridModel : Grid
     {
-        protected IndexedButton[,] BoardPiceButtons = new IndexedButton[24, 12];
+        protected IndexedButton[][] BoardPiceButtons = new IndexedButton[22][];
         public EventHandler<IndexedButton>? ButtonClicked;
 
         protected abstract IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex);
