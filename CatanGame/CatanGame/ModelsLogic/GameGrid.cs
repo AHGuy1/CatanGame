@@ -6,12 +6,9 @@ namespace CatanGame.ModelsLogic
     {
         public GameGrid()
         {
-            for (int i = 0; i < 22; i++)
+            for (int i = 1; i < 24; i++)
             {
-                if(i%0 == 0)
-                {
-                    BoardPiceButtons[i] = new IndexedButton[GetAmountOfColumns(i)];
-                }
+                BoardPiceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
             }
         }
         private static int GetAmountOfColumns(int i)
@@ -63,15 +60,11 @@ namespace CatanGame.ModelsLogic
 
         protected override IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
-            IndexedButton indexedButton = new(rowIndex, colmnIndex, 6, 18, rotation);
-            BoardPiceButtons[rowIndex, colmnIndex] = indexedButton;
-            return indexedButton;
+            return new(rowIndex, colmnIndex, 6, 18, rotation);
         }
         protected override IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
-            IndexedButton indexedButton = new(rowIndex, colmnIndex, 10, 10);
-            BoardPiceButtons[rowIndex, colmnIndex] = indexedButton;
-            return indexedButton;
+            return new(rowIndex, colmnIndex, 10, 10);
         }
         public override void Init(Grid gameBoard, Grid grdPices, Game game)
         {
@@ -337,12 +330,12 @@ namespace CatanGame.ModelsLogic
                 if (i % 2 != 0)
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    for (int k = 1; k < (i == 1 || i == 23 ? 4 : i == 3 || i == 5 || i == 19 || i == 21 ? 5 : i == 7 || i == 9 || i == 15 || i == 17 ? 6 : 7); k++)
+                    for (int k = 1; k < GetAmountOfColumns(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        BoardPiceButtons[i, k] = CreateApexButton(k, i);
-                        BoardPiceButtons[i, k].Clicked += OnButtonClicked;
-                        Row.Add(BoardPiceButtons[i, k], k);
+                        BoardPiceButtons[i][k - 1] = CreateApexButton(k, i);
+                        BoardPiceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        Row.Add(BoardPiceButtons[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     Row.ColumnSpacing = i == 11 || i == 13 ? 62 : 52;
@@ -350,12 +343,12 @@ namespace CatanGame.ModelsLogic
                 else
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    for (int k = 1; k < (i == 2 || i == 22 ? 7 : i == 4 || i == 20 ? 5 : i == 6 || i == 18 ? 9 : i == 8 || i == 16 ? 6 : i == 10 || i == 14 ? 11 : 7); k++)
+                    for (int k = 1; k < GetAmountOfColumns(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        BoardPiceButtons[i, k] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
-                        BoardPiceButtons[i, k].Clicked += OnButtonClicked;
-                        Row.Add(BoardPiceButtons[i, k], k);
+                        BoardPiceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
+                        BoardPiceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        Row.Add(BoardPiceButtons[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     Row.ColumnSpacing = i % 4 != 0 ? 12.6 : i == 12 ? 62.3 : 44;
@@ -370,63 +363,64 @@ namespace CatanGame.ModelsLogic
         }
         public override void ShowBuildOptions(string peiceType, Game game)
         {
-            //string[,] BoardPeices = new string[24, 12];
-            //for (int i = 1; i < 24; i++)
-            //{
-            //    for (int k = 0; k < 12; k++)
-            //    {
-            //        if (game.BoardPeices[(i * 12) + k] != null)
-            //            BoardPeices[i, k] = game.BoardPeices[(i * 12) + k];
-            //    }
-            //}
-            //if (game.Status.CurrentStatus == GameStatus.Status.YourTurn)
-            //{
-            //    if (peiceType == Strings.Road || peiceType == Strings.All)
-            //    {
-            //        for (int i = 1; i < 24; i = i + 2)
-            //        {
-            //            for (int k = 0; k < 12; k++)
-            //            {
-            //                if (BoardPeices[i, k] == (game.PlayerIndicator + 1).ToString() + Strings.City || BoardPeices[i, k] == (game.PlayerIndicator + 1).ToString() + Strings.Town)
-            //                {
-            //                    if (i == 1)
-            //                    {
-            //                        if (BoardPeices[i + 1, k * 2 - 1] == string.Empty)
-            //                            BoardPiceButtons[2, k * 2 ].BorderWidth = 1;
-            //                        if (BoardPeices[i + 1, k * 2] == string.Empty)
-            //                            BoardPiceButtons[2,k * 2 + 1].BorderWidth = 1;
-            //                    }
-            //                    else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
-            //                    {
-            //                        if (BoardPeices[i - 12, k * 2] == string.Empty)
-            //                            BoardPiceButtons[i - 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+            string[][] BoardPeices = new string[24][];
+            for (int i = 1; i < 24; i++)
+            {
+                BoardPeices[i] = new string[GetAmountOfColumns(i) - 1];
+                for (int k = 1; k < GetAmountOfColumns(i); k++)
+                {
+                    if (game.BoardPeices[(i * 12) + k] != null)
+                        BoardPeices[i][k] = game.BoardPeices[(i * 12) + k];
+                }
+            }
+            if (game.Status.CurrentStatus == GameStatus.Status.YourTurn)
+            {
+                if (peiceType == Strings.Road || peiceType == Strings.All)
+                {
+                    for (int i = 1; i < 24; i = i + 2)
+                    {
+                        for (int k = 0; k < 12; k++)
+                        {
+                            if (BoardPeices[i][k] == (game.PlayerIndicator + 1).ToString() + Strings.City || BoardPeices[i, k] == (game.PlayerIndicator + 1).ToString() + Strings.Town)
+                            {
+                                if (i == 1)
+                                {
+                                    if (BoardPeices[i + 1, k * 2 - 1] == string.Empty)
+                                        BoardPiceButtons[2, k * 2].BorderWidth = 1;
+                                    if (BoardPeices[i + 1, k * 2] == string.Empty)
+                                        BoardPiceButtons[2, k * 2 + 1].BorderWidth = 1;
+                                }
+                                else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
+                                {
+                                    if (BoardPeices[i - 12, k * 2] == string.Empty)
+                                        BoardPiceButtons[i - 1, ((k % 12) * 2) + 1].BorderWidth = 1;
 
-            //                        if (k % 12 != 0 && BoardPeices[((k % 12) * 2) + ((i - 2) * 12) - 1] == 0)
-            //                            BoardPiceButtons[i - 1, ((k % 12) * 2)].BorderWidth = 1;
+                                    if (k % 12 != 0 && BoardPeices[((k % 12) * 2) + ((i - 2) * 12) - 1] == 0)
+                                        BoardPiceButtons[i - 1, ((k % 12) * 2)].BorderWidth = 1;
 
-            //                        if (BoardPeices[k + 12] == 0)
-            //                            BoardPiceButtons[i + 1, (k % 12) + 1].BorderWidth = 1;
-            //                    }
-            //                    else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
-            //                    {
-            //                        if (BoardPeices[((k % 12) * 2) + (i * 12)] == 0)
-            //                        {
-            //                            BoardPiceButtons[i + 1, ((k % 12) * 2) + 1].BorderWidth = 1;
-            //                        }
-            //                        if (BoardPeices[((k % 12) * 2) + (i * 12) + 1] == 0)
-            //                        {
-            //                            BoardPiceButtons[i + 1, ((k % 12) * 2) + 2].BorderWidth = 1;
-            //                        }
-            //                        if (BoardPeices[k - 12] == 0)
-            //                        {
-            //                            BoardPiceButtons[i - 1, (k % 12) + 1].BorderWidth = 1;
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+                                    if (BoardPeices[k + 12] == 0)
+                                        BoardPiceButtons[i + 1, (k % 12) + 1].BorderWidth = 1;
+                                }
+                                else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
+                                {
+                                    if (BoardPeices[((k % 12) * 2) + (i * 12)] == 0)
+                                    {
+                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 1].BorderWidth = 1;
+                                    }
+                                    if (BoardPeices[((k % 12) * 2) + (i * 12) + 1] == 0)
+                                    {
+                                        BoardPiceButtons[i + 1, ((k % 12) * 2) + 2].BorderWidth = 1;
+                                    }
+                                    if (BoardPeices[k - 12] == 0)
+                                    {
+                                        BoardPiceButtons[i - 1, (k % 12) + 1].BorderWidth = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
