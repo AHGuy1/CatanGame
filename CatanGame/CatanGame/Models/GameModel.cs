@@ -1,5 +1,6 @@
 ﻿using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Timers;
@@ -55,7 +56,9 @@ namespace CatanGame.Models
         protected abstract void OnCompleteAddPlayerName(Task task);
         protected abstract void OnTurnChanged(Task task);
         protected abstract void StartTimer();
-        public abstract void OneSecondElapsed(object? sender, ElapsedEventArgs e);
+        protected abstract void IntArrayBoardPices();
+        protected abstract void RegisterTimer();
+        protected abstract void OnMessageReceived(long timeleft);
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

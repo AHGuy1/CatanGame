@@ -10,6 +10,7 @@ namespace CatanGame.Platforms.Android
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
     {
+        MyTimer? myTimer;
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -31,9 +32,12 @@ namespace CatanGame.Platforms.Android
             });
         }
 
-        private static void OnMessageReceived(TimerSettings value)
+        private void OnMessageReceived(TimerSettings value)
         {
-            _ = new MyTimer(value.TotalTimeInMilliseconds, value.IntervalInMilliseconds).Start();
+            myTimer?.Cancel();
+            myTimer = null;
+            myTimer = new MyTimer(value.TotalTimeInMilliseconds, value.IntervalInMilliseconds);
+            myTimer.Start();
         }
     }
 }

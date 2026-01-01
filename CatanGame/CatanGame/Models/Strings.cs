@@ -104,5 +104,6 @@
         public const string Road = "Road";
         public const string All = "All";
         public const string TimeUp = "Time Up";
+        public const string BuildOptions = "Build Options";
     }
 }

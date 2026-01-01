@@ -14,6 +14,7 @@ namespace CatanGame.ModelsLogic
 
         public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
         {
+            RegisterTimer();
             TurnTime = turnTime;
             ISRandomBoard = isRandomBoard;
             PlayerCount = slectedAmountOfPlayers.Size;
@@ -21,20 +22,30 @@ namespace CatanGame.ModelsLogic
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
             UpdateStatus();
-            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, n) =>
-            {
-                OnMessageReceived(n.Value);
-            });
+            IntArrayBoardPices();
         }
         public Game()
         {
-            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, n) =>
+            RegisterTimer();
+            IntArrayBoardPices();
+        }
+
+        protected override void IntArrayBoardPices()
+        {
+            for (int i = 0; i < 276; i++)
             {
-                OnMessageReceived(n.Value);
+                BoardPeices[i] = string.Empty;
+            }
+        }
+        protected  override void RegisterTimer()
+        {
+            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
+            {
+                OnMessageReceived(m.Value);
             });
         }
 
-        private void OnMessageReceived(long timeleft)
+        protected override void OnMessageReceived(long timeleft)
         {
            
             if (timeleft == Keys.FinishedSignal)
@@ -44,11 +55,16 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                TimeLeft = Strings.TimeLeft + double.Round(timeleft / 1000, 2).ToString();
+                TimeLeft = Strings.TimeLeft + double.Round(timeleft / 1000, 1).ToString();
                 TimeLeftChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
+        protected override void StartTimer()
+        {
+            WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
+            TimerSettings ts = new((TurnTime * 1000) + 1, 100);
+            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
+        }
         protected override void OnCompletePlayerLeft(Task task)
         {
             PlayerLeft?.Invoke(this, PlayerIndicator);
@@ -129,17 +145,6 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
                 GameStatus.Status.Player6Turn;
         }
-        protected override void StartTimer()
-        {
-            WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
-            TimerSettings ts = new(TurnTime + 1, 1000);
-            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
-        }
-
-        public override void OneSecondElapsed(object? sender, ElapsedEventArgs e)
-        {
-            TimeLeftChanged?.Invoke(this, EventArgs.Empty);
-        }
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
@@ -207,6 +212,7 @@ namespace CatanGame.ModelsLogic
                 { nameof(Turn), Turn }
             };
             UpdateFields(OnTurnChanged, dict);
+            StartTimer();
         }
         public override void StartGame()
         {

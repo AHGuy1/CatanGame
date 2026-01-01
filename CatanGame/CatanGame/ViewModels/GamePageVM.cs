@@ -31,11 +31,11 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public ICommand EndTurnCommand { get; }
-        public ICommand BuildOptionsCommand { get; }
+        public ICommand ShowBuildOptionsCommand { get; }
         public GamePageVM(Game game, Grid grdBoard, Grid grdPices)
         {
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
-            BuildOptionsCommand = new Command(ShowBuildOptions);
+            ShowBuildOptionsCommand = new Command(ShowBuildOptions,CanShowBuildOptions);
             this.game = game;
             board.Init(grdBoard, grdPices, game);
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
@@ -47,9 +47,15 @@ namespace CatanGame.ViewModels
             game.StartGame();
         }
 
+        private bool CanShowBuildOptions()
+        {
+            return StatusMessage == Strings.YourTurn;
+        }
+
         private void ShowBuildOptions()
         {
             board.ShowBuildOptions(Strings.All, game);
+            OnPropertyChanged(nameof(board));
         }
         private void UpdateTimeLeft(object? sender, EventArgs e)
         {
@@ -126,6 +132,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(StatusMessage));
             OnPropertyChanged(nameof(TimeLeft));
             (EndTurnCommand as Command)?.ChangeCanExecute();
+            (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
         }
 
         public void RemoveSnapshotListener()
