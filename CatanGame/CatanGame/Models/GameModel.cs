@@ -23,7 +23,7 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler? GameChanged;
         [Ignored]
-        public EventHandler? GameDeleted;
+        public EventHandler<string>? GameDeleted;
         [Ignored]
         public EventHandler<int>? PlayerLeft;
         [Ignored]
@@ -56,9 +56,10 @@ namespace CatanGame.Models
         protected abstract void OnCompleteAddPlayerName(Task task);
         protected abstract void OnTurnChanged(Task task);
         protected abstract void StartTimer();
-        protected abstract void IntArrayBoardPices();
         protected abstract void RegisterTimer();
+        protected abstract void StopTimer();
         protected abstract void OnMessageReceived(long timeleft);
+        protected abstract void IntArrayBoardPices();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

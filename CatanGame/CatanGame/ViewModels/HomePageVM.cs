@@ -13,6 +13,17 @@ namespace CatanGame.ViewModels
         private string SelectedBoardTypePri = string.Empty;
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
+        public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
+        public static ObservableCollection<string> BoardTypes => Games.BoardTypes;
+        public static string DisplayName => string.Empty;
+        public int SlectedAmountOfPointsNeeded { get; set; }
+        public ICommand JoinGameWithCodeCommand { get; }
+        public ICommand AddGameCommand { get; }
+        public ObservableCollection<GameSize>? AmountOfPlayers { get => games.AmountOfPlayers; set => games.AmountOfPlayers = value; }
+        public ObservableCollection<TurnTime> TurnTimes { get => games.TurnTimes; set => games.TurnTimes = value; }
+        public ObservableCollection<Game>? GamesList => games.GamesList;
+        public GameSize SlectedAmountOfPlayers { get; set; } = new GameSize();
+        public TurnTime SelectedTurnTime { get; set; } = new TurnTime();
         public string GameCode
         {
             get => GameCodePri;
@@ -31,17 +42,6 @@ namespace CatanGame.ViewModels
                 SelectedBoardTypePri = value;
             }
         }
-        public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
-        public static ObservableCollection<string> BoardTypes => Games.BoardTypes;
-        public static string DisplayName => string.Empty;
-        public int SlectedAmountOfPointsNeeded { get; set; }
-        public ICommand JoinGameWithCodeCommand { get; }
-        public ICommand AddGameCommand { get; }
-        public ObservableCollection<GameSize>? AmountOfPlayers { get => games.AmountOfPlayers; set => games.AmountOfPlayers = value; }
-        public ObservableCollection<TurnTime> TurnTimes { get => games.TurnTimes; set => games.TurnTimes = value; }
-        public ObservableCollection<Game>? GamesList => games.GamesList;
-        public GameSize SlectedAmountOfPlayers { get; set; } = new GameSize();
-        public TurnTime SelectedTurnTime { get; set; } = new TurnTime();
         public Game? SelectedItem
         {
             get => games.CurrentGame;
@@ -72,12 +72,10 @@ namespace CatanGame.ViewModels
             games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBoard);
             OnPropertyChanged(nameof(IsBusy));
         }
-
         private void OnGamesChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(GamesList));
         }
-
         private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
@@ -86,16 +84,6 @@ namespace CatanGame.ViewModels
                 Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
             });
         }
-        public void AddSnapshotListener()
-        {
-            games.AddSnapshotListener();
-        }
-
-        public void RemoveSnapshotListener()
-        {
-            games.RemoveSnapshotListener();
-        }
-
         private bool CanJoinGameWithCode()
         {
             return !String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
@@ -104,6 +92,15 @@ namespace CatanGame.ViewModels
         private void JoinGameWithCode()
         {
             games.JoinGameWithCode(GameCode);
+        }
+
+        public void AddSnapshotListener()
+        {
+            games.AddSnapshotListener();
+        }
+        public void RemoveSnapshotListener()
+        {
+            games.RemoveSnapshotListener();
         }
     }
 }

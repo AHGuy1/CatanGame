@@ -11,7 +11,7 @@ namespace CatanGame.ViewModels
     public partial class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        private readonly GameGrid board = [];
+        private readonly GameGrid board;
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
@@ -37,7 +37,8 @@ namespace CatanGame.ViewModels
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             ShowBuildOptionsCommand = new Command(ShowBuildOptions,CanShowBuildOptions);
             this.game = game;
-            board.Init(grdBoard, grdPices, game);
+            board = new(game);
+            board.Init(grdBoard, grdPices);
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;
@@ -71,11 +72,11 @@ namespace CatanGame.ViewModels
             EndTurn();
         }
 
-        private void OnGameDeleted(object? sender, EventArgs e)
+        private void OnGameDeleted(object? sender, string messgae)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Toast.Make(Strings.GameDeleted, ToastDuration.Long, 20).Show();
+                Toast.Make(messgae, ToastDuration.Long, 20).Show();
             });
         }
         private void OnPlayerLeft(object? sender, int Player)

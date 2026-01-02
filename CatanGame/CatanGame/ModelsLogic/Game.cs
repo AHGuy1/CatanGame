@@ -37,14 +37,13 @@ namespace CatanGame.ModelsLogic
                 BoardPeices[i] = string.Empty;
             }
         }
-        protected  override void RegisterTimer()
+        protected override void RegisterTimer()
         {
             WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
             {
                 OnMessageReceived(m.Value);
             });
         }
-
         protected override void OnMessageReceived(long timeleft)
         {
            
@@ -61,9 +60,13 @@ namespace CatanGame.ModelsLogic
         }
         protected override void StartTimer()
         {
-            WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
+            StopTimer();
             TimerSettings ts = new((TurnTime * 1000) + 1, 100);
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
+        }
+        protected override void StopTimer()
+        {
+            WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
         }
         protected override void OnCompletePlayerLeft(Task task)
         {
@@ -116,13 +119,13 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                GameDeleted?.Invoke(this, EventArgs.Empty);
+                GameDeleted?.Invoke(this,Strings.GameDeleted);
             }
         }
         protected override void OnCompleteDeleted(Task task)
         {
             if (task.IsCompletedSuccessfully)
-                GameDeleted?.Invoke(this, EventArgs.Empty);
+                GameDeleted?.Invoke(this, string.Empty);
         }
         protected override void OnCompleteAddPlayerName(Task task)
         {
@@ -168,7 +171,8 @@ namespace CatanGame.ModelsLogic
         }
         public override void RemoveSnapshotListener()
         {
-            ilr?.Remove();
+            StopTimer();
+            ilr?.Remove();                           
             PlayerNames[PlayerIndicator] = string.Empty;
             if (PlayerIndicator == 0 || GameStarted)
                 DeleteDocument(OnCompleteDeleted);

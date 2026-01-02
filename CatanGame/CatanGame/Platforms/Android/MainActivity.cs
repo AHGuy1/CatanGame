@@ -30,12 +30,21 @@ namespace CatanGame.Platforms.Android
             {
                 OnMessageReceived(n.Value);
             });
+            WeakReferenceMessenger.Default.Register<AppMessage<string>>(this, (r, n) =>
+            {
+                OnMessageReceived(n.Value);
+            });
         }
-
+        private void OnMessageReceived(string value)
+        {
+            if(value == Keys.StopSignal)
+            {
+                myTimer?.Cancel();
+                myTimer = null;
+            }
+        }
         private void OnMessageReceived(TimerSettings value)
         {
-            myTimer?.Cancel();
-            myTimer = null;
             myTimer = new MyTimer(value.TotalTimeInMilliseconds, value.IntervalInMilliseconds);
             myTimer.Start();
         }

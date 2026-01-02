@@ -37,11 +37,11 @@ namespace CatanGame.ViewModels
             this.game.GameChanged += OnGameChanged;
         }
 
-        private void OnGameDeleted(object? sender, EventArgs e)
+        private void OnGameDeleted(object? sender, string message)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Toast.Make(Strings.GameDeleted, ToastDuration.Long, 20).Show();
+                Toast.Make(message + Strings.HostLeft, ToastDuration.Long, 20).Show();
                 Application.Current!.MainPage = new AppShell();
             });
         }

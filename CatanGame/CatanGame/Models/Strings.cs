@@ -53,6 +53,7 @@
         public const string Player4 = "Player 4 :  ";
         public const string Player5 = "Player 5 :  ";
         public const string Player6 = "Player 6 :  ";
+        public const string HostLeft = " , Host Left";
         public const string Player2Left = "Player 2 Left";
         public const string Player3Left = "Player 3 Left";
         public const string Player4Left = "Player 4 Left";
@@ -65,7 +66,7 @@
         public const string Player5Turn = " (Player 5) Turn";
         public const string Player6Turn = " (Player 6) Turn";
         public const string YourTurn = "Your Turn";
-        public const string GameDeleted = "Game Deleted Host Left";
+        public const string GameDeleted = "Game Deleted";
         public const string PleseWait = "Plese Wait";
         public const string You = "(You)";
         public const string EndTurn = "End Turn";
@@ -105,5 +106,12 @@
         public const string All = "All";
         public const string TimeUp = "Time Up";
         public const string BuildOptions = "Build Options";
+        public const string red = "red";
+        public const string blue = "blue";
+        public const string green = "green";
+        public const string orenge = "orange";
+        public const string white = "white";
+        public const string brown = "brown";
+
     }
 }

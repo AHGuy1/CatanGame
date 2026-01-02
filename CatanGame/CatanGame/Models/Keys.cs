@@ -19,5 +19,6 @@ namespace CatanGame.Models
         public const string GameCodesCollection = "GameCodes";
         public const long FinishedSignal = -1000;
         public const int TheredSleepTime = 36000000;
+        public const int ButtonVisible = -1;
     }
 }

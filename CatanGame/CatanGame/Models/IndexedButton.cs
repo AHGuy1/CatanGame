@@ -15,7 +15,7 @@ namespace CatanGame.Models
             Rotation = rotation;
             Background = Colors.Transparent;
             BorderColor = Colors.White;
-            BorderWidth = 0;
+            BorderWidth = 1;
             HorizontalOptions = LayoutOptions.Center;
             CornerRadius = 30;
         }

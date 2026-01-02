@@ -8,6 +8,10 @@ namespace CatanGame.ModelsLogic
 {
     public class Games : GamesModel
     {
+        public Games()
+        {
+        }
+
         protected override void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
@@ -116,11 +120,6 @@ namespace CatanGame.ModelsLogic
             IsBusy = true;
             GameCode gamecode = new();
             gamecode.GetDocument(gameCode, OnCompleteGetCodeDocument);
-        }
-
-        public Games()
-        {
-
         }
     }
 }
