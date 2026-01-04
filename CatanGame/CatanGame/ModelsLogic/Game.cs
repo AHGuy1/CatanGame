@@ -34,7 +34,10 @@ namespace CatanGame.ModelsLogic
         {
             for (int i = 0; i < 276; i++)
             {
-                BoardPeices[i] = string.Empty;
+                if ((i / 12) % 2 == 0)
+                    BoardPeices[i] =  1 + Strings.Town;
+                else
+                    BoardPeices[i] = string.Empty;
             }
         }
         protected override void RegisterTimer()

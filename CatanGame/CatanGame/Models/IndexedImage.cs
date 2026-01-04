@@ -7,6 +7,7 @@
 
         public IndexedImage(int rowIndex, int columnIndex, int heightRequest, int widthRequest, int rotation = 0)
         {
+
             RowIndex = rowIndex;
             ColumnIndex = columnIndex;
             HeightRequest = heightRequest;

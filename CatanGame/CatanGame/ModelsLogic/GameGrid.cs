@@ -11,8 +11,10 @@ namespace CatanGame.ModelsLogic
             for (int i = 1; i < 24; i++)
             {
                 BoardPiceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
+                BoardPiceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
             }
         }
+
         private static int GetAmountOfColumns(int i)
         {
             return i switch
@@ -376,11 +378,16 @@ namespace CatanGame.ModelsLogic
             IndexedButton? button = (IndexedButton)sender!;
             if(button.BorderWidth == Keys.ButtonVisible)
             {
-               if(game.PlayerIndicator + 1 == 1)
+               if(game.PlayerIndicator  == 0)
                {
-
+                    if (button.RowIndex % 2 == 0)
+                    {
+                        BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (Strings.Oreange + Strings.Road).ToLower();
+                        button.BorderWidth = 0;
+                    }
                }
             }
+            OnPropertyChanged(nameof(BoardPiceImages));
         }
         public override void ShowBuildOptions(string peiceType, Game game)
         {
@@ -415,17 +422,39 @@ namespace CatanGame.ModelsLogic
                                 {
                                     if (BoardPeices[i + 1][k] == string.Empty)
                                         BoardPiceButtons[i + 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i - 1][k * 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][k * 2].BorderWidth = Keys.ButtonVisible;
-                                    if (i > 12 || (k != 0 && k != GetAmountOfColumns(i) - 2) && BoardPeices[i - 1][(k * 2) + 1] == string.Empty)
-                                        BoardPiceButtons[i - 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
+                                    if(i>12)
+                                    {
+                                        if (BoardPeices[i - 1][k * 2] == string.Empty)
+                                            BoardPiceButtons[i - 1][k * 2].BorderWidth = Keys.ButtonVisible;
+                                        if (BoardPeices[i - 1][(k * 2) + 1] == string.Empty)
+                                            BoardPiceButtons[i - 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
+                                    }
+                                    else
+                                    {
+                                        if (k != GetAmountOfColumns(i) - 2 && BoardPeices[i - 1][k * 2] == string.Empty)
+                                            BoardPiceButtons[i - 1][k * 2].BorderWidth = Keys.ButtonVisible;
+                                        if (k != 0 && BoardPeices[i - 1][(k * 2) - 1] == string.Empty)
+                                            BoardPiceButtons[i - 1][(k * 2) - 1].BorderWidth = Keys.ButtonVisible;
+                                    }
                                 }
                                 else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
                                 {
                                     if (BoardPeices[i - 1][k] == string.Empty)
                                         BoardPiceButtons[i - 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][k * 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
+                                    if (i < 12)
+                                    {
+                                        if (BoardPeices[i + 1][k * 2] == string.Empty)
+                                            BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
+                                        if (BoardPeices[i + 1][(k * 2) + 1] == string.Empty)
+                                            BoardPiceButtons[i + 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
+                                    } 
+                                    else
+                                    {
+                                        if (k != GetAmountOfColumns(i) - 2 && BoardPeices[i + 1][k * 2] == string.Empty)
+                                            BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
+                                        if (k != 0 && BoardPeices[i + 1][(k * 2) - 1] == string.Empty)
+                                            BoardPiceButtons[i + 1][(k * 2) - 1].BorderWidth = Keys.ButtonVisible;
+                                    }
                                     if (i < 12 || (k != 0 && k != GetAmountOfColumns(i) - 2) && BoardPeices[i + 1][(k * 2) + 1] == string.Empty)
                                         BoardPiceButtons[i + 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
                                 }

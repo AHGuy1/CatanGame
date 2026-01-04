@@ -106,12 +106,12 @@
         public const string All = "All";
         public const string TimeUp = "Time Up";
         public const string BuildOptions = "Build Options";
-        public const string red = "red";
-        public const string blue = "blue";
-        public const string green = "green";
-        public const string orenge = "orange";
-        public const string white = "white";
-        public const string brown = "brown";
+        public const string Red = "red";
+        public const string Blue = "blue";
+        public const string Green = "green";
+        public const string Oreange = "oreange";
+        public const string White = "white";
+        public const string Brown = "brown";
 
     }
 }
