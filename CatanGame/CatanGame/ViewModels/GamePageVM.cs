@@ -134,6 +134,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(TimeLeft));
             (EndTurnCommand as Command)?.ChangeCanExecute();
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
+            board.OnChange();
         }
 
         public void RemoveSnapshotListener()

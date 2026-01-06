@@ -10,7 +10,8 @@ namespace CatanGame.Models
         public EventHandler<IndexedButton>? ButtonClicked;
 
         protected abstract void OnButtonClicked(object? sender, EventArgs e);
-
+        
+        public abstract void OnChange();
         public abstract void Init(Grid gameBoard, Grid grdPices);
         public abstract void ShowBuildOptions(string peiceType, Game game);
     }

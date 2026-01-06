@@ -28,6 +28,19 @@ namespace CatanGame.ModelsLogic
                 _ => 0,
             };
         }
+        private static string GetPicesColor(int i)
+        {
+            return i switch
+            {
+                1 => Strings.Oreange,
+                2 => Strings.Blue,
+                3 => Strings.White,
+                4 => Strings.Green,
+                6 => Strings.Red,
+                10 => Strings.Brown,
+                _ => string.Empty,
+            };
+        }
         private static Grid CreateTileImage(string imageSource)
         {
             Grid grid = [];
@@ -376,29 +389,62 @@ namespace CatanGame.ModelsLogic
         protected override void OnButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
-            if(button.BorderWidth == Keys.ButtonVisible)
+            if (button.BorderWidth == Keys.ButtonVisible)
             {
-               if(game.PlayerIndicator  == 0)
-               {
-                    if (button.RowIndex % 2 == 0)
-                    {
-                        BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (Strings.Oreange + Strings.Road).ToLower();
-                        button.BorderWidth = 0;
-                    }
-               }
+                if (button.RowIndex % 2 == 0 && (BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()) == string.Empty)
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!;
+                }
+                else if (button.RowIndex % 2 == 1 && (BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()) == string.Empty)
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!;
+
+                }
+                else if (button.RowIndex % 2 == 1 && (BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString() == GetPicesColor(game.PlayerIndicator + 1) + Strings.Town))
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!;
+                }
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(game.BoardPeices), game.BoardPeices },
+                };
+                game.UpdateFields(dict);
             }
-            OnPropertyChanged(nameof(BoardPiceImages));
         }
+        public override void OnChange()
+        {
+            if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
+            {
+                for (int i = 1; i < 24; i++)
+                {
+                    for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                    {
+                        if (BoardPiceImages[i][k].Source != null && game.BoardPeices[((i - 1) * 12) + k] != null && BoardPiceImages[i][k].Source.ToString() != game.BoardPeices[((i - 1) * 12) + k])
+                        {
+                            BoardPiceImages[i][k].Source = game.BoardPeices[((i - 1) * 12) + k];
+                            BoardPiceButtons[i][k].BorderWidth = 0;
+                        }
+                    }
+                }
+            }    
+        }
+
         public override void ShowBuildOptions(string peiceType, Game game)
         {
             string[][] BoardPeices = new string[24][];
             for (int i = 1; i < 24; i++)
             {
                 BoardPeices[i] = new string[GetAmountOfColumns(i) - 1];
-                for (int k = 0; k < GetAmountOfColumns(i)-1; k++)
+                for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                 {
-                    if (game.BoardPeices[((i-1) * 12) + k] != null)
-                        BoardPeices[i][k] = game.BoardPeices[((i-1) * 12) + k];
+                    if (game.BoardPeices[((i - 1) * 12) + k] != null)
+                        BoardPeices[i][k] = game.BoardPeices[((i - 1) * 12) + k];
                 }
             }
             if (game.Status.CurrentStatus == GameStatus.Status.YourTurn)
@@ -407,9 +453,9 @@ namespace CatanGame.ModelsLogic
                 {
                     for (int i = 1; i < 24; i++)
                     {
-                        for (int k = 0; k < GetAmountOfColumns(i)-1; k++)
+                        for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                         {
-                            if (BoardPeices[i][k] == (game.PlayerIndicator + 1).ToString() + Strings.City || BoardPeices[i][k] == (game.PlayerIndicator + 1).ToString() + Strings.Town)
+                            if (BoardPeices[i][k] == GetPicesColor(game.PlayerIndicator + 1) + Strings.City || BoardPeices[i][k] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Town)
                             {
                                 if (i == 1)
                                 {
@@ -422,7 +468,7 @@ namespace CatanGame.ModelsLogic
                                 {
                                     if (BoardPeices[i + 1][k] == string.Empty)
                                         BoardPiceButtons[i + 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if(i>12)
+                                    if (i > 12)
                                     {
                                         if (BoardPeices[i - 1][k * 2] == string.Empty)
                                             BoardPiceButtons[i - 1][k * 2].BorderWidth = Keys.ButtonVisible;
@@ -447,7 +493,7 @@ namespace CatanGame.ModelsLogic
                                             BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
                                         if (BoardPeices[i + 1][(k * 2) + 1] == string.Empty)
                                             BoardPiceButtons[i + 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
-                                    } 
+                                    }
                                     else
                                     {
                                         if (k != GetAmountOfColumns(i) - 2 && BoardPeices[i + 1][k * 2] == string.Empty)
@@ -469,8 +515,19 @@ namespace CatanGame.ModelsLogic
                         }
                     }
                 }
+                if (peiceType == Strings.Town || peiceType == Strings.All)
+                {
+                    for (int i = 1; i < 24; i++)
+                    {
+                        for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                        {
+                            if (BoardPeices[i][k] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Road)
+                            {
+                            }
+                        }
+                    }
+                }
             }
-            OnPropertyChanged(nameof(BoardPeices));
         }
     }
 }

@@ -34,10 +34,7 @@ namespace CatanGame.ModelsLogic
         {
             for (int i = 0; i < 276; i++)
             {
-                if ((i / 12) % 2 == 0)
-                    BoardPeices[i] =  1 + Strings.Town;
-                else
-                    BoardPeices[i] = string.Empty;
+                BoardPeices[i] = string.Empty;
             }
         }
         protected override void RegisterTimer()
@@ -110,6 +107,9 @@ namespace CatanGame.ModelsLogic
                     PlayerTurn = updatedGame.PlayerTurn;
                     StartTimer();
                 }
+                for (int i = 0; i < BoardPeices.Length; i++)
+                    if(BoardPeices[i] != updatedGame.BoardPeices[i])
+                        BoardPeices[i] = updatedGame.BoardPeices[i];
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
