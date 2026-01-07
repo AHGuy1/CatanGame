@@ -111,7 +111,7 @@
         public const string Green = "green";
         public const string Oreange = "oreange";
         public const string White = "white";
-        public const string Brown = "brown";
+        public const string Cyan = "cyan";
 
     }
 }

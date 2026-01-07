@@ -35,9 +35,9 @@ namespace CatanGame.ModelsLogic
                 1 => Strings.Oreange,
                 2 => Strings.Blue,
                 3 => Strings.White,
-                4 => Strings.Green,
-                6 => Strings.Red,
-                10 => Strings.Brown,
+                4 => Strings.Red,
+                6 => Strings.Green,
+                10 => Strings.Cyan,
                 _ => string.Empty,
             };
         }
