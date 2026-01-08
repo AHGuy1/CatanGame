@@ -23,13 +23,13 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler? GameChanged;
         [Ignored]
+        public EventHandler? TurnChanged;
+        [Ignored]
         public EventHandler<string>? GameDeleted;
         [Ignored]
         public EventHandler<int>? PlayerLeft;
         [Ignored]
         public string Id { get; set; } = string.Empty;
-        [Ignored]
-        public int PlayerLeftIndex { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
         [Ignored]

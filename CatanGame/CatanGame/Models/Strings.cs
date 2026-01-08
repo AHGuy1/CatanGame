@@ -110,7 +110,7 @@
         public const string Blue = "blue";
         public const string Green = "green";
         public const string Oreange = "oreange";
-        public const string White = "white";
+        public const string Yellow = "yellow";
         public const string Cyan = "cyan";
 
     }
