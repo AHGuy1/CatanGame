@@ -10,11 +10,11 @@ namespace CatanGame.ModelsLogic
 {
     public class Game : GameModel
     {
+        private static bool TimerRegisterd = false;
         public override GameStatus Status => _status;
 
         public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
         {
-            RegisterTimer();
             TurnTime = turnTime;
             ISRandomBoard = isRandomBoard;
             PlayerCount = slectedAmountOfPlayers.Size;
@@ -26,7 +26,6 @@ namespace CatanGame.ModelsLogic
         }
         public Game()
         {
-            RegisterTimer();
             IntArrayBoardPices();
         }
 
@@ -40,10 +39,14 @@ namespace CatanGame.ModelsLogic
         }
         protected override void RegisterTimer()
         {
-            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
+            if(!TimerRegisterd)
             {
-                OnMessageReceived(m.Value);
-            });
+                WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
+                {
+                    OnMessageReceived(m.Value);
+                });
+            }
+            TimerRegisterd = true;
         }
         protected override void OnMessageReceived(long timeleft)
         {
@@ -115,6 +118,7 @@ namespace CatanGame.ModelsLogic
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
+                        RegisterTimer();
                         StartTimer();
                         GameStarted = updatedGame.GameStarted;
                         Application.Current!.MainPage = new GamePage(this);
@@ -227,6 +231,7 @@ namespace CatanGame.ModelsLogic
         }
         public override void StartGame()
         {
+            RegisterTimer();
             GameStarted = true;
             Dictionary<string, object> dict = new()
             {

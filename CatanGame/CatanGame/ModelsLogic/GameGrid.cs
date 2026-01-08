@@ -421,7 +421,7 @@ namespace CatanGame.ModelsLogic
                     button.BorderWidth = 0;
                     game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
                     HideButtuns();
-                    if (game.Turn <= game.PlayerCount)
+                    if (game.Turn <= game.PlayerCount*2)
                         ShowBuildOptions(Strings.Road);
                 }
                 else if (button.RowIndex % 2 == 1 && BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
