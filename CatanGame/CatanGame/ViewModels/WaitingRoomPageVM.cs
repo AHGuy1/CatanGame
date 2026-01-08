@@ -41,7 +41,7 @@ namespace CatanGame.ViewModels
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Toast.Make(message + Strings.HostLeft, ToastDuration.Long, 20).Show();
+                Toast.Make(Strings.GameDeleted + message, ToastDuration.Long, 20).Show();
                 Application.Current!.MainPage = new AppShell();
             });
         }

@@ -36,6 +36,7 @@ namespace CatanGame.ModelsLogic
             {
                 BoardPeices[i] = string.Empty;
             }
+            
         }
         protected override void RegisterTimer()
         {
@@ -60,7 +61,6 @@ namespace CatanGame.ModelsLogic
         }
         protected override void StartTimer()
         {
-            StopTimer();
             TimerSettings ts = new((TurnTime * 1000) + 1, 100);
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
         }
@@ -105,6 +105,8 @@ namespace CatanGame.ModelsLogic
                 if(PlayerTurn != updatedGame.PlayerTurn)
                 {
                     PlayerTurn = updatedGame.PlayerTurn;
+                    Turn = updatedGame.Turn;
+                    TurnChanged?.Invoke(this, EventArgs.Empty);
                     StartTimer();
                 }
                 for (int i = 0; i < BoardPeices.Length; i++)
@@ -122,7 +124,10 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                GameDeleted?.Invoke(this,Strings.GameDeleted);
+                if(!GameStarted)
+                GameDeleted?.Invoke(this,Strings.HostLeft);
+                else
+                GameDeleted?.Invoke(this, string.Empty);
             }
         }
         protected override void OnCompleteDeleted(Task task)
@@ -190,7 +195,6 @@ namespace CatanGame.ModelsLogic
                     }
                 }
                 IsFull = false;
-                PlayerLeftIndex = PlayerIndicator;
                 Dictionary<string, object> dict = new()
                 {
 

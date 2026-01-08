@@ -25,7 +25,6 @@ namespace CatanGame.ViewModels
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
         public string TimeLeft => game.TimeLeft;
         public bool IsBusy { get; set; } = false;
-        public bool ShouldGameBeDeleted { get; set; } = true;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
@@ -43,9 +42,19 @@ namespace CatanGame.ViewModels
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;
             this.game.GameChanged += OnGameChanged;
+            this.game.TurnChanged += OnTurnChanged;
             this.game.TimeLeftChanged += UpdateTimeLeft;
             OnPropertyChanged(nameof(game.TimeLeft));
             game.StartGame();
+            OnPropertyChanged(nameof(board));
+        }
+
+        private void OnTurnChanged(object? sender, EventArgs e)
+        {
+            if (game.Turn <= game.PlayerCount*2 && game.PlayerTurn == game.PlayerIndicator + 1)
+            {
+                board.ShowBuildOptions(Strings.Town);
+            }
         }
 
         private bool CanShowBuildOptions()
@@ -55,8 +64,7 @@ namespace CatanGame.ViewModels
 
         private void ShowBuildOptions()
         {
-            board.ShowBuildOptions(Strings.All, game);
-            OnPropertyChanged(nameof(board));
+            board.ShowBuildOptions(Strings.All);
         }
         private void UpdateTimeLeft(object? sender, EventArgs e)
         {
@@ -76,7 +84,8 @@ namespace CatanGame.ViewModels
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Toast.Make(messgae, ToastDuration.Long, 20).Show();
+                Toast.Make(Strings.GameDeleted + messgae, ToastDuration.Long, 20).Show();
+                Application.Current!.MainPage = new AppShell();
             });
         }
         private void OnPlayerLeft(object? sender, int Player)
@@ -134,13 +143,12 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(TimeLeft));
             (EndTurnCommand as Command)?.ChangeCanExecute();
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
-            board.OnChange();
+            MainThread.InvokeOnMainThreadAsync(() => board.OnChange());
         }
 
         public void RemoveSnapshotListener()
         {
-            if (ShouldGameBeDeleted)
-                game.RemoveSnapshotListener();
+            game.RemoveSnapshotListener();
         }
     }
 }
