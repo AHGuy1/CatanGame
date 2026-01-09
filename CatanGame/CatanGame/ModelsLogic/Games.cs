@@ -55,12 +55,10 @@ namespace CatanGame.ModelsLogic
                 game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);
             }
             else
-            {
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
                 });
-            }
         }
         protected override void OnCompleteGetGameDocument(IDocumentSnapshot ds)
         {
@@ -69,31 +67,22 @@ namespace CatanGame.ModelsLogic
                 Game? game = ds.ToObject<Game>();
                 game!.Id = ds.Id;
                 if (!game.IsFull)
-                {
                     if (Application.Current != null)
-                    {
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
                             Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
                         });
-                    }
-                }
                 else
-                {
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         Toast.Make(Strings.GameIsFull, ToastDuration.Long, 20).Show();
                     });
-                }
             }
             else
-            {
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
                 });
-            }
-
         }
 
         public override void AddSnapshotListener()

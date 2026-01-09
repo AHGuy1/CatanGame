@@ -35,18 +35,15 @@ namespace CatanGame.ModelsLogic
                 int pos = msg.IndexOf(Strings.ContainsReason);
                 msg = msg.Substring((pos + 7), msg.Length - pos - 8);
                 for (int i = 1; i < msg.Length; i++)
-                {
                     if (char.IsUpper(msg[i]))
                     {
                         msg = string.Concat(msg.AsSpan(pos, i), Strings.EmptySpace, msg.AsSpan(i));
                         pos = i + 1;
                         i++;
                     }
-                }
             }
             return msg;
         }
-
 
         public override async void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<Task> OnComplete)
         {

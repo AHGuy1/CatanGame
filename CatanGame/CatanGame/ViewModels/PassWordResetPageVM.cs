@@ -69,13 +69,11 @@ namespace CatanGame.ViewModels
 
         private void SwitchToLogInPage()
         {
-            if (Application.Current != null)
-            {              
+            if (Application.Current != null)             
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new LogInPage();
                 });
-            }
         }
 
         private void ToggleIsVisibleEmailMessege()

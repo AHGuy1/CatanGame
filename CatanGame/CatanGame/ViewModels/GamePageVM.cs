@@ -24,6 +24,7 @@ namespace CatanGame.ViewModels
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
         public string TimeLeft => game.TimeLeft;
+        public bool ShouldGameBeDeleted = true;
         public bool IsBusy { get; set; } = false;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
@@ -45,16 +46,14 @@ namespace CatanGame.ViewModels
             this.game.TurnChanged += OnTurnChanged;
             this.game.TimeLeftChanged += UpdateTimeLeft;
             OnPropertyChanged(nameof(game.TimeLeft));
-            game.StartGame();
             OnPropertyChanged(nameof(board));
+            game.StartGame();
         }
 
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             if (game.Turn <= game.PlayerCount*2 && game.PlayerTurn == game.PlayerIndicator + 1)
-            {
                 board.ShowBuildOptions(Strings.Town);
-            }
         }
 
         private bool CanShowBuildOptions()
@@ -82,6 +81,7 @@ namespace CatanGame.ViewModels
 
         private void OnGameDeleted(object? sender, string messgae)
         {
+            ShouldGameBeDeleted = false;
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.GameDeleted + messgae, ToastDuration.Long, 20).Show();
@@ -148,7 +148,8 @@ namespace CatanGame.ViewModels
 
         public void RemoveSnapshotListener()
         {
-            game.RemoveSnapshotListener();
+            if(ShouldGameBeDeleted)
+                game.RemoveSnapshotListener();
         }
     }
 }

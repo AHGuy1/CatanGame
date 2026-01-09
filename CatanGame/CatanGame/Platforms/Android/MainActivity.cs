@@ -45,8 +45,7 @@ namespace CatanGame.Platforms.Android
         }
         private void OnMessageReceived(TimerSettings value)
         {
-            myTimer?.Cancel();
-            myTimer = null;
+            OnMessageReceived(Keys.StopSignal);
             myTimer = new MyTimer(value.TotalTimeInMilliseconds, value.IntervalInMilliseconds);
             myTimer.Start();
         }

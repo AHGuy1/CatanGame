@@ -76,39 +76,33 @@ namespace CatanGame.ModelsLogic
         }
         private static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 6, 18, rotation);
+            return new(rowIndex, colmnIndex, 6*1.1, 18*1.1, rotation);
         }
         private static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 10, 10);
+            return new(rowIndex, colmnIndex, 10 * 1.5, 10 * 1.4);
         }
         private static IndexedImage CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 6, 18, rotation);
+            return new(rowIndex, colmnIndex, 6 * 1.1, 18 * 1.1, rotation);
         }
         private static IndexedImage CreateApexImage(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 10, 10);
+            return new(rowIndex, colmnIndex, 10 * 1.5, 10 * 1.5);
         }
 
         protected override void HideButtuns()
         {
             for (int i = 1; i < 24; i++)
-            {
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                {
                     BoardPiceButtons[i][k].BorderWidth = 0;
-                }
-            }
         }
 
         public override void Init(Grid gameBoard, Grid grdPices)
         {
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
-            {
                 gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            }
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1.75, GridUnitType.Star) });
             gameBoard.RowSpacing = 0;
             Grid Row = new()
@@ -117,7 +111,6 @@ namespace CatanGame.ModelsLogic
                 HorizontalOptions = LayoutOptions.Center
             };
             if (game.PlayerIndicator != 0)
-            {
                 for (int i = 1; i < 6; i++)
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
@@ -135,7 +128,6 @@ namespace CatanGame.ModelsLogic
                         HorizontalOptions = LayoutOptions.Center
                     };
                 }
-            }
             else
             {
                 string sourceTile;
@@ -164,9 +156,7 @@ namespace CatanGame.ModelsLogic
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
-                    {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(2, GridUnitType.Star) });
-                    }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
@@ -350,10 +340,7 @@ namespace CatanGame.ModelsLogic
                     grdPices.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
                 }
                 else
-                {
                     grdPices.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
-                }
-
             }
             grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
             for (int i = 1; i < 24; i++)
@@ -377,11 +364,11 @@ namespace CatanGame.ModelsLogic
                         Row.Add(BoardPiceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    Row.ColumnSpacing = i == 11 || i == 13 ? 62 : 52;
+                    Row.ColumnSpacing = i == 11 || i == 13 ? 63 : 48;
                 }
                 else
                 {
-                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
                     for (int k = 1; k < GetAmountOfColumns(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
@@ -392,16 +379,14 @@ namespace CatanGame.ModelsLogic
                         BoardPiceImages[i][k - 1].Source = game.BoardPeices[(i - 1) * 12 + k - 1];
                         Row.Add(BoardPiceImages[i][k - 1], k);
                     }
-                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    Row.ColumnSpacing = i % 4 != 0 ? 12.6 : i == 12 ? 62.3 : 44;
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+                    Row.ColumnSpacing = i % 4 == 0 ? i == 12 ? 62.3 : 42 : 11;
                     Row.Rotation = i > 12 ? 180 : 0;
                 }
                 grdPices.Add(Row, 0, i);
             }
             if (game.PlayerIndicator == 0)
-            {
-                ShowBuildOptions(Strings.Town);
-            }
+                ShowBuildOptions(Strings.All);
         }
         protected override void OnButtonClicked(object? sender, EventArgs e)
         {
@@ -441,18 +426,10 @@ namespace CatanGame.ModelsLogic
         public override void OnChange()
         {
             if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
-            {
                 for (int i = 1; i < 24; i++)
-                {
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
                         if (BoardPiceImages[i][k].Source != null && game.BoardPeices[((i - 1) * 12) + k] != null && BoardPiceImages[i][k].Source.ToString() != game.BoardPeices[((i - 1) * 12) + k])
-                        {
                             BoardPiceImages[i][k].Source = game.BoardPeices[((i - 1) * 12) + k];
-                        }
-                    }
-                }
-            }
         }
 
         public override void ShowBuildOptions(string peiceType)
@@ -462,17 +439,12 @@ namespace CatanGame.ModelsLogic
             {
                 BoardPeices[i] = new string[GetAmountOfColumns(i) - 1];
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                {
                     if (game.BoardPeices[((i - 1) * 12) + k] != null)
                         BoardPeices[i][k] = game.BoardPeices[((i - 1) * 12) + k];
-                }
             }
             if (peiceType == Strings.Road || peiceType == Strings.All)
-            {
                 for (int i = 1; i < 24; i++)
-                {
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
                         if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.City.ToLower()) || BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                         {
                             if (i == 1)
@@ -518,10 +490,8 @@ namespace CatanGame.ModelsLogic
                                 else
                                 {
                                     if(i== 13)
-                                    {
                                         if (BoardPeices[i - 1][k] == string.Empty)
                                             BoardPiceButtons[i - 1][k].BorderWidth = Keys.ButtonVisible;
-                                    }
                                     else if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - 2 - k] == string.Empty)
                                         BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - 2 - k].BorderWidth = Keys.ButtonVisible;    
                                     if (k < GetAmountOfColumns(i) - 2 && BoardPeices[i + 1][GetAmountOfColumns(i + 1) - (k * 2) - 2] == string.Empty)
@@ -538,15 +508,10 @@ namespace CatanGame.ModelsLogic
                                     BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k * 2)-3].BorderWidth = Keys.ButtonVisible;
                             }
                         }
-                    }
-                }
-            }
             if (peiceType == Strings.All)
-            {
+            {         
                 for (int i = 1; i < 24; i++)
-                {
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
                         if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower()))
                         {
                             if (i == 2 || i == 6 || i == 10)
@@ -601,35 +566,17 @@ namespace CatanGame.ModelsLogic
                                 }
                             }
                         }
-                    }
-                }
             }
             if (peiceType == Strings.City || peiceType == Strings.All)
-            {
                 for (int i = 1; i < 24; i++)
-                {
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
                         if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
-                        {
                             BoardPiceButtons[i][k].BorderWidth = Keys.ButtonVisible;
-                        }
-                    }
-                }
-            }
             if (peiceType == Strings.Town)
-            {
                 for (int i = 1; i < 24; i++)
-                {
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
                         if (BoardPeices[i][k].Equals(string.Empty) && i % 2 == 1)
-                        {
                             BoardPiceButtons[i][k].BorderWidth = Keys.ButtonVisible;
-                        }
-                    }
-                }
-            }
 
         }
     }

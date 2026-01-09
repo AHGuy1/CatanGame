@@ -3,14 +3,16 @@ using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Messaging;
+using Firebase.Firestore.Model;
 using Plugin.CloudFirestore;
+using System;
 using System.Timers;
+using static Android.Icu.Util.Calendar;
 
 namespace CatanGame.ModelsLogic
 {
     public class Game : GameModel
     {
-        private static bool TimerRegisterd = false;
         public override GameStatus Status => _status;
 
         public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
@@ -32,21 +34,14 @@ namespace CatanGame.ModelsLogic
         protected override void IntArrayBoardPices()
         {
             for (int i = 0; i < 276; i++)
-            {
-                BoardPeices[i] = string.Empty;
-            }
-            
+                BoardPeices[i] = string.Empty;       
         }
         protected override void RegisterTimer()
         {
-            if(!TimerRegisterd)
+            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
             {
-                WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
-                {
                     OnMessageReceived(m.Value);
-                });
-            }
-            TimerRegisterd = true;
+            });
         }
         protected override void OnMessageReceived(long timeleft)
         {
@@ -81,11 +76,9 @@ namespace CatanGame.ModelsLogic
             if (updatedGame != null)
             {
                 for (int i = 1; i < PlayerCount; i++)
-                {
                     if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
                     {
                         for (int j = 1; j < PlayerCount; j++)
-                        {
                             if (PlayerNames[j] != updatedGame.PlayerNames[j])
                             {
                                 PlayerLeft?.Invoke(this, j);
@@ -93,10 +86,8 @@ namespace CatanGame.ModelsLogic
                                     PlayerIndicator--;
                                 j = PlayerCount;
                             }
-                        }
                         i = PlayerCount;
                     }
-                }
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
                 TurnTime = updatedGame.TurnTime;
@@ -129,9 +120,9 @@ namespace CatanGame.ModelsLogic
             else
             {
                 if(!GameStarted)
-                GameDeleted?.Invoke(this,Strings.HostLeft);
+                    GameDeleted?.Invoke(this,Strings.HostLeft);
                 else
-                GameDeleted?.Invoke(this, string.Empty);
+                    GameDeleted?.Invoke(this, string.Empty);
             }
         }
         protected override void OnCompleteDeleted(Task task)
@@ -151,14 +142,10 @@ namespace CatanGame.ModelsLogic
         }
         protected override void UpdateStatus()
         {
+           Array status = Enum.GetValues(typeof(GameStatus.Status));
             _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
                 PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
-                PlayerTurn == 1 ? GameStatus.Status.Player1Turn :
-                PlayerTurn == 2 ? GameStatus.Status.Player2Turn :
-                PlayerTurn == 3 ? GameStatus.Status.Player3Turn :
-                PlayerTurn == 4 ? GameStatus.Status.Player4Turn :
-                PlayerTurn == 5 ? GameStatus.Status.Player5Turn :
-                GameStatus.Status.Player6Turn;
+                (GameStatus.Status)status.GetValue(PlayerTurn - 1)!;
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -191,13 +178,11 @@ namespace CatanGame.ModelsLogic
             else
             {
                 for (int i = 0; i < PlayerCount - 1; i++)
-                {
                     if (String.IsNullOrWhiteSpace(PlayerNames[i]))
                     {
                         PlayerNames[i] = PlayerNames[i + 1];
                         PlayerNames[i + 1] = string.Empty;
                     }
-                }
                 IsFull = false;
                 Dictionary<string, object> dict = new()
                 {
@@ -231,19 +216,25 @@ namespace CatanGame.ModelsLogic
         }
         public override void StartGame()
         {
-            RegisterTimer();
-            GameStarted = true;
-            Dictionary<string, object> dict = new()
+            if (!GameStarted)
             {
-                { nameof(GameStarted), GameStarted },
-            };
-            UpdateFields(OnTurnChanged, dict);
-            StartTimer();
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    RegisterTimer();
+                    StartTimer();
+                });
+                GameStarted = true;
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(GameStarted), GameStarted },
+                };
+                UpdateFields(OnTurnChanged, dict);
+            }       
         }
         public override void AddPlayerName()
         {
-            for (int i = 0; i < PlayerCount; i++)
-            {
+            bool addedName = false;
+            for (int i = 0; i < PlayerCount && !addedName; i++)
                 if (String.IsNullOrWhiteSpace(PlayerNames[i]))
                 {
                     PlayerNames[i] = fbd.DisplayName;
@@ -258,9 +249,8 @@ namespace CatanGame.ModelsLogic
                     };
                     UpdateFields(OnCompleteAddPlayerName, dict);
                     PlayerIndicator = i;
-                    i = PlayerCount;
+                    addedName = true;
                 }
-            }
         }
     }
 }

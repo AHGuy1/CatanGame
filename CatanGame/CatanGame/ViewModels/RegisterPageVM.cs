@@ -84,12 +84,10 @@ namespace CatanGame.ViewModels
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if(Application.Current != null)
-            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new LogInPage();
                 });
-            }
             IsBusy = false;
             IsEnabled = true;
             OnPropertyChanged(nameof(IsEnabled));

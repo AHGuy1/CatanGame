@@ -5,10 +5,10 @@
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
 
-        public IndexedImage(int rowIndex, int columnIndex, int heightRequest, int widthRequest, int rotation = 0)
+        public IndexedImage(int rowIndex, int columnIndex, double heightRequest, double widthRequest, int rotation = 0)
         {
             RowIndex = rowIndex;
-            ColumnIndex = columnIndex;
+            ColumnIndex = columnIndex; 
             HeightRequest = heightRequest;
             WidthRequest = widthRequest;
             Rotation = rotation;

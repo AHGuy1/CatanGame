@@ -43,9 +43,7 @@ namespace CatanGame.ModelsLogic
         protected override void ResetPasswordOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
-            {
                 AuthComplete?.Invoke(this, EventArgs.Empty);
-            }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
@@ -96,6 +94,7 @@ namespace CatanGame.ModelsLogic
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);
+
         }
         public override void Login()
         {

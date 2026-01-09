@@ -64,12 +64,10 @@ namespace CatanGame.ViewModels
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
-            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new AppShell();
                 });
-            }
             IsBusy = false;
             IsEnabled = true;
             OnPropertyChanged(nameof(IsEnabled));
@@ -138,14 +136,12 @@ namespace CatanGame.ViewModels
             IsEnabled = false;
             OnPropertyChanged(nameof(IsEnabled));
             if (Application.Current != null)
-            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new PassWordResetPage();
                     IsEnabled = true;
                     OnPropertyChanged(nameof(IsEnabled));
                 });
-            }
         }
 
         public void GoToRegister()
@@ -153,14 +149,12 @@ namespace CatanGame.ViewModels
             IsEnabled = false;
             OnPropertyChanged(nameof(IsEnabled));
             if (Application.Current != null)
-            {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new RegisterPage();
                     IsEnabled = true;
                     OnPropertyChanged(nameof(IsEnabled));
                 });
-            }
         }
     }
 }

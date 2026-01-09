@@ -6,7 +6,7 @@ namespace CatanGame.Models
     {
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
-        public IndexedButton(int rowIndex, int columnIndex,int heightRequest, int widthRequest,int rotation=0)
+        public IndexedButton(int rowIndex, int columnIndex,double heightRequest, double widthRequest,int rotation=0)
         {
             RowIndex = rowIndex;
             ColumnIndex = columnIndex;
@@ -15,9 +15,9 @@ namespace CatanGame.Models
             Rotation = rotation;
             Background = Colors.Transparent;
             BorderColor = Colors.White;
-            BorderWidth = 0;
+            BorderWidth = 2;
             HorizontalOptions = LayoutOptions.Center;
-            CornerRadius = 30;
+            CornerRadius = 120;
         }
     }
 }
