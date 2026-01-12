@@ -29,7 +29,9 @@
                 VerticalOptions="Center"
                 WidthRequest="430" />
         </Grid>
-        <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">
+        <Grid RowDefinitions="*,*,*,*" VerticalOptions="Center">
+            <Frame BorderColor="Black"
+                   CornerRadius="900" />
             <Label HorizontalOptions="Center" Text="{Binding TimeLeft}" />
             <Label
                 Grid.Row="1"

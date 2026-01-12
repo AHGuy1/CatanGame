@@ -3,11 +3,7 @@ using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Messaging;
-using Firebase.Firestore.Model;
 using Plugin.CloudFirestore;
-using System;
-using System.Timers;
-using static Android.Icu.Util.Calendar;
 
 namespace CatanGame.ModelsLogic
 {
@@ -53,7 +49,7 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                TimeLeft = Strings.TimeLeft + double.Round(timeleft / 1000, 1).ToString();
+                TimeLeft = double.Round(timeleft / 1000, 1).ToString();
                 TimeLeftChanged?.Invoke(this, EventArgs.Empty);
             }
         }
