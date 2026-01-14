@@ -380,7 +380,7 @@ namespace CatanGame.ModelsLogic
                         Row.Add(BoardPiceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-                    Row.ColumnSpacing = i % 4 == 0 ? i == 12 ? 62.3 : 42 : 11;
+                    Row.ColumnSpacing = i % 4 == 0 ? i == 12 ? 62.3 : 43 : 12;
                     Row.Rotation = i > 12 ? 180 : 0;
                 }
                 grdPices.Add(Row, 0, i);

@@ -47,15 +47,20 @@ namespace CatanGame.ModelsLogic
                 TimeLeft = Strings.TimeUp;
                 EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
             }
+            else if(timeleft/1000 <= 10)
+            {
+                TimeLeft = double.Round(((double)timeleft / 1000), 1).ToString();
+                TimeLeftChanged?.Invoke(this, EventArgs.Empty);
+            }
             else
             {
-                TimeLeft = double.Round(timeleft / 1000, 1).ToString();
+                TimeLeft = double.Round(((double)timeleft / 1000), 0).ToString();
                 TimeLeftChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         protected override void StartTimer()
         {
-            TimerSettings ts = new((TurnTime * 1000) + 1, 100);
+            TimerSettings ts = new((TurnTime * 1000) + 1, 1);
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
         }
         protected override void StopTimer()

@@ -12,6 +12,7 @@ namespace CatanGame.ViewModels
     {
         private readonly Game game;
         private readonly GameGrid board;
+        private readonly Animations animations;
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
@@ -30,10 +31,13 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
+        public Color? TimeColor => animations.TimeColor;
+        public double TimeOpacity => animations.TimeOpacity;
         public ICommand EndTurnCommand { get; }
         public ICommand ShowBuildOptionsCommand { get; }
         public GamePageVM(Game game, Grid grdBoard, Grid grdPices)
         {
+            animations = new Animations();
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             ShowBuildOptionsCommand = new Command(ShowBuildOptions,CanShowBuildOptions);
             this.game = game;
@@ -45,11 +49,17 @@ namespace CatanGame.ViewModels
             this.game.GameChanged += OnGameChanged;
             this.game.TurnChanged += OnTurnChanged;
             this.game.TimeLeftChanged += UpdateTimeLeft;
+            this.animations.OpacityChanged += OnOpacityChanged;
             OnPropertyChanged(nameof(game.TimeLeft));
             OnPropertyChanged(nameof(board));
             game.StartGame();
         }
 
+        private void OnOpacityChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(TimeColor));
+            OnPropertyChanged(nameof(TimeOpacity));
+        }
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             if (game.Turn <= game.PlayerCount*2 && game.PlayerTurn == game.PlayerIndicator + 1)
