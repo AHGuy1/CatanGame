@@ -1,0 +1,108 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = true
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.MvvmToolkitEnableINotifyPropertyChangingSupport = true
+build_property._MvvmToolkitIsUsingWindowsRuntimePack = false
+build_property.CsWinRTComponent = 
+build_property.CsWinRTAotOptimizerEnabled = 
+build_property.CsWinRTAotWarningLevel = 
+build_property.TargetFramework = net8.0-android
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = CatanGame
+build_property.ProjectDir = C:\.vs\CatanGame\CatanGame\CatanGame\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.App.xaml
+build_metadata.AdditionalFiles.TargetPath = App.xaml
+build_metadata.AdditionalFiles.RelativePath = App.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Resources/Styles/Converters.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Resources.Styles.Converters.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Converters.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Converters.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Resources/Styles/Icons.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Resources.Styles.Icons.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Icons.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Icons.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Resources/Styles/MyStyles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Resources.Styles.MyStyles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\MyStyles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\MyStyles.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/GamePage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.GamePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\GamePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\GamePage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/HomePage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.HomePage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\HomePage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\HomePage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/LogInPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.LogInPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\LogInPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\LogInPage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/PassWordResetPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.PassWordResetPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PassWordResetPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PassWordResetPage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/RegisterPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.RegisterPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RegisterPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RegisterPage.xaml
+
+[C:/.vs/CatanGame/CatanGame/CatanGame/Views/WaitingRoomPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CatanGame.Views.WaitingRoomPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\WaitingRoomPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\WaitingRoomPage.xaml
