@@ -388,7 +388,7 @@ namespace CatanGame.ModelsLogic
                 grdPices.Add(Row, 0, i);
             }
             if (game.PlayerIndicator == 0)
-                ShowBuildOptions(Strings.City);
+                ShowBuildOptions(Strings.Town);
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             Image image = new()
