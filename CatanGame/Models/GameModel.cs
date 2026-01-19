@@ -17,6 +17,10 @@ namespace CatanGame.Models
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
+        public string Id { get; set; } = string.Empty;
+        [Ignored]
+        public string TimeLeft { get; protected set; } = string.Empty;
+        [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
         public EventHandler? EndTurnOutOfTime;
@@ -31,14 +35,15 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler<int>? PlayerLeft;
         [Ignored]
-        public string Id { get; set; } = string.Empty;
+        public int PlayerLongestRoadLength { get; set; }
+        [Ignored]
+        public int PlayerLargestArmySize { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
         [Ignored]
-        public string TimeLeft { get; protected set; } = string.Empty;
-        [Ignored]
-        public bool ISRandomBoard { get; set; }
-        public int LongestRoad { get; set; } = 4;
+        public bool IsRandomBoard { get; set; }
+        public int LongestRoadLength { get; set; } = 4;
+        public int LargestArmySize { get; set; } = 2;
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
         public int AmountOfPointsNeeded { get; set; }

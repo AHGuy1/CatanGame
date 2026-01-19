@@ -17,6 +17,17 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        private static int GetBigestNumber(int num1, int num2, int num3 = 0, int num4 = 0)
+        {
+            return Math.Max(Math.Max(num1, num2), Math.Max(num3, num4));
+        }
+        private static bool[][] IntBoolArray()
+        {
+            bool[][] array = new bool[12][];
+            for (int i = 1; i< 12; i++)
+                array[i] = new bool[GetAmountOfColumns(i) - 1];
+            return array;
+        }
         private static int GetAmountOfColumns(int i)
         {
             return i switch
@@ -97,9 +108,109 @@ namespace CatanGame.ModelsLogic
         {
             for (int i = 1; i < 24; i++)
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    BoardPiceButtons[i][k].BorderWidth = 0;
+                    if(BoardPiceButtons[i][k].BorderWidth == Keys.ButtonVisible)
+                        BoardPiceButtons[i][k].BorderWidth = 0;
         }
+        protected override void OnButtonClicked(object? sender, EventArgs e)
+        {
+            IndexedButton? button = (IndexedButton)sender!;
+            if (button.BorderWidth == Keys.ButtonVisible)
+            {
+                if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                    HideButtuns();
+                    CheckLongestRoad();
+                }
+                else if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                    HideButtuns();
+                    if (game.Turn <= game.PlayerCount * 2)
+                        ShowBuildOptions(Strings.Road);
+                }
+                else if (button.RowIndex % 2 == 1 && BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
+                {
+                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
+                    button.BorderWidth = 0;
+                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                    HideButtuns();
+                }
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(game.BoardPeices), game.BoardPeices },
+                };
+                game.UpdateFields(dict);
+            }
+        }
+        protected override void CheckLongestRoad()
+        {
+            for (int i = 1; i < 24; i++)
+                for(int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                    if (BoardPiceImages[i][k].Source != null && BoardPiceImages[i][k].Source.ToString()![..6] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
+                    {
+                        bool[][] visited = IntBoolArray();
+                        int roadLength = CheckLongestRoad(i, k, 0, visited);
+                        if (roadLength > game.PlayerLongestRoadLength)
+                            game.PlayerLongestRoadLength = roadLength;
+                    }
+            if(game.PlayerLongestRoadLength > game.LongestRoadLength)
+            {
+                LongestRoad.Opacity = 1;
+                game.LongestRoadLength  = game.PlayerLongestRoadLength;
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(game.LongestRoadLength), game.LongestRoadLength }
+                };
+                game.UpdateFields(dict);
+            }
+        }
+        protected override int CheckLongestRoad(int row, int column, int count, bool[][] visited)
+        {
+            if (visited[row / 2][column])
+                return count;
+            if (row == 2 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))
+                return count;
+            if (row == 23 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) - 1][(column / 2) + 1] && visited[row / 2][column + 1])))
+                return count;
+            if (row < 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) + 1]))
+                return count;
+            if (row > 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) + 1]))
+                return count;
+            if(row % 4 == 0 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) - 1]) || (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) - 1])))
+                return count;
+            if ((row == 6 || row == 10) && ((column == 0 && visited[(row / 2) - 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1])))
+                return count;
+            if ((row == 6 || row == 10 || row == 14 || row == 18) && (column != 0 && column != GetAmountOfColumns(row) - 2) && ((column % 2 == 0 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column + 1]) || (visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]))) || (column % 2 == 1 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))))
+                return count;
+            if ((row == 14 || row == 18) && ((column == 0 && visited[(row / 2) + 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1])))
+                return count;
+            visited[row / 2][column] = true;
+            if (BoardPiceImages[row][column].Source.ToString()![..6] != GetPicesColor(game.PlayerIndicator+ 1) + Strings.Road)
+                return count;
+            if(row == 2)
+            {
+                if (column == 0)
+                    return GetBigestNumber(CheckLongestRoad(row,column + 1,count++,visited), CheckLongestRoad(row + 2, column, count++, visited));
+            }
+        }
+        public override void OnChange()
+        {
+            if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
+                for (int i = 1; i < 24; i++)
+                    for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                        if (BoardPiceImages[i][k].Source != null && game.BoardPeices[((i - 1) * 12) + k] != null && BoardPiceImages[i][k].Source.ToString()![..6] != game.BoardPeices[((i - 1) * 12) + k])
+                            BoardPiceImages[i][k].Source = game.BoardPeices[((i - 1) * 12) + k];
+            if(LongestRoad.Opacity != Keys.DoesNotOwn && game.PlayerLongestRoadLength < game.LongestRoadLength)
+                LongestRoad.Opacity = Keys.DoesNotOwn;
+            if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
+                LargestArmy.Opacity = Keys.DoesNotOwn;
 
+        }
         public override void Init(Grid gameBoard, Grid grdPices,Grid otherPices)
         {
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
@@ -162,7 +273,7 @@ namespace CatanGame.ModelsLogic
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        if (!game.ISRandomBoard)
+                        if (!game.IsRandomBoard)
                         {
                             if (i == 1)
                             {
@@ -391,70 +502,26 @@ namespace CatanGame.ModelsLogic
                 ShowBuildOptions(Strings.Town);
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-            Image image = new()
+            LongestRoad = new()
             {
                 Source = Strings.LongestRoadImage,
                 HeightRequest = 100,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.End,
-                Opacity = 0.5
+                Opacity = Keys.DoesNotOwn
             };
-            otherPices.Add(image);
-            image = new()
+            otherPices.Add(LongestRoad);
+            LargestArmy = new()
             {
                 Source = Strings.LargestArmyImage,
                 HeightRequest = 100,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.End,
-                Opacity = 0.5
+                Opacity = Keys.DoesNotOwn
             };
-            otherPices.Add(image, 1, 0);
+            otherPices.Add(LargestArmy, 1, 0);
             otherPices.ColumnSpacing = 5;
         }
-        protected override void OnButtonClicked(object? sender, EventArgs e)
-        {
-            IndexedButton? button = (IndexedButton)sender!;
-            if (button.BorderWidth == Keys.ButtonVisible)
-            {
-                if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
-                {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
-                }
-                else if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
-                {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
-                    if (game.Turn <= game.PlayerCount*2)
-                        ShowBuildOptions(Strings.Road);
-                }
-                else if (button.RowIndex % 2 == 1 && BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
-                {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
-                }
-                Dictionary<string, object> dict = new()
-                {
-                    { nameof(game.BoardPeices), game.BoardPeices },
-                };
-                game.UpdateFields(dict);
-            }
-        }
-        public override void OnChange()
-        {
-            if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
-                for (int i = 1; i < 24; i++)
-                    for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPiceImages[i][k].Source != null && game.BoardPeices[((i - 1) * 12) + k] != null && BoardPiceImages[i][k].Source.ToString() != "File: " + game.BoardPeices[((i - 1) * 12) + k] )
-                            BoardPiceImages[i][k].Source = game.BoardPeices[((i - 1) * 12) + k];
-        }
-
         public override void ShowBuildOptions(string peiceType)
         {
             string[][] BoardPeices = new string[24][];

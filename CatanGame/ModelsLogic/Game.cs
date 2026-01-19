@@ -14,7 +14,7 @@ namespace CatanGame.ModelsLogic
         public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
         {
             TurnTime = turnTime;
-            ISRandomBoard = isRandomBoard;
+            IsRandomBoard = isRandomBoard;
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
@@ -111,7 +111,13 @@ namespace CatanGame.ModelsLogic
                         gridChanged = true;
                         BoardPeices[i] = updatedGame.BoardPeices[i];
                     }
-                if(gridChanged)
+                if(LongestRoadLength != updatedGame.LongestRoadLength || LargestArmySize != updatedGame.LargestArmySize)
+                {
+                    LongestRoadLength = updatedGame.LongestRoadLength;
+                    LargestArmySize = updatedGame.LargestArmySize;
+                    gridChanged = true;
+                }
+                if (gridChanged)
                     GridChanged?.Invoke(this, EventArgs.Empty);
                 if (updatedGame.GameStarted && !GameStarted)
                     MainThread.InvokeOnMainThreadAsync(() =>

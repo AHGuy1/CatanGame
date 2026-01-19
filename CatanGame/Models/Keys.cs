@@ -20,5 +20,6 @@ namespace CatanGame.Models
         public const long FinishedSignal = -1000;
         public const int TheredSleepTime = 36000000;
         public const double ButtonVisible = 2;
+        public const double DoesNotOwn = 0.5;
     }
 }
