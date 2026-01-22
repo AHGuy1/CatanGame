@@ -14,7 +14,7 @@ namespace CatanGame.Models
         protected abstract void OnButtonClicked(object? sender, EventArgs e);
         protected abstract void HideButtuns();
         protected abstract void CheckLongestRoad();
-        protected abstract int CheckLongestRoad(int row, int column, int count, bool[][] visited);
+        protected abstract int CheckLongestRoad(int row, int column, bool[][] visited);
 
         public abstract void OnChange();
         public abstract void Init(Grid gameBoard, Grid grdPices, Grid otherPices);

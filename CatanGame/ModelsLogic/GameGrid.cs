@@ -19,13 +19,13 @@ namespace CatanGame.ModelsLogic
 
         private static int GetBigestNumber(int num1, int num2, int num3 = 0, int num4 = 0)
         {
-            return Math.Max(Math.Max(num1, num2), Math.Max(num3, num4));
+            return Math.Max(num1, Math.Max(num2, Math.Max(num3, num4)));
         }
         private static bool[][] IntBoolArray()
         {
             bool[][] array = new bool[12][];
-            for (int i = 1; i< 12; i++)
-                array[i] = new bool[GetAmountOfColumns(i) - 1];
+            for (int i = 1; i < 12; i++)
+                array[i] = new bool[GetAmountOfColumns(i * 2) - 1];
             return array;
         }
         private static int GetAmountOfColumns(int i)
@@ -151,10 +151,10 @@ namespace CatanGame.ModelsLogic
         {
             for (int i = 1; i < 24; i++)
                 for(int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if (BoardPiceImages[i][k].Source != null && BoardPiceImages[i][k].Source.ToString()![..6] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
+                    if (BoardPiceImages[i][k].Source != null && BoardPiceImages[i][k].Source.ToString()![6..] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
                     {
                         bool[][] visited = IntBoolArray();
-                        int roadLength = CheckLongestRoad(i, k, 0, visited);
+                        int roadLength = CheckLongestRoad(i, k,visited);
                         if (roadLength > game.PlayerLongestRoadLength)
                             game.PlayerLongestRoadLength = roadLength;
                     }
@@ -169,33 +169,84 @@ namespace CatanGame.ModelsLogic
                 game.UpdateFields(dict);
             }
         }
-        protected override int CheckLongestRoad(int row, int column, int count, bool[][] visited)
+        protected override int CheckLongestRoad(int row, int column,bool[][] visited)
         {
             if (visited[row / 2][column])
-                return count;
+                return 0;
             if (row == 2 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))
-                return count;
+                return 0;
             if (row == 23 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) - 1][(column / 2) + 1] && visited[row / 2][column + 1])))
-                return count;
+                return 0;
             if (row < 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) + 1]))
-                return count;
+                return 0;
             if (row > 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) + 1]))
-                return count;
-            if(row % 4 == 0 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) - 1]) || (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) - 1])))
-                return count;
+                return 0;
+            if (row % 4 == 0 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) - 1]) || (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) - 1])))
+                return 0;
             if ((row == 6 || row == 10) && ((column == 0 && visited[(row / 2) - 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1])))
-                return count;
+                return 0;
             if ((row == 6 || row == 10 || row == 14 || row == 18) && (column != 0 && column != GetAmountOfColumns(row) - 2) && ((column % 2 == 0 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column + 1]) || (visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]))) || (column % 2 == 1 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))))
-                return count;
+                return 0;
             if ((row == 14 || row == 18) && ((column == 0 && visited[(row / 2) + 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1])))
-                return count;
+                return 0;
             visited[row / 2][column] = true;
-            if (BoardPiceImages[row][column].Source.ToString()![..6] != GetPicesColor(game.PlayerIndicator+ 1) + Strings.Road)
-                return count;
-            if(row == 2)
+            if (row < 12)
+            {
+                if (BoardPiceImages[row][column].Source.ToString()![6..] != GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
+                    return 0;
+            }
+            else
+            {
+                if (BoardPiceImages[row][GetAmountOfColumns(row) - 2 - column].Source.ToString()![6..] != GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
+                    return 0;
+            }
+            if (row == 2)
             {
                 if (column == 0)
-                    return GetBigestNumber(CheckLongestRoad(row,column + 1,count++,visited), CheckLongestRoad(row + 2, column, count++, visited));
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row + 2, column, visited));
+                if (column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row + 2, (column / 2) + 1, visited));
+                if (column % 2 == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited));
+                return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row + 2, (column / 2) + 1, visited), CheckLongestRoad(row, column + 1, visited));
+            }
+            if (row == 23)
+            {
+                if (column == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row - 2, column, visited));
+                if (column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, (column / 2) + 1, visited));
+                if (column % 2 == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row - 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited));
+                return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, (column / 2) + 1, visited), CheckLongestRoad(row, column + 1, visited));
+            }
+            if (row % 4 == 0)
+            {
+                if (row < 12 && column == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row + 2, column + 1, visited), CheckLongestRoad(row - 2, column, visited));
+                if (row < 12 && column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 3, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited));
+                if (row == 12 && column == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row - 2, column, visited));
+                if (row == 12 && column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited));
+                if (row > 12 && column == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row - 2, column, visited), CheckLongestRoad(row - 2, column + 1, visited), CheckLongestRoad(row + 2, column, visited));
+                if (row > 12 && column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 3, visited), CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited));
+                return 1 + GetBigestNumber(CheckLongestRoad(row + 2, (column * 2) - 1, visited), CheckLongestRoad(row + 2, (column * 2), visited), CheckLongestRoad(row - 2, (column * 2) - 1, visited), CheckLongestRoad(row - 2, (column * 2), visited));
+            }
+            else
+            {
+                if (column == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row - 2, column, visited), CheckLongestRoad(row, column + 1, visited));
+                if (column == GetAmountOfColumns(row) - 2)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited), CheckLongestRoad(row, column - 1, visited));
+                if (column % 2 == 0)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, column / 2, visited));
+                if (row < 12)
+                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column / 2 + 1, visited), CheckLongestRoad(row - 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row, column + 1, visited));
+                return 1 + GetBigestNumber(CheckLongestRoad(row - 2, column / 2 + 1, visited), CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row, column + 1, visited));
             }
         }
         public override void OnChange()
