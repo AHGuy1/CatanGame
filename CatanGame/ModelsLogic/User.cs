@@ -94,11 +94,11 @@ namespace CatanGame.ModelsLogic
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);
-
         }
         public override void Login()
         {
-            fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
+            //fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
+            fbd.SignInWithGoogleAsync(LoginOnComplete);
         }
         public override void ResetPassword()
         {

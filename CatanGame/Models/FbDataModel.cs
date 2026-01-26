@@ -1,6 +1,7 @@
 ﻿using Firebase.Auth;
 using Firebase.Auth.Providers;
 using Plugin.CloudFirestore;
+using Plugin.Firebase.Auth;
 
 namespace CatanGame.Models
 {
@@ -8,10 +9,12 @@ namespace CatanGame.Models
     {
         protected FirebaseAuthClient facl;
         protected IFirestore fdb;
+        protected IFirebaseAuth fbauth;
         public abstract string DisplayName { get; }
         public abstract string UserID { get; }
         public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract void SignInWithGoogleAsync(Action<Task> OnComplete);
         public abstract void ResetPassword(string email, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void DeleteDocument(string collectonName, string id, Action<Task> onComplete);
         public abstract void DeleteDocument(string collectonName, string id);

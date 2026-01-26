@@ -12,7 +12,20 @@
           "package_name": "com.meitar.catangame"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "576491131527-gbcvbbqihjvpadgsoas0q5kcteducriv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.meitar.catangame",
+            "certificate_hash": "4a45f340a7ccecfafc14019c1af217de1f558b03"
+          }
+        },
+        {
+          "client_id": "576491131527-nobltn4f2e8e1d6p3h3oabq528mohe3o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBiMqS0AFWWQFeV3mnZuVYH1VC3SGaNtQ0"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576491131527-nobltn4f2e8e1d6p3h3oabq528mohe3o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,6 +1,8 @@
 ﻿using CatanGame.Models;
 using CommunityToolkit.Maui.Core;
+using Firebase.Auth;
 using Plugin.CloudFirestore;
+using Plugin.Firebase.Auth;
 using System.Threading.Tasks;
 
 namespace CatanGame.ModelsLogic
