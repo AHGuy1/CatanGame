@@ -6,6 +6,14 @@ namespace CatanGame.ModelsLogic
 {
     public class User : UserModel
     {
+
+        public User()
+        {
+            IsRegistered = Preferences.Get(Keys.IsRegisteredKey, false);
+            Email = Preferences.Get(Keys.EmailKey, string.Empty);
+            Password = Preferences.Get(Keys.PasswordKey, string.Empty);
+        }
+
         private static void SaveToPreferences()
         {
             Preferences.Set(Keys.IsRegisteredKey, true);
@@ -90,19 +98,114 @@ namespace CatanGame.ModelsLogic
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+        protected override void VerifyPhoneNumberOnComplete(Task task)
+        {
+            if(task.IsCompletedSuccessfully)
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.CodeSentToPhone, ToastDuration.Long, 20).Show();
+                });
+                PhoneNumberComplete?.Invoke(this, EventArgs.Empty);
+            }
+            else if (task.Exception != null)
+            {
+                string msg = task.Exception.Message;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                });
+                PhoneNumberFalier?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
+                PhoneNumberFalier?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        protected override void LinkPhoneToAcountOnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.PhoneLinkedToAcoount, ToastDuration.Long, 20).Show();
+                });
+                VerificationCodeComplete?.Invoke(this, EventArgs.Empty);      
+            }
+            else if (task.Exception != null)
+            {
+                string msg = task.Exception.Message;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                });
+                VerificationCodeFalier?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
+                VerificationCodeFalier?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        protected override void SignInWithPhoneNumberOnComplete(Task task)  
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show();
+                });
+                AuthComplete?.Invoke(this, EventArgs.Empty);
+            }
+            else if (task.Exception != null)
+            {
+                string msg = task.Exception.Message;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
+                });
+                AuthFalier?.Invoke(this, EventArgs.Empty);
 
+            }
+            else
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
+                });
+                AuthFalier?.Invoke(this, EventArgs.Empty);
+            }
+        }
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);
         }
         public override void Login()
         {
-            //fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
-            fbd.SignInWithGoogleAsync(LoginOnComplete);
+            fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
         }
         public override void ResetPassword()
         {
             fbd.ResetPassword(Email, ResetPasswordOnComplete);
+        }
+        public override void VerifyPhoneNumber(string phoneNumber)
+        {
+            fbd.VerifyPhoneNumberAsync(phoneNumber, VerifyPhoneNumberOnComplete);
+        }
+        public override void LinkPhoneNumberToAcount(string verificationCode)
+        {
+            fbd.LinkWithPhoneNumberVerificationCodeAsync(verificationCode, LinkPhoneToAcountOnComplete);
+        }
+        public override void SignInWithPhoneNumber(string verificationCode)
+        {
+            fbd.SignInWithPhoneNumberVerificationCodeAsync(verificationCode, SignInWithPhoneNumberOnComplete);
         }
         public override void RememberMe()
         {
@@ -118,13 +221,6 @@ namespace CatanGame.ModelsLogic
                 Preferences.Remove(Keys.PasswordKey);
                 Preferences.Set(Keys.IsRememberedKey, false);
             }
-        }
-
-        public User()
-        {
-            IsRegistered = Preferences.Get(Keys.IsRegisteredKey, false);
-            Email = Preferences.Get(Keys.EmailKey, string.Empty);
-            Password = Preferences.Get(Keys.PasswordKey, string.Empty);
         }
     }
 }

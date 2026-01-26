@@ -12,10 +12,12 @@ namespace CatanGame.Models
         protected IFirebaseAuth fbauth;
         public abstract string DisplayName { get; }
         public abstract string UserID { get; }
-        public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete);
-        public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<System.Threading.Tasks.Task> OnComplete);
-        public abstract void SignInWithGoogleAsync(Action<Task> OnComplete);
-        public abstract void ResetPassword(string email, Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<Task> OnComplete);
+        public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<Task> OnComplete);
+        public abstract void VerifyPhoneNumberAsync(string phoneNumber, Action<Task> OnComplete);
+        public abstract void LinkWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete);
+        public abstract void SignInWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete); 
+        public abstract void ResetPassword(string email, Action<Task> OnComplete);
         public abstract void DeleteDocument(string collectonName, string id, Action<Task> onComplete);
         public abstract void DeleteDocument(string collectonName, string id);
         public abstract void UpdateFields(string collectonName, string id, Dictionary<string, object> dict, Action<Task> OnComplete);
@@ -23,7 +25,7 @@ namespace CatanGame.Models
         public abstract void GetDocument(string collectonName, string documentName, Action<IDocumentSnapshot> OnComplete);
         public abstract void GetDocumentsWhereLessThan(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete);
         public abstract void GetDocumentsWhereEqualTo(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete);
-        public abstract string SetDocument(object obj, string collectonName, string id, Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract string SetDocument(object obj, string collectonName, string id, Action<Task> OnComplete);
         public abstract IListenerRegistration AddSnapshotListener(string collectonName, Plugin.CloudFirestore.QuerySnapshotHandler OnChange);
         public abstract IListenerRegistration AddSnapshotListener(string collectonName, string id, Plugin.CloudFirestore.DocumentSnapshotHandler OnChange);
 
@@ -37,6 +39,7 @@ namespace CatanGame.Models
             };
             facl = new FirebaseAuthClient(fac);
             fdb = CrossCloudFirestore.Current.Instance;
+            fbauth = CrossFirebaseAuth.Current;
         }
     }
 }

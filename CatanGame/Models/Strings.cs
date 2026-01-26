@@ -1,4 +1,6 @@
-﻿namespace CatanGame.Models
+﻿using Android.Net.Wifi.Aware;
+
+namespace CatanGame.Models
 {
     public static class Strings
     {
@@ -24,8 +26,18 @@
         public const string UnknownError = "Unknown Error";
         public const string RememberMeLabel = "Remember Me:";
         public const string ContainsINVALID_LOGIN_CREDENTIALS = "INVALID_LOGIN_CREDENTIALS";
+        public const string CodeSentToPhone = "Verification Code Sent To Phone";
+        public const string PhoneLinkedToAcoount = "Phone Linked To Acoount";
+        public const string PhoneAreaCode = "+972";
+        public const string PhoneStructure = "+972 5" + @"^[0-9]{1}$" + "-" + @"^[0-9]{3}$" + "-" + @"^[0-9]{3}$";
+        public const string VaildPhoneNumber = "You Must Enter A Vaild Phone Number!";
+        public const string PhoneNumberLabel = "Phone Number:";
+        public const string SendVerificationCode = "Send Verification Code";
+        public const string VerificationCodeLabel = "Verification Code:";
         public const string ContainsReason = "Reason";
         public const string EmptySpace = " ";
+        public const string AtSign = "@";
+        public const string Dot = ".";
         public const string PasswordResetLabel = "Reset Password";
         public const string ReturnToLogInLabl = "Return To Log In Page";
         public const string PassWordResetLinkSentPartOne = "If The Email Matches An";
@@ -114,6 +126,5 @@
         public const string Oreange = "oreange";
         public const string Yellow = "yellow";
         public const string Cyan = "cyan";
-
     }
 }
