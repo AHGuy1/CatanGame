@@ -18,6 +18,7 @@
             FontSize="32"
             HorizontalOptions="Center"
             Text="{x:Static m:Strings.LoginTitle}"
+            IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
             TextColor="DodgerBlue" />
 
         <Label
@@ -25,47 +26,48 @@
             FontFamily="MaterialSymbols"
             FontSize="32"
             HorizontalOptions="Center"
-            Text="{StaticResource IconVerified_user}"
+               IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
+               Text="{StaticResource IconVerified_user}"
             TextColor="DodgerBlue" />
 
         <Border
             Padding="10"
             Stroke="DodgerBlue"
+            IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
             StrokeShape="RoundRectangle 16"
             StrokeThickness="1">
 
-            <Grid RowDefinitions="auto,auto,auto">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="20"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.EmailLabel}"
-                    TextColor="DarkOrange" />
+            <Grid RowDefinitions="auto,auto,auto"
+                  IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
+                <Label FontAttributes="Bold"
+                       FontSize="20"
+                       HorizontalOptions="Center"
+                       Text="{x:Static m:Strings.EmailLabel}"
+                       TextColor="DarkOrange" />
 
-                <Entry
-                    Grid.Row="1"
-                    FontSize="18"
-                    Text="{Binding Email}"
-                    TextColor="black" />
-                <Label
-                    Grid.Row="2"
-                    FontAttributes="Bold"
-                    FontSize="12"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisibleEmailMessege}"
-                    Text="{x:Static m:Strings.invalidEmail}"
-                    TextColor="#E32636" />
+                <Entry Grid.Row="1"
+                       FontSize="18"
+                       Text="{Binding Email}"
+                       TextColor="black" />
+                <Label Grid.Row="2"
+                       FontAttributes="Bold"
+                       FontSize="12"
+                       HorizontalOptions="Center"
+                       IsVisible="{Binding IsVisibleEmailMessege}"
+                       Text="{x:Static m:Strings.invalidEmail}"
+                       TextColor="#E32636" />
             </Grid>
-
         </Border>
 
         <Border
             Padding="10"
             Stroke="DodgerBlue"
             StrokeShape="RoundRectangle 16"
+            IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
             StrokeThickness="1">
 
-            <Grid RowDefinitions="auto,auto,auto">
+            <Grid RowDefinitions="auto,auto,auto"
+                  IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
                 <Label
                     FontAttributes="Bold"
                     FontSize="20"
@@ -100,7 +102,8 @@
             </Grid>
         </Border>
 
-        <Grid ColumnDefinitions="*,*,*">
+        <Grid ColumnDefinitions="*,*,*"
+              IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
             <CheckBox
                 Grid.Column="2"
                 HorizontalOptions="Start"
@@ -118,7 +121,7 @@
 
         </Grid>
 
-        <Grid>
+        <Grid IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
             <Label
                 FontSize="20"
                 HorizontalOptions="Center"
@@ -133,14 +136,13 @@
             </Label>
         </Grid>
 
-
-        <Button
-            Command="{Binding LoginCommand}"
-            FontSize="18"
-            HeightRequest="70"
-            IsEnabled="{Binding IsEnabled}"
-            Text="{x:Static m:Strings.LoginButton}"
-            TextColor="White">
+        <Button Command="{Binding LoginCommand}"
+                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
+                FontSize="18"
+                HeightRequest="70"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{x:Static m:Strings.LoginButton}"
+                TextColor="White">
 
             <Button.ImageSource>
                 <FontImageSource Glyph="{StaticResource IconLogin}">
@@ -150,7 +152,80 @@
 
         </Button>
 
-        <Label
+        <Border Padding="10"
+                Stroke="DodgerBlue"
+                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+            <Grid RowDefinitions="auto,auto,auto"
+                  IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
+                <Label FontAttributes="Bold"
+                       FontSize="20"
+                       HorizontalOptions="Center"
+                       Text="{x:Static m:Strings.PhoneNumberLabel}"
+                       TextColor="DarkOrange" />
+
+                <Entry Grid.Row="1"
+                       FontSize="18"
+                       Text="{Binding PhoneNumber}"
+                       TextColor="black" />
+                <Label Grid.Row="2"
+                       FontAttributes="Bold"
+                       FontSize="12"
+                       HorizontalOptions="Center"
+                       IsVisible="{Binding IsVisiblePhoneMessege}"
+                       Text="{x:Static m:Strings.invalidEmail}"
+                       TextColor="#E32636" />
+            </Grid>
+
+        </Border>
+        <Button Command="{Binding SendVerificationCodeToPhoneCommand}"
+                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
+                FontSize="18"
+                HeightRequest="70"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{x:Static m:Strings.SendVerificationCode}"
+                TextColor="White" />
+
+        <Border Padding="10"
+                Stroke="DodgerBlue"
+                IsVisible="{Binding IsVisibileAfterVerificationCodeSent}"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+            <Grid RowDefinitions="auto,auto,auto"
+                  IsVisible="{Binding IsVisibileAfterVerificationCodeSent}">
+                <Label FontAttributes="Bold"
+                       FontSize="20"
+                       HorizontalOptions="Center"
+                       Text="{x:Static m:Strings.VerificationCodeLabel}"
+                       TextColor="DarkOrange" />
+
+                <Entry Grid.Row="1"
+                       FontSize="18"
+                       Text="{Binding VerificationCode}"
+                       TextColor="black" />
+                <Label Grid.Row="2"
+                       FontAttributes="Bold"
+                       FontSize="12"
+                       HorizontalOptions="Center"
+                       IsVisible="{Binding IsVisibleVerificationCodeMessege}"
+                       Text="{x:Static m:Strings.invalidEmail}"
+                       TextColor="#E32636" />
+            </Grid>
+
+        </Border>
+        <Button Command="{Binding SendVerificationCodeToPhoneCommand}"
+                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
+                FontSize="18"
+                HeightRequest="70"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{x:Static m:Strings.SendVerificationCode}"
+                TextColor="White" />
+        
+        <Label 
+            IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
             FontAttributes="Bold"
             FontSize="25"
             HorizontalOptions="Center"
@@ -161,6 +236,7 @@
             Command="{Binding CreateAcoountPageCommand}"
             FontSize="18"
             HeightRequest="70"
+            IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
             IsEnabled="{Binding IsEnabled}"
             Text="{x:Static m:Strings.CreateAnAcoountLabel}"
             TextColor="White" />
