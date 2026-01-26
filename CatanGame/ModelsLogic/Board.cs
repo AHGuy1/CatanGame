@@ -10,17 +10,17 @@ namespace CatanGame.ModelsLogic
 
         public override void InitEmpty(int vertexCount, int edgeCount, int hexCount)
         {
-            Vertices = new VertexNode[vertexCount];
-            for (int i = 0; i < vertexCount; i++)
-                Vertices[i] = new VertexNode(i);
+            //Vertices = new VertexNode[vertexCount];
+            //for (int i = 0; i < vertexCount; i++)
+            //    Vertices[i] = new VertexNode(i);
 
-            Edges = new EdgeLink[edgeCount];
-            for (int i = 0; i < edgeCount; i++)
-                Edges[i] = new EdgeLink(i, -1, -1);
+            //Edges = new EdgeLink[edgeCount];
+            //for (int i = 0; i < edgeCount; i++)
+            //    Edges[i] = new EdgeLink(i, -1, -1);
 
-            Hexes = new HexTile[hexCount];
-            for (int i = 0; i < hexCount; i++)
-                Hexes[i] = new HexTile(i, BoardModel.TerrainType.None, 0, []);
+            //Hexes = new HexTile[hexCount];
+            //for (int i = 0; i < hexCount; i++)
+            //    Hexes[i] = new HexTile(i, BoardModel.TerrainType.None, 0, []);
         }
 
         public VertexNode GetVertex(int id)

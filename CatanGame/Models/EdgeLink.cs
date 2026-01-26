@@ -1,6 +1,6 @@
 namespace CatanGame.Models
 {
-    public abstract class EdgeLinkModel
+    public abstract class EdgeLink
     {
         public int Id { get; set; }
         public int A { get; set; }

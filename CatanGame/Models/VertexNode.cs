@@ -1,6 +1,6 @@
 namespace CatanGame.Models
 {
-    public abstract class VertexNodeModel
+    public abstract class VertexNode
     {
         public int Id { get; set; }
         public Building? Building { get; set; }
