@@ -195,17 +195,17 @@ namespace CatanGame.ModelsLogic
         {
             fbd.ResetPassword(Email, ResetPasswordOnComplete);
         }
-        public override void VerifyPhoneNumber(string phoneNumber)
+        public override void VerifyPhoneNumber()
         {
-            fbd.VerifyPhoneNumberAsync(phoneNumber, VerifyPhoneNumberOnComplete);
+            fbd.VerifyPhoneNumberAsync("+972504694685", VerifyPhoneNumberOnComplete);
         }
-        public override void LinkPhoneNumberToAcount(string verificationCode)
+        public override void LinkPhoneNumberToAcount()
         {
-            fbd.LinkWithPhoneNumberVerificationCodeAsync(verificationCode, LinkPhoneToAcountOnComplete);
+            fbd.LinkWithPhoneNumberVerificationCodeAsync(VerificationCode, LinkPhoneToAcountOnComplete);
         }
-        public override void SignInWithPhoneNumber(string verificationCode)
+        public override void SignInWithPhoneNumber()
         {
-            fbd.SignInWithPhoneNumberVerificationCodeAsync(verificationCode, SignInWithPhoneNumberOnComplete);
+            fbd.SignInWithPhoneNumberVerificationCodeAsync(VerificationCode, SignInWithPhoneNumberOnComplete);
         }
         public override void RememberMe()
         {

@@ -17,6 +17,8 @@ namespace CatanGame.Models
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = Strings.PhoneAreaCode + Strings.EmptySpace;
+        public string VerificationCode { get; set; } = string.Empty;
         protected abstract void RegisterOnComplete(Task task);
         protected abstract void ResetPasswordOnComplete(Task task);
         protected abstract void LoginOnComplete(Task task);
@@ -25,9 +27,9 @@ namespace CatanGame.Models
         protected abstract void LinkPhoneToAcountOnComplete(Task task);
         public abstract void Register();
         public abstract void Login();
-        public abstract void VerifyPhoneNumber(string phoneNumber);
-        public abstract void LinkPhoneNumberToAcount(string verificationCode);
-        public abstract void SignInWithPhoneNumber(string verificationCode);
+        public abstract void VerifyPhoneNumber();
+        public abstract void LinkPhoneNumberToAcount();
+        public abstract void SignInWithPhoneNumber();
         public abstract void ResetPassword();
         public abstract void RememberMe();
 

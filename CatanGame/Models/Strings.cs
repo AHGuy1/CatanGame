@@ -29,7 +29,7 @@ namespace CatanGame.Models
         public const string CodeSentToPhone = "Verification Code Sent To Phone";
         public const string PhoneLinkedToAcoount = "Phone Linked To Acoount";
         public const string PhoneAreaCode = "+972";
-        public const string PhoneStructure = "+972 5" + @"^[0-9]{1}$" + "-" + @"^[0-9]{3}$" + "-" + @"^[0-9]{3}$";
+        public const string PhoneStructure = @"^\+972 5[0-9]-[0-9]{3}-[0-9]{4}$";
         public const string VaildPhoneNumber = "You Must Enter A Vaild Phone Number!";
         public const string PhoneNumberLabel = "Phone Number:";
         public const string SendVerificationCode = "Send Verification Code";

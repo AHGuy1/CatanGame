@@ -1,12 +1,15 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
 using CatanGame.Views;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {
     public partial class LogInPageVM : ObservableObject
     {
+        [GeneratedRegex(Strings.PhoneStructure)]
+        private static partial Regex PhoneStructureRegex();
         private readonly  User user = new();
         public ICommand LoginCommand { get; }
         public ICommand LoginWithVerificationCodeCommand { get; }
@@ -21,7 +24,7 @@ namespace CatanGame.ViewModels
         public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisiblePhoneMessege { get; set; } = false;
         public bool IsVisiblePasswordMessege { get; set; } = false;
-        public bool IsVisibleVerificationCodeMessege { get; set; } = true;
+        public bool IsVisibleVerificationCodeMessege { get; set; } = false;
         public bool IsPassword { get; set; } = true;
         public bool IsRemembered
         {
@@ -58,19 +61,20 @@ namespace CatanGame.ViewModels
         }
         public string VerificationCode
         {
-            get => VerificationCode;
+            get => user.VerificationCode;
             set
             {
-
+                user.VerificationCode = value;
                 ToggleIsVisibleVerificationCodeMessege();
                 (LoginWithVerificationCodeCommand as Command)?.ChangeCanExecute();
             }
         }
         public string PhoneNumber
         {
-            get => PhoneNumber;
+            get => user.PhoneNumber;
             set
             {
+                user.PhoneNumber = value;
                 ToggleIsVisiblePhoneMessege();
                 (SendVerificationCodeToPhoneCommand as Command)?.ChangeCanExecute();
             }
@@ -151,7 +155,7 @@ namespace CatanGame.ViewModels
         }
         private void ToggleIsVisiblePhoneMessege()
         {
-            IsVisiblePhoneMessege = !String.Equals(PhoneNumber, Strings.PhoneStructure);
+            IsVisiblePhoneMessege = !String.IsNullOrWhiteSpace(PhoneNumber) && !PhoneStructureRegex().IsMatch(PhoneNumber) && !String.Equals(PhoneNumber, Strings.PhoneAreaCode + Strings.EmptySpace);
             OnPropertyChanged(nameof(IsVisiblePhoneMessege));
         }
         private void ToggleIsVisibleEmailMessege()
@@ -181,7 +185,7 @@ namespace CatanGame.ViewModels
         private void LoginWithVerificationCode()
         {
             Busy();
-            user.SignInWithPhoneNumber(VerificationCode);
+            user.SignInWithPhoneNumber();
         }
         private bool CanLoginWithVerificationCode()
         {
@@ -189,13 +193,12 @@ namespace CatanGame.ViewModels
         }
         private void SendVerificationCodeToPhone()
         {
-
             Busy();
-            user.VerifyPhoneNumber(PhoneNumber);
+            user.VerifyPhoneNumber();
         }
         private bool CanSendVerificationCodeToPhone()
         {
-            return String.Equals(PhoneNumber,Strings.PhoneStructure);
+            return PhoneStructureRegex().IsMatch(PhoneNumber);
         }
         private void GoToResetPassword()
         {
