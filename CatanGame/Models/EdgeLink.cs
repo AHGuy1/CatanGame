@@ -1,23 +1,11 @@
 namespace CatanGame.Models
 {
-    public abstract class EdgeLink
+    public class EdgeLink(int row, int column, VertexNode vertexModeOne, VertexNode vertexModeTwo)
     {
-        public int Id { get; set; }
-        public int A { get; set; }
-        public int B { get; set; }
-        public int RoadOwnerPlayerIndex { get; set; }
-
-        public EdgeLink()
-        {
-            RoadOwnerPlayerIndex = -1;
-        }
-
-        public EdgeLink(int id, int a, int b)
-        {
-            Id = id;
-            A = a;
-            B = b;
-            RoadOwnerPlayerIndex = -1;
-        }
+        public int Row { get; set; } = row;
+        public int Column { get; set; } = column;
+        public VertexNode VertexModeOne { get; set; } = vertexModeOne;
+        public VertexNode VertexModeTwo { get; set; } = vertexModeTwo;
+        public int RoadOwnerPlayerIndex { get; set; } = -1;
     }
 }

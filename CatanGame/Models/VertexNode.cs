@@ -1,18 +1,22 @@
+using static Android.InputMethodServices.Keyboard;
+
 namespace CatanGame.Models
 {
-    public abstract class VertexNode
+    public class VertexNode
     {
-        public int Id { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
         public Building? Building { get; set; }
-        public int[] Edges { get; set; } = [];
+        public EdgeLink[] Edges { get; set; } = [];
 
         public VertexNode()
         {
         }
 
-        public VertexNode(int id)
+        public VertexNode(int row, int column)
         {
-            Id = id;
+            Row = row;
+            Column = column;
         }
     }
 }

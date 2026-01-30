@@ -17,9 +17,8 @@ namespace CatanGame.Models
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
-        public string Id { get; set; } = string.Empty;
-        [Ignored]
-        public string TimeLeft { get; protected set; } = string.Empty;
+        //= new()?
+        public Board GameBoard { get; } = new();
         [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
@@ -42,6 +41,10 @@ namespace CatanGame.Models
         public int PlayerIndicator { get; set; }
         [Ignored]
         public bool IsRandomBoard { get; set; }
+        [Ignored]
+        public string Id { get; set; } = string.Empty;
+        [Ignored]
+        public string TimeLeft { get; protected set; } = string.Empty;
         public int LongestRoadLength { get; set; } = 4;
         public int LargestArmySize { get; set; } = 2;
         public int TurnTime { get; set; }

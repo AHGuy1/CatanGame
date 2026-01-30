@@ -1,8 +1,11 @@
+using static Android.InputMethodServices.Keyboard;
+
 namespace CatanGame.Models
 {
-    public abstract class HexTile
+    public class HexTile
     {
-        public int Id { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
         public BoardModel.TerrainType Terrain { get; set; }
         public int NumberToken { get; set; }
         public int[] Corners { get; set; } = [];
@@ -13,12 +16,12 @@ namespace CatanGame.Models
             NumberToken = 0;
         }
 
-        public HexTile(int id, BoardModel.TerrainType terrain, int numberToken, int[] corners)
+        public HexTile(int row, int column, BoardModel.TerrainType terrainType, int numberToken)
         {
-            Id = id;
-            Terrain = terrain;
+            Row = row;
+            Column = column;
+            Terrain = terrainType;
             NumberToken = numberToken;
-            Corners = corners;
         }
     }
 }

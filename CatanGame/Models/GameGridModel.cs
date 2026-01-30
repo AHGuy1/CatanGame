@@ -10,6 +10,7 @@ namespace CatanGame.Models
         public EventHandler<IndexedButton>? ButtonClicked;
         public Image LongestRoad { get; set; } = new();
         public Image LargestArmy { get; set; } = new();
+        protected Game game = new();
 
         protected abstract void OnButtonClicked(object? sender, EventArgs e);
         protected abstract void HideButtuns();

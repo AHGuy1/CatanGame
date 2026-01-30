@@ -1,12 +1,10 @@
 ﻿using CatanGame.Models;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+using System;
 
 namespace CatanGame.ModelsLogic
 {
     public class GameGrid : GameGridModel
     {
-        private readonly Game game;
         public GameGrid(Game game)
         {
             this.game = game;
@@ -38,7 +36,40 @@ namespace CatanGame.ModelsLogic
                 2 or 11 or 12 or 13 or 22 => 7,
                 6 or 18 => 9,
                 10 or 14 => 11,
+                //Should not happen
                 _ => 0,
+            };
+        }
+        private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
+        {
+            // Determine the tile type and number based on fixed board layout
+            (sourceTile, sourceNumber) = (i, k) switch
+            {
+                (1, 1) => (Strings.MountienOne, Strings.TenImage),
+                (1, 2) => (Strings.PastureOne, Strings.TwoImage),
+                (1, 3) => (Strings.ForestOne, Strings.NineImage),
+
+                (2, 1) => (Strings.FieldsOne, Strings.TwelveImage),
+                (2, 2) => (Strings.Hills, Strings.SixImage),
+                (2, 3) => (Strings.PastureTwo, Strings.FourImage),
+                (2, 4) => (Strings.Hills, Strings.TenImage),
+
+                (3, 1) => (Strings.FieldsOne, Strings.NineImage),
+                (3, 2) => (Strings.ForestTwo, Strings.ElevenImage),
+                (3, 3) => (Strings.Desert, String.Empty),
+                (3, 4) => (Strings.ForestOne, Strings.ThreeImage),
+                (3, 5) => (Strings.MountienTwo, Strings.EightImage),
+
+                (4, 1) => (Strings.ForestTwo, Strings.EightImage),
+                (4, 2) => (Strings.MountienOne, Strings.ThreeImage),
+                (4, 3) => (Strings.FieldsTwo, Strings.FourImage),
+                (4, 4) => (Strings.PastureOne, Strings.FiveImage),
+
+                (5, 1) => (Strings.Hills, Strings.FiveImage),
+                (5, 2) => (Strings.FieldsTwo, Strings.SixImage),
+                (5, 3) => (Strings.PastureTwo, Strings.ElevenImage),
+                //Should not happen
+                _ => (string.Empty, string.Empty),
             };
         }
         private static string GetPicesColor(int i)
@@ -51,6 +82,7 @@ namespace CatanGame.ModelsLogic
                 4 => Strings.Red,
                 5 => Strings.Green,
                 6 => Strings.Cyan,
+                //Should not happen
                 _ => string.Empty,
             };
         }
@@ -102,6 +134,30 @@ namespace CatanGame.ModelsLogic
         private static IndexedImage CreateApexImage(int colmnIndex, int rowIndex)
         {
             return new(rowIndex, colmnIndex, 10 * 1.5, 10 * 1.5);
+        }
+        public static int GetTileLocationInArray(int row, int column)
+        {
+            int location = 0;
+            for (int i = 1; i < row; i++)
+            {
+                location += GetAmountOfColumnsTiles(i);
+            }
+            for (int i = 1; i < column; i++)
+            {
+                location++;
+            }
+            return location;
+        }
+        public static int GetAmountOfColumnsTiles(int i)
+        {
+            return i switch
+            {
+                1 or 5 => 3,
+                2 or 4 => 4,
+                3 => 5,
+                //Should not happen
+                _ => 0,
+            };
         }
 
         protected override void HideButtuns()
@@ -249,6 +305,7 @@ namespace CatanGame.ModelsLogic
                 return 1 + GetBigestNumber(CheckLongestRoad(row - 2, column / 2 + 1, visited), CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row, column + 1, visited));
             }
         }
+
         public override void OnChange()
         {
             if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
@@ -264,6 +321,7 @@ namespace CatanGame.ModelsLogic
         }
         public override void Init(Grid gameBoard, Grid grdPices,Grid otherPices)
         {
+            // Define the Rows In gameBoard (for UI/UX layout purposes)
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
                 gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
@@ -274,15 +332,16 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             };
+            //Initialize the tiles on the UI/UX game board
             if (game.PlayerIndicator != 0)
                 for (int i = 1; i < 6; i++)
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
+                    for (int k = 1; k < 1 + GetAmountOfColumnsTiles(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(2, GridUnitType.Star) });
-                        Row.Add(CreateTileImage(game.TileTypes[(i - 1) * 5 + k - 1]), k);
-                        Row.Add(CreateNumberImage(game.TileNumbers[(i - 1) * 5 + k - 1]), k);
+                        Row.Add(CreateTileImage(game.TileTypes[GetTileLocationInArray(i, k)]), k);
+                        Row.Add(CreateNumberImage(game.TileNumbers[GetTileLocationInArray(i, k)]), k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     gameBoard.Add(Row, 0, i);
@@ -294,10 +353,12 @@ namespace CatanGame.ModelsLogic
                 }
             else
             {
+                //local variables Used for random board generation
                 string sourceTile;
                 string sourceNumber;
                 Random random = new();
                 int count = 0;
+                //string arrays containing all the tile types and numbers, bye there respective amount
                 string[] tiles =
                 [
                     Strings.FieldsTwo,Strings.FieldsTwo,Strings.FieldsOne,Strings.FieldsOne,
@@ -324,143 +385,24 @@ namespace CatanGame.ModelsLogic
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     for (int k = 1; k < 4 + (i > 2 ? 5 - i : i - 1); k++)
                     {
-                        if (!game.IsRandomBoard)
+                        // Determine the tile type and number based on whether the board is random or fixed
+                        if (game.IsRandomBoard)
                         {
-                            if (i == 1)
-                            {
-                                if (k == 1)
-                                {
-                                    sourceTile = Strings.MountienOne;
-                                    sourceNumber = Strings.TenImage;
-                                }
-                                else if (k == 2)
-                                {
-                                    sourceTile = Strings.PastureOne;
-                                    sourceNumber = Strings.TwoImage;
-                                }
-                                else
-                                {
-                                    sourceTile = Strings.ForestOne;
-                                    sourceNumber = Strings.NineImage;
-                                }
-                            }
-                            else if (i == 2)
-                            {
-                                if (k == 1)
-                                {
-                                    sourceTile = Strings.FieldsOne;
-                                    sourceNumber = Strings.TwelveImage;
-                                }
-                                else if (k == 2)
-                                {
-                                    sourceTile = Strings.Hills;
-                                    sourceNumber = Strings.SixImage;
-                                }
-                                else if (k == 3)
-                                {
-                                    sourceTile = Strings.PastureTwo;
-                                    sourceNumber = Strings.FourImage;
-                                }
-                                else
-                                {
-                                    sourceTile = Strings.Hills;
-                                    sourceNumber = Strings.TenImage;
-                                }
-                            }
-                            else if (i == 3)
-                            {
-                                if (k == 1)
-                                {
-                                    sourceTile = Strings.FieldsOne;
-                                    sourceNumber = Strings.NineImage;
-                                }
-                                else if (k == 2)
-                                {
-                                    sourceTile = Strings.ForestTwo;
-                                    sourceNumber = Strings.ElevenImage;
-                                }
-                                else if (k == 3)
-                                {
-                                    sourceTile = Strings.Desert;
-                                    sourceNumber = String.Empty;
-                                }
-                                else if (k == 4)
-                                {
-                                    sourceTile = Strings.ForestOne;
-                                    sourceNumber = Strings.ThreeImage;
-                                }
-                                else
-                                {
-                                    sourceTile = Strings.MountienTwo;
-                                    sourceNumber = Strings.EightImage;
-                                }
-                            }
-                            else if (i == 4)
-                            {
-                                if (k == 1)
-                                {
-                                    sourceTile = Strings.ForestTwo;
-                                    sourceNumber = Strings.EightImage;
-                                }
-                                else if (k == 2)
-                                {
-                                    sourceTile = Strings.MountienOne;
-                                    sourceNumber = Strings.ThreeImage;
-                                }
-                                else if (k == 3)
-                                {
-                                    sourceTile = Strings.FieldsTwo;
-                                    sourceNumber = Strings.FourImage;
-                                }
-                                else
-                                {
-                                    sourceTile = Strings.PastureOne;
-                                    sourceNumber = Strings.FiveImage;
-                                }
-                            }
-                            else
-                            {
-                                if (k == 1)
-                                {
-                                    sourceTile = Strings.Hills;
-                                    sourceNumber = Strings.FiveImage;
-                                }
-                                else if (k == 2)
-                                {
-                                    sourceTile = Strings.FieldsTwo;
-                                    sourceNumber = Strings.SixImage;
-                                }
-                                else
-                                {
-                                    sourceTile = Strings.PastureTwo;
-                                    sourceNumber = Strings.ElevenImage;
-                                }
-                            }
-                        }
-                        else
-                        {
+
                             int curent = random.Next(0, tiles.Length - count);
                             sourceTile = tiles[curent];
                             tiles[curent] = String.Empty;
+                            //Desert tile does not get a number token
                             if (sourceTile == Strings.Desert)
-                            {
-                                sourceNumber = numbers[numbers.Length - 1 - count];
-                                numbers[numbers.Length - 1 - count] = String.Empty;
-                            }
+                                sourceNumber = String.Empty;
                             else
                             {
-                                sourceNumber = String.Empty;
-                                while (sourceNumber == String.Empty)
-                                {
-                                    curent = random.Next(0, numbers.Length - count);
-                                    if (numbers[curent] != String.Empty)
-                                    {
-                                        sourceNumber = numbers[curent];
-                                        numbers[curent] = String.Empty;
-                                    }
-                                }
+                                curent = random.Next(0, numbers.Length - count - 1);
+                                sourceNumber = numbers[curent];
+                                numbers[curent] = String.Empty;
                             }
                             count++;
+                            //Shift the arrays to remove empty entries
                             for (int n = 0; n < tiles.Length - 1; n++)
                             {
                                 if (tiles[n] == String.Empty)
@@ -474,6 +416,10 @@ namespace CatanGame.ModelsLogic
                                     numbers[n + 1] = String.Empty;
                                 }
                             }
+                        }
+                        else
+                        {
+                            GetFixedTile(i, k, out sourceTile, out sourceNumber);
                         }
                         game.TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
                         Row.Add(CreateTileImage(sourceTile), k);
@@ -492,8 +438,10 @@ namespace CatanGame.ModelsLogic
                     {nameof(game.TileNumbers), game.TileNumbers },
                     {nameof(game.TileTypes), game.TileTypes }
                 };
+                //Update the firebase with the new tile types and numbers
                 game.UpdateFields(dict);
             }
+            // Define the Rows In grdPices (for UI/UX layout purposes)
             grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
             {
@@ -507,6 +455,7 @@ namespace CatanGame.ModelsLogic
                     grdPices.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
             }
             grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
+            //Initialize the peices on the game UI/UX board
             for (int i = 1; i < 24; i++)
             {
                 Row = new()
@@ -549,6 +498,8 @@ namespace CatanGame.ModelsLogic
                 }
                 grdPices.Add(Row, 0, i);
             }
+            //Connect the game logic board with the UI/UX board
+            game.GameBoard.InitBoard(BoardPiceButtons, game.TileTypes, game.TileNumbers);
             if (game.PlayerIndicator == 0)
                 ShowBuildOptions(Strings.Town);
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
