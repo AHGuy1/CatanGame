@@ -26,6 +26,11 @@ namespace CatanGame.Models
         public HexTile[] Hexes { get; set; } = [];
 
         protected abstract void InitHex(string[] tileTypes, string[] tileNumbers);
+        protected abstract void InitEdges();
+        protected abstract void InitVertices();
+        protected abstract void SetEdgesVertices();
+        protected abstract void SetVerticesEdegs();
+
 
         public abstract void InitBoard(IndexedButton[][] pices, string[] tileTypes, string[] tileNumbers);
     }

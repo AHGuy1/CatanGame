@@ -26,20 +26,6 @@ namespace CatanGame.ModelsLogic
                 array[i] = new bool[GetAmountOfColumns(i * 2) - 1];
             return array;
         }
-        private static int GetAmountOfColumns(int i)
-        {
-            return i switch
-            {
-                1 or 23 => 4,
-                3 or 4 or 5 or 19 or 20 or 21 => 5,
-                7 or 8 or 9 or 15 or 16 or 17 => 6,
-                2 or 11 or 12 or 13 or 22 => 7,
-                6 or 18 => 9,
-                10 or 14 => 11,
-                //Should not happen
-                _ => 0,
-            };
-        }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
             // Determine the tile type and number based on fixed board layout
@@ -158,6 +144,48 @@ namespace CatanGame.ModelsLogic
                 //Should not happen
                 _ => 0,
             };
+        }
+        public static int GetAmountOfColumns(int i)
+        {
+            return i switch
+            {
+                1 or 23 => 4,
+                3 or 4 or 5 or 19 or 20 or 21 => 5,
+                7 or 8 or 9 or 15 or 16 or 17 => 6,
+                2 or 11 or 12 or 13 or 22 => 7,
+                6 or 18 => 9,
+                10 or 14 => 11,
+                //Should not happen
+                _ => 0,
+            };
+        }
+        public static int GetPiceLocationInArray(int row, int column)
+        {
+            int location = 0;
+            if(row % 2 == 0)
+            {
+                for (int i = 2; i < row; i += 2)
+                {
+                    location += GetAmountOfColumns(i) - 1;
+                }
+                for (int i = 0; i < column; i++)
+                {
+                    location++;
+                }
+                return location;
+            }
+            else
+            {
+                for (int i = 1; i < row; i += 2)
+                {
+                    location += GetAmountOfColumns(i) - 1;
+                }
+                for (int i = 0; i < column; i++)
+                {
+                    location++;
+                }
+                return location;
+            }
         }
 
         protected override void HideButtuns()
@@ -500,8 +528,10 @@ namespace CatanGame.ModelsLogic
             }
             //Connect the game logic board with the UI/UX board
             game.GameBoard.InitBoard(BoardPiceButtons, game.TileTypes, game.TileNumbers);
+            //Show build options for the first player for starting turn
             if (game.PlayerIndicator == 0)
                 ShowBuildOptions(Strings.Town);
+            // Define the Rows In otherPices  (for UI/UX layout purposes)
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             LongestRoad = new()
@@ -548,7 +578,6 @@ namespace CatanGame.ModelsLogic
                             }
                             else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
                             {
-
                                 if (i > 12)
                                 {
                                     if (BoardPeices[i + 1][GetAmountOfColumns(i + 1) - 2 - k] == string.Empty)
