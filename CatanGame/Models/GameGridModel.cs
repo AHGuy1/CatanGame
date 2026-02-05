@@ -5,8 +5,8 @@ namespace CatanGame.Models
 {
     public abstract class GameGridModel : Grid
     {
-        protected IndexedButton[][] BoardPiceButtons = new IndexedButton[24][];
-        protected IndexedImage[][] BoardPiceImages = new IndexedImage[24][];
+        protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
+        protected IndexedImage[][] BoardPieceImages = new IndexedImage[24][];
         public EventHandler<IndexedButton>? ButtonClicked;
         public Image LongestRoad { get; set; } = new();
         public Image LargestArmy { get; set; } = new();
@@ -15,10 +15,12 @@ namespace CatanGame.Models
         protected abstract void OnButtonClicked(object? sender, EventArgs e);
         protected abstract void HideButtuns();
         protected abstract void CheckLongestRoad();
-        protected abstract int CheckLongestRoad(int row, int column, bool[][] visited);
+        protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);
+        protected abstract int GetPieceIndexFromColor(int row, int column);
+        protected abstract BoardModel.PieceType GetPieceType(int row, int column);
 
         public abstract void OnChange();
-        public abstract void Init(Grid gameBoard, Grid grdPices, Grid otherPices);
-        public abstract void ShowBuildOptions(string peiceType);
+        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces);
+        public abstract void ShowBuildOptions(string pieceType);
     }
 }

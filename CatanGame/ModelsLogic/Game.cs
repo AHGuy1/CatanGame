@@ -20,17 +20,17 @@ namespace CatanGame.ModelsLogic
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
             UpdateStatus();
-            IntArrayBoardPices();
+            IntArrayBoardPieces();
         }
         public Game()
         {
-            IntArrayBoardPices();
+            IntArrayBoardPieces();
         }
 
-        protected override void IntArrayBoardPices()
+        protected override void IntArrayBoardPieces()
         {
             for (int i = 0; i < 276; i++)
-                BoardPeices[i] = string.Empty;       
+                BoardPieces[i] = string.Empty;       
         }
         protected override void RegisterTimer()
         {
@@ -105,11 +105,11 @@ namespace CatanGame.ModelsLogic
                     StartTimer();
                 }
                 bool gridChanged = false;
-                for (int i = 0; i < BoardPeices.Length; i++)
-                    if(BoardPeices[i] != updatedGame.BoardPeices[i])
+                for (int i = 0; i < BoardPieces.Length; i++)
+                    if(BoardPieces[i] != updatedGame.BoardPieces[i])
                     {
                         gridChanged = true;
-                        BoardPeices[i] = updatedGame.BoardPeices[i];
+                        BoardPieces[i] = updatedGame.BoardPieces[i];
                     }
                 if(LongestRoadLength != updatedGame.LongestRoadLength || LargestArmySize != updatedGame.LargestArmySize)
                 {

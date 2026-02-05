@@ -1,4 +1,5 @@
-﻿using CatanGame.Models;
+﻿using Android.Hardware.Camera2;
+using CatanGame.Models;
 using System;
 
 namespace CatanGame.ModelsLogic
@@ -10,21 +11,14 @@ namespace CatanGame.ModelsLogic
             this.game = game;
             for (int i = 1; i < 24; i++)
             {
-                BoardPiceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
-                BoardPiceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
+                BoardPieceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
+                BoardPieceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
             }
         }
 
         private static int GetBigestNumber(int num1, int num2, int num3 = 0, int num4 = 0)
         {
             return Math.Max(num1, Math.Max(num2, Math.Max(num3, num4)));
-        }
-        private static bool[][] IntBoolArray()
-        {
-            bool[][] array = new bool[12][];
-            for (int i = 1; i < 12; i++)
-                array[i] = new bool[GetAmountOfColumns(i * 2) - 1];
-            return array;
         }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
@@ -58,7 +52,7 @@ namespace CatanGame.ModelsLogic
                 _ => (string.Empty, string.Empty),
             };
         }
-        private static string GetPicesColor(int i)
+        private static string GetPiecesColor(int i)
         {
             return i switch
             {
@@ -159,7 +153,7 @@ namespace CatanGame.ModelsLogic
                 _ => 0,
             };
         }
-        public static int GetPiceLocationInArray(int row, int column)
+        public static int GetPieceLocationInArray(int row, int column)
         {
             int location = 0;
             if(row % 2 == 0)
@@ -187,167 +181,174 @@ namespace CatanGame.ModelsLogic
                 return location;
             }
         }
-
+        protected override BoardModel.PieceType GetPieceType(int row, int column)
+        {
+            return BoardPieceImages[row][column].ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.City, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.City :
+                   BoardModel.PieceType.None;
+        }
+        protected override int GetPieceIndexFromColor(int row, int column)
+        {
+            return BoardPieceImages[row][column].ToString()!.Contains(Strings.Oreange, StringComparison.CurrentCultureIgnoreCase) ? 0 :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Blue, StringComparison.CurrentCultureIgnoreCase) ? 1 :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Yellow, StringComparison.CurrentCultureIgnoreCase) ? 2 :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Red, StringComparison.CurrentCultureIgnoreCase) ? 3 :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
+                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
+                   -1;
+        }
         protected override void HideButtuns()
         {
             for (int i = 1; i < 24; i++)
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if(BoardPiceButtons[i][k].BorderWidth == Keys.ButtonVisible)
-                        BoardPiceButtons[i][k].BorderWidth = 0;
+                    if(BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
+                        BoardPieceButtons[i][k].BorderWidth = 0;
         }
         protected override void OnButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
             if (button.BorderWidth == Keys.ButtonVisible)
             {
-                if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                 {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
+                    BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
+                    game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                    game.GameBoard.Edges[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(button.RowIndex, button.ColumnIndex - 1);
                     CheckLongestRoad();
                 }
-                else if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                else
                 {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
-                    if (game.Turn <= game.PlayerCount * 2)
-                        ShowBuildOptions(Strings.Road);
+                    if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                    {
+                        BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
+                        game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                        if (game.Turn <= game.PlayerCount * 2)
+                            ShowBuildOptions(Strings.Road);
+                    }
+                    else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
+                    {
+                        BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
+                        game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                    }
+                    game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = GetPieceIndexFromColor(button.RowIndex, button.ColumnIndex - 1);
+                    game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = GetPieceType(button.RowIndex, button.ColumnIndex - 1);
+                    Dictionary<string, object> dict = new()
+                    {
+                        { nameof(game.BoardPieces), game.BoardPieces }
+                    };
+                    game.UpdateFields(dict);
                 }
-                else if (button.RowIndex % 2 == 1 && BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
-                {
-                    BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPicesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
-                    button.BorderWidth = 0;
-                    game.BoardPeices[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPiceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    HideButtuns();
-                }
-                Dictionary<string, object> dict = new()
-                {
-                    { nameof(game.BoardPeices), game.BoardPeices },
-                };
-                game.UpdateFields(dict);
+                HideButtuns();
             }
         }
         protected override void CheckLongestRoad()
         {
-            for (int i = 1; i < 24; i++)
-                for(int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if (BoardPiceImages[i][k].Source != null && BoardPiceImages[i][k].Source.ToString()![6..] == GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
-                    {
-                        bool[][] visited = IntBoolArray();
-                        int roadLength = CheckLongestRoad(i, k,visited);
-                        if (roadLength > game.PlayerLongestRoadLength)
-                            game.PlayerLongestRoadLength = roadLength;
-                    }
+            EdgeLink[] edges = game.GameBoard.Edges;
+            for (int i = 0; i < edges.Length; i++)
+            {
+                if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
+                {
+                    bool[] visited = new bool[edges.Length];
+                    int roadLength = CheckLongestRoad(edges[i], visited);
+                    if (roadLength > game.PlayerLongestRoadLength)
+                        game.PlayerLongestRoadLength = roadLength;
+                }
+            }
             if(game.PlayerLongestRoadLength > game.LongestRoadLength)
             {
                 LongestRoad.Opacity = 1;
                 game.LongestRoadLength  = game.PlayerLongestRoadLength;
-                Dictionary<string, object> dict = new()
+            }
+            Dictionary<string, object> dict = new()
                 {
+                    { nameof(game.BoardPieces), game.BoardPieces },
                     { nameof(game.LongestRoadLength), game.LongestRoadLength }
                 };
-                game.UpdateFields(dict);
-            }
+            game.UpdateFields(dict);
         }
-        protected override int CheckLongestRoad(int row, int column,bool[][] visited)
+        protected override int CheckLongestRoad(EdgeLink edge, bool[] visited)
         {
-            if (visited[row / 2][column])
+            if (visited[GetPieceLocationInArray(edge.Row,edge.Column)])
                 return 0;
-            if (row == 2 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))
-                return 0;
-            if (row == 23 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((column % 2 == 0 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (column % 2 == 1 && visited[(row / 2) - 1][(column / 2) + 1] && visited[row / 2][column + 1])))
-                return 0;
-            if (row < 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) + 1]))
-                return 0;
-            if (row > 12 && row % 4 == 0 && (column == 0 || column == GetAmountOfColumns(row) - 2) && (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) + 1]))
-                return 0;
-            if (row % 4 == 0 && column != 0 && column != GetAmountOfColumns(row) - 2 && ((visited[(row / 2) + 1][column * 2] && visited[(row / 2) + 1][(column * 2) - 1]) || (visited[(row / 2) - 1][column * 2] && visited[(row / 2) - 1][(column * 2) - 1])))
-                return 0;
-            if ((row == 6 || row == 10) && ((column == 0 && visited[(row / 2) - 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1])))
-                return 0;
-            if ((row == 6 || row == 10 || row == 14 || row == 18) && (column != 0 && column != GetAmountOfColumns(row) - 2) && ((column % 2 == 0 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column + 1]) || (visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]))) || (column % 2 == 1 && ((visited[(row / 2) - 1][column / 2] && visited[row / 2][column - 1]) || (visited[(row / 2) + 1][(column / 2) + 1] && visited[row / 2][column + 1])))))
-                return 0;
-            if ((row == 14 || row == 18) && ((column == 0 && visited[(row / 2) + 1][column] && visited[row / 2][column + 1]) || (column == GetAmountOfColumns(row) - 2 && visited[(row / 2) + 1][column / 2] && visited[row / 2][column - 1])))
-                return 0;
-            visited[row / 2][column] = true;
-            if (row < 12)
+            int longestBranch = 0;
+            int curentBranch;
+            visited[GetPieceLocationInArray(edge.Row,edge.Column)] = true;
+            //if vertex not owned by another player
+            if (edge.VertexNodeOne.PlayerIndex == -1 ||  edge.VertexNodeOne.PlayerIndex == game.PlayerIndicator)
             {
-                if (BoardPiceImages[row][column].Source.ToString()![6..] != GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
-                    return 0;
+                EdgeLink[] edges = edge.VertexNodeOne.Edges;
+                if(edges.Length > 2)
+                {
+                    //Handele Forks
+                    bool a = visited[GetPieceLocationInArray(edges[0].Row, edges[0].Column)];
+                    bool b = visited[GetPieceLocationInArray(edges[1].Row, edges[1].Column)];
+                    bool c = visited[GetPieceLocationInArray(edges[2].Row, edges[2].Column)];
+                    if (!(a && b) && !(b && c) && !(c && a))
+                        for(int i = 0; i < 3; i++)
+                        {
+                            curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                            if(curentBranch > longestBranch)
+                                longestBranch = curentBranch;
+                        }
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                    if (curentBranch > longestBranch)
+                        longestBranch = curentBranch;
+                }
             }
-            else
+            if (edge.VertexNodeTwo.PlayerIndex == -1 || edge.VertexNodeTwo.PlayerIndex == game.PlayerIndicator)
             {
-                if (BoardPiceImages[row][GetAmountOfColumns(row) - 2 - column].Source.ToString()![6..] != GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower())
-                    return 0;
+                EdgeLink[] edges = edge.VertexNodeTwo.Edges;
+                if (edges.Length > 2)
+                {
+                    //Handele Forks
+                    bool a = visited[GetPieceLocationInArray(edges[0].Row, edges[0].Column)];
+                    bool b = visited[GetPieceLocationInArray(edges[1].Row, edges[1].Column)];
+                    bool c = visited[GetPieceLocationInArray(edges[2].Row, edges[2].Column)];
+                    if (!(a && b) && !(b && c) && !(c && a))
+                        for (int i = 0; i < 3; i++)
+                        {
+                            curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                            if (curentBranch > longestBranch)
+                                longestBranch = curentBranch;
+                        }
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                    if (curentBranch > longestBranch)
+                        longestBranch = curentBranch;
+                }
             }
-            if (row == 2)
-            {
-                if (column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row + 2, column, visited));
-                if (column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row + 2, (column / 2) + 1, visited));
-                if (column % 2 == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited));
-                return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row + 2, (column / 2) + 1, visited), CheckLongestRoad(row, column + 1, visited));
-            }
-            if (row == 23)
-            {
-                if (column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row - 2, column, visited));
-                if (column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, (column / 2) + 1, visited));
-                if (column % 2 == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row - 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited));
-                return 1 + GetBigestNumber(CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, (column / 2) + 1, visited), CheckLongestRoad(row, column + 1, visited));
-            }
-            if (row % 4 == 0)
-            {
-                if (row < 12 && column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row + 2, column + 1, visited), CheckLongestRoad(row - 2, column, visited));
-                if (row < 12 && column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 3, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited));
-                if (row == 12 && column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row - 2, column, visited));
-                if (row == 12 && column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited));
-                if (row > 12 && column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row - 2, column, visited), CheckLongestRoad(row - 2, column + 1, visited), CheckLongestRoad(row + 2, column, visited));
-                if (row > 12 && column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 3, visited), CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited));
-                return 1 + GetBigestNumber(CheckLongestRoad(row + 2, (column * 2) - 1, visited), CheckLongestRoad(row + 2, (column * 2), visited), CheckLongestRoad(row - 2, (column * 2) - 1, visited), CheckLongestRoad(row - 2, (column * 2), visited));
-            }
-            else
-            {
-                if (column == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column, visited), CheckLongestRoad(row - 2, column, visited), CheckLongestRoad(row, column + 1, visited));
-                if (column == GetAmountOfColumns(row) - 2)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, GetAmountOfColumns(row + 2) - 2, visited), CheckLongestRoad(row - 2, GetAmountOfColumns(row - 2) - 2, visited), CheckLongestRoad(row, column - 1, visited));
-                if (column % 2 == 0)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column + 1, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row - 2, column / 2, visited));
-                if (row < 12)
-                    return 1 + GetBigestNumber(CheckLongestRoad(row + 2, column / 2 + 1, visited), CheckLongestRoad(row - 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row, column + 1, visited));
-                return 1 + GetBigestNumber(CheckLongestRoad(row - 2, column / 2 + 1, visited), CheckLongestRoad(row + 2, column / 2, visited), CheckLongestRoad(row, column - 1, visited), CheckLongestRoad(row, column + 1, visited));
-            }
+            visited[GetPieceLocationInArray(edge.Row, edge.Column)] = false;
+            return longestBranch;
         }
 
         public override void OnChange()
         {
-            if (game.BoardPeices != null && BoardPiceImages != null && BoardPiceButtons != null)
+            if (game.BoardPieces != null && BoardPieceImages != null && BoardPieceButtons != null)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPiceImages[i][k].Source != null && game.BoardPeices[((i - 1) * 12) + k] != null && BoardPiceImages[i][k].Source.ToString()![..6] != game.BoardPeices[((i - 1) * 12) + k])
-                            BoardPiceImages[i][k].Source = game.BoardPeices[((i - 1) * 12) + k];
+                        if (BoardPieceImages[i][k].Source != null && game.BoardPieces[((i - 1) * 12) + k] != null && BoardPieceImages[i][k].Source.ToString()![6..] != game.BoardPieces[((i - 1) * 12) + k])
+                        {
+                            BoardPieceImages[i][k].Source = game.BoardPieces[((i - 1) * 12) + k];
+                            if(i % 2 == 0)
+                                game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(i, k);
+                            else
+                            {
+                                game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PlayerIndex = GetPieceIndexFromColor(i, k);
+                                game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PieceType = GetPieceType(i, k);
+                            }
+                        }
             if(LongestRoad.Opacity != Keys.DoesNotOwn && game.PlayerLongestRoadLength < game.LongestRoadLength)
                 LongestRoad.Opacity = Keys.DoesNotOwn;
             if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
                 LargestArmy.Opacity = Keys.DoesNotOwn;
 
         }
-        public override void Init(Grid gameBoard, Grid grdPices,Grid otherPices)
+        public override void Init(Grid gameBoard, Grid grdPieces,Grid otherPieces)
         {
             // Define the Rows In gameBoard (for UI/UX layout purposes)
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
@@ -449,9 +450,9 @@ namespace CatanGame.ModelsLogic
                         {
                             GetFixedTile(i, k, out sourceTile, out sourceNumber);
                         }
-                        game.TileTypes[(i - 1) * 5 + k - 1] = sourceTile;
+                        game.TileTypes[GetTileLocationInArray(i,k)] = sourceTile;
                         Row.Add(CreateTileImage(sourceTile), k);
-                        game.TileNumbers[(i - 1) * 5 + k - 1] = sourceNumber;
+                        game.TileNumbers[GetTileLocationInArray(i, k)] = sourceNumber;
                         Row.Add(CreateNumberImage(sourceNumber), k);
                     }
                     gameBoard.Add(Row, 0, i);
@@ -469,21 +470,23 @@ namespace CatanGame.ModelsLogic
                 //Update the firebase with the new tile types and numbers
                 game.UpdateFields(dict);
             }
-            // Define the Rows In grdPices (for UI/UX layout purposes)
-            grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
+            //Connect the game logic board with the UI/UX board
+            game.GameBoard.InitBoard(BoardPieceButtons, game.TileTypes, game.TileNumbers);
+            // Define the Rows In grdPieces (for UI/UX layout purposes)
+            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
             {
                 if (i % 2 == 0)
                 {
-                    grdPices.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-                    grdPices.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
-                    grdPices.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                    grdPieces.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
+                    grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(1.1, GridUnitType.Star) });
+                    grdPieces.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
                 }
                 else
-                    grdPices.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
+                    grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
             }
-            grdPices.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
-            //Initialize the peices on the game UI/UX board
+            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
+            //Initialize the pieces on the game UI/UX board
             for (int i = 1; i < 24; i++)
             {
                 Row = new()
@@ -497,12 +500,12 @@ namespace CatanGame.ModelsLogic
                     for (int k = 1; k < GetAmountOfColumns(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        BoardPiceButtons[i][k - 1] = CreateApexButton(k, i);
-                        BoardPiceButtons[i][k - 1].Clicked += OnButtonClicked;
-                        Row.Add(BoardPiceButtons[i][k - 1], k);
-                        BoardPiceImages[i][k - 1] = CreateApexImage(k, i);
-                        BoardPiceImages[i][k - 1].Source = game.BoardPeices[(i-1)*12 + k -1];
-                        Row.Add(BoardPiceImages[i][k - 1], k);
+                        BoardPieceButtons[i][k - 1] = CreateApexButton(k, i);
+                        BoardPieceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        Row.Add(BoardPieceButtons[i][k - 1], k);
+                        BoardPieceImages[i][k - 1] = CreateApexImage(k, i);
+                        BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i-1)*12 + k -1];
+                        Row.Add(BoardPieceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     Row.ColumnSpacing = i == 11 || i == 13 ? 63 : 48;
@@ -513,27 +516,25 @@ namespace CatanGame.ModelsLogic
                     for (int k = 1; k < GetAmountOfColumns(i); k++)
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                        BoardPiceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
-                        BoardPiceButtons[i][k - 1].Clicked += OnButtonClicked;
-                        Row.Add(BoardPiceButtons[i][k - 1], k);
-                        BoardPiceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
-                        BoardPiceImages[i][k - 1].Source = game.BoardPeices[(i - 1) * 12 + k - 1];
-                        Row.Add(BoardPiceImages[i][k - 1], k);
+                        BoardPieceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
+                        BoardPieceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        Row.Add(BoardPieceButtons[i][k - 1], k);
+                        BoardPieceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
+                        BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
+                        Row.Add(BoardPieceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
                     Row.ColumnSpacing = i % 4 == 0 ? i == 12 ? 62.3 : 43 : 12;
                     Row.Rotation = i > 12 ? 180 : 0;
                 }
-                grdPices.Add(Row, 0, i);
+                grdPieces.Add(Row, 0, i);
             }
-            //Connect the game logic board with the UI/UX board
-            game.GameBoard.InitBoard(BoardPiceButtons, game.TileTypes, game.TileNumbers);
             //Show build options for the first player for starting turn
             if (game.PlayerIndicator == 0)
                 ShowBuildOptions(Strings.Town);
-            // Define the Rows In otherPices  (for UI/UX layout purposes)
-            otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-            otherPices.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            // Define the Rows In otherPieces  (for UI/UX layout purposes)
+            otherPieces.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            otherPieces.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             LongestRoad = new()
             {
                 Source = Strings.LongestRoadImage,
@@ -542,7 +543,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End,
                 Opacity = Keys.DoesNotOwn
             };
-            otherPices.Add(LongestRoad);
+            otherPieces.Add(LongestRoad);
             LargestArmy = new()
             {
                 Source = Strings.LargestArmyImage,
@@ -551,155 +552,83 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End,
                 Opacity = Keys.DoesNotOwn
             };
-            otherPices.Add(LargestArmy, 1, 0);
-            otherPices.ColumnSpacing = 5;
+            otherPieces.Add(LargestArmy, 1, 0);
+            otherPieces.ColumnSpacing = 5;
         }
-        public override void ShowBuildOptions(string peiceType)
+        public override void ShowBuildOptions(string pieceType)
         {
-            string[][] BoardPeices = new string[24][];
+            string[][] BoardPieces = new string[24][];
             for (int i = 1; i < 24; i++)
             {
-                BoardPeices[i] = new string[GetAmountOfColumns(i) - 1];
+                BoardPieces[i] = new string[GetAmountOfColumns(i) - 1];
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if (game.BoardPeices[((i - 1) * 12) + k] != null)
-                        BoardPeices[i][k] = game.BoardPeices[((i - 1) * 12) + k];
+                    if (game.BoardPieces[((i - 1) * 12) + k] != null)
+                        BoardPieces[i][k] = game.BoardPieces[((i - 1) * 12) + k];
             }
-            if (peiceType == Strings.Road || peiceType == Strings.All)
-                for (int i = 1; i < 24; i++)
+            if (pieceType == Strings.Road || pieceType == Strings.All)
+                for (int i = 1; i < 24; i ++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.City.ToLower()) || BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
+                    {
+                        if(i % 2 == 1)
                         {
-                            if (i == 1)
+                            VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            if ((vertexNode.PieceType == BoardModel.PieceType.Town || vertexNode.PieceType == BoardModel.PieceType.City) && vertexNode.PlayerIndex == game.PlayerIndicator)
                             {
-                                if (BoardPeices[i + 1][k * 2] == string.Empty)
-                                    BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
-                                if (BoardPeices[i + 1][(k * 2) + 1] == string.Empty)
-                                    BoardPiceButtons[i + 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
-                            }
-                            else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
-                            {
-                                if (i > 12)
-                                {
-                                    if (BoardPeices[i + 1][GetAmountOfColumns(i + 1) - 2 - k] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - 2 - k].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 3] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 3].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 2].BorderWidth = Keys.ButtonVisible;
-                                }
-                                else
-                                {
-                                    if (BoardPeices[i + 1][k] == string.Empty)
-                                        BoardPiceButtons[i + 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if (k != GetAmountOfColumns(i) - 2 && BoardPeices[i - 1][k * 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][k * 2].BorderWidth = Keys.ButtonVisible;
-                                    if (k != 0 && BoardPeices[i - 1][(k * 2) - 1] == string.Empty)
-                                        BoardPiceButtons[i - 1][(k * 2) - 1].BorderWidth = Keys.ButtonVisible;
-                                }
-                            }
-                            else if (i == 5 || i == 9 || i == 13 || i == 17 || i == 21)
-                            {
-                                if (i < 12)
-                                {
-                                    if (BoardPeices[i - 1][k] == string.Empty)
-                                        BoardPiceButtons[i - 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][(k * 2) + 1] == string.Empty)
-                                        BoardPiceButtons[i + 1][(k * 2) + 1].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][k * 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][k * 2].BorderWidth = Keys.ButtonVisible;
-                                }
-                                else
-                                {
-                                    if(i == 13)
-                                    {
-                                        if (BoardPeices[i - 1][k] == string.Empty)
-                                            BoardPiceButtons[i - 1][k].BorderWidth = Keys.ButtonVisible;
-                                    }
-                                    else if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - 2 - k] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - 2 - k].BorderWidth = Keys.ButtonVisible;    
-                                    if (k < GetAmountOfColumns(i) - 2 && BoardPeices[i + 1][GetAmountOfColumns(i + 1) - (k * 2) - 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - (k * 2) - 2].BorderWidth = Keys.ButtonVisible;
-                                    if (k > 0 && BoardPeices[i + 1][GetAmountOfColumns(i + 1) - (k * 2) - 1] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - (k * 2) - 1].BorderWidth = Keys.ButtonVisible;
-                                }
-                            }
-                            else if (i == 23)
-                            {
-                                if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 2] == string.Empty)
-                                    BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k * 2) - 2].BorderWidth = Keys.ButtonVisible;
-                                if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - (k * 2)-3] == string.Empty)
-                                    BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k * 2)-3].BorderWidth = Keys.ButtonVisible;
+                                EdgeLink[] edges = vertexNode.Edges;
+                                for (int j = 0; j < edges.Length; j++)
+                                    if (edges[j].RoadOwnerPlayerIndex == -1)
+                                        BoardPieceButtons[edges[j].Row][edges[j].Column].BorderWidth = Keys.ButtonVisible;
                             }
                         }
-            if (peiceType == Strings.All)
+                        else
+                        {
+                            EdgeLink edge = game.GameBoard.Edges[GetPieceLocationInArray(i, k)];
+                            if (edge.RoadOwnerPlayerIndex == game.PlayerIndicator)
+                            {
+                                //if vertex not owned by another player
+                                if (edge.VertexNodeOne.PlayerIndex == -1 || edge.VertexNodeOne.PlayerIndex == game.PlayerIndicator)
+                                {
+                                    EdgeLink[] edges = edge.VertexNodeOne.Edges;
+                                    for (int j = 0; j < edges.Length; j++)
+                                        if (edges[j].RoadOwnerPlayerIndex == -1)
+                                            BoardPieceButtons[edges[j].Row][edges[j].Column].BorderWidth = Keys.ButtonVisible;
+                                }
+                                if (edge.VertexNodeTwo.PlayerIndex == -1 || edge.VertexNodeTwo.PlayerIndex == game.PlayerIndicator)
+                                {
+                                    EdgeLink[] edges = edge.VertexNodeTwo.Edges;
+                                    for (int j = 0; j < edges.Length; j++)
+                                        if (edges[j].RoadOwnerPlayerIndex == -1)
+                                            BoardPieceButtons[edges[j].Row][edges[j].Column].BorderWidth = Keys.ButtonVisible;
+                                }
+                            }
+                        }
+        
+                    }
+            if (pieceType == Strings.All)
             {         
-                for (int i = 1; i < 24; i++)
+                for (int i = 2; i < 24; i += 2)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Road.ToLower()))
+                    {
+                        EdgeLink edge = game.GameBoard.Edges[GetPieceLocationInArray(i, k)];
+                        if (i % 2 == 0 && edge.RoadOwnerPlayerIndex == game.PlayerIndicator)
                         {
-                            if (i == 2 || i == 6 || i == 10)
-                            {
-                                if (k % 2 == 0)
-                                {
-                                    if (BoardPeices[i - 1][k / 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][k / 2].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][k / 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][k / 2].BorderWidth = Keys.ButtonVisible;
-                                }
-                                else
-                                {
-                                    if (BoardPeices[i - 1][k / 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][k / 2].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][k / 2 + 1] == string.Empty)
-                                        BoardPiceButtons[i + 1][k / 2 + 1].BorderWidth = Keys.ButtonVisible;
-                                }
-                            }
-                            else if (i == 14 || i == 18 || i == 22)
-                            {
-                                if (k % 2 == 0)
-                                {
-                                    if (BoardPeices[i - 1][GetAmountOfColumns(i-1) -( k / 2)-2] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k / 2)-2].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][GetAmountOfColumns(i + 1) - (k / 2)-2] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - (k / 2) - 2].BorderWidth = Keys.ButtonVisible;
-                                }
-                                else
-                                {
-                                    if (BoardPeices[i + 1][GetAmountOfColumns(i + 1) - (k / 2) - 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - (k / 2) - 2].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i - 1][GetAmountOfColumns(i - 1) - (k / 2)-3] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - (k / 2)-3].BorderWidth = Keys.ButtonVisible;
-                                }
-                            }
-                            else if (i == 4 || i == 8 || i == 12 || i == 16 || i == 20)
-                            {
-                                if(i>12)
-                                {
-                                    if (BoardPeices[i - 1][GetAmountOfColumns(i-1)- k - 2] == string.Empty)
-                                        BoardPiceButtons[i - 1][GetAmountOfColumns(i - 1) - k - 2].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][GetAmountOfColumns(i + 1) - k - 2] == string.Empty)
-                                        BoardPiceButtons[i + 1][GetAmountOfColumns(i + 1) - k - 2].BorderWidth = Keys.ButtonVisible;
-                                }
-                                else
-                                {
-                                    if (BoardPeices[i - 1][k] == string.Empty)
-                                        BoardPiceButtons[i - 1][k].BorderWidth = Keys.ButtonVisible;
-                                    if (BoardPeices[i + 1][k] == string.Empty)
-                                        BoardPiceButtons[i + 1][k].BorderWidth = Keys.ButtonVisible;
-                                }
-                            }
+                            if(edge.VertexNodeOne.PlayerIndex == -1)
+                                BoardPieceButtons[edge.VertexNodeOne.Row][edge.VertexNodeOne.Column].BorderWidth = Keys.ButtonVisible;
+                            if(edge.VertexNodeTwo.PlayerIndex == -1)
+                                BoardPieceButtons[edge.VertexNodeTwo.Row][edge.VertexNodeTwo.Column].BorderWidth = Keys.ButtonVisible;
                         }
+                    }
             }
-            if (peiceType == Strings.City || peiceType == Strings.All)
+            if (pieceType == Strings.City || pieceType == Strings.All)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPeices[i][k].Equals(GetPicesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
-                            BoardPiceButtons[i][k].BorderWidth = Keys.ButtonVisible;
-            if (peiceType == Strings.Town)
+                        if (BoardPieces[i][k].Equals(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
+                            BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
+            if (pieceType == Strings.Town)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPeices[i][k].Equals(string.Empty) && i % 2 == 1)
-                            BoardPiceButtons[i][k].BorderWidth = Keys.ButtonVisible;
+                        if (BoardPieces[i][k].Equals(string.Empty) && i % 2 == 1)
+                            BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
 
         }
     }

@@ -6,7 +6,8 @@ namespace CatanGame.Models
     {
         public int Row { get; set; }
         public int Column { get; set; }
-        public Building? Building { get; set; }
+        public int PlayerIndex { get; set; } = -1;
+        public BoardModel.PieceType PieceType { get; set; } = BoardModel.PieceType.None;
         public EdgeLink[] Edges { get; set; } = [];
 
         public VertexNode()

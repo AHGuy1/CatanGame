@@ -42,6 +42,7 @@ namespace CatanGame.ModelsLogic
         }
         private static int GetNumberTokenFromTile(string tileNumber)
         {
+            // Check what value the tileNumber contains from the NumberTokenMap, and return the corresponding String value
             if (NumberTokenMap.TryGetValue(tileNumber, out int value))
             {
                 return value;
@@ -52,6 +53,7 @@ namespace CatanGame.ModelsLogic
 
         protected override void InitHex(string[] tileTypes, string[] tileNumbers)
         {
+            Hexes = new HexTile[19];
             // Initialize the hex tiles on the game board
             for (int i = 1; i < 6; i++)
             {
@@ -70,7 +72,7 @@ namespace CatanGame.ModelsLogic
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumns(i) - 1; k++)
                 {
-                    Vertices[GameGrid.GetPiceLocationInArray(i,k)] = new VertexNode(i, k);
+                    Vertices[GameGrid.GetPieceLocationInArray(i,k)] = new VertexNode(i, k);
                 }
             }
         }
@@ -82,12 +84,13 @@ namespace CatanGame.ModelsLogic
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumns(i) - 1; k++)
                 {
-                    Edges[GameGrid.GetPiceLocationInArray(i, k)] = new EdgeLink(i, k);
+                    Edges[GameGrid.GetPieceLocationInArray(i, k)] = new EdgeLink(i, k);
                 }
             }
         }
         protected override void SetEdgesVertices()
         {
+            // Set the Vertices for each edge
             for (int i = 2; i < 24; i += 2)
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumns(i) - 1; k++)
@@ -96,40 +99,40 @@ namespace CatanGame.ModelsLogic
                     {
                         if (k % 2 == 0)
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i - 1, k / 2)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i + 1, k / 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i - 1, k / 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i + 1, k / 2)];
 
                         }
                         else
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i - 1, k / 2)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i + 1, k / 2 + 1)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i - 1, k / 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i + 1, k / 2 + 1)];
                         }
                     }
                     else if (i == 14 || i == 18 || i == 22)
                     {
                         if (k % 2 == 0)
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k / 2) - 2)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k / 2) - 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k / 2) - 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k / 2) - 2)];
                         }
                         else
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k / 2) - 3)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k / 2) - 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k / 2) - 3)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k / 2) - 2)];
                         }
                     }
                     else if (i == 4 || i == 8 || i == 12 || i == 16 || i == 20)
                     {
                         if (i > 12)
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - k - 2)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - k - 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - k - 2)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - k - 2)];
                         }
                         else
                         {
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPiceLocationInArray(i - 1, k)];
-                            Edges[GameGrid.GetPiceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPiceLocationInArray(i + 1, k)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i - 1, k)];
+                            Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i + 1, k)];
                         }
                     }
                 }
@@ -137,40 +140,41 @@ namespace CatanGame.ModelsLogic
         }
         protected override void SetVerticesEdegs()
         {
+            // Set the edges for each vertex node
             for (int i = 1; i < 24; i += 2)
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumns(i) - 1; k++)
                 {
                     if (i == 1)
                     {
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[2];
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i + 1, k * 2)];
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i + 1, k * 2 + 1)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[2];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i + 1, k * 2)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, k * 2 + 1)];
                     }
                     else if (i == 3 || i == 7 || i == 11 || i == 15 || i == 19)
                     {
                         if (i > 12)
                         {
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[3];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - 2 - k)];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[3];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - 2 - k)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
                         }
                         else
                         {
                             if (k != GameGrid.GetAmountOfColumns(i) - 2 && k != 0)
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[3];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[3];
                             else
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[2];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i + 1, k)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[2];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i + 1, k)];
                             if (k != GameGrid.GetAmountOfColumns(i) - 2)
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i - 1, k * 2)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i - 1, k * 2)];
                             if (k != 0)
                             {
                                 if (k != GameGrid.GetAmountOfColumns(i) - 2)
-                                    Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPiceLocationInArray(i - 1, (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPieceLocationInArray(i - 1, (k * 2) - 1)];
                                 else
-                                    Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i - 1, (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i - 1, (k * 2) - 1)];
                             }
                         }
                     }
@@ -178,49 +182,79 @@ namespace CatanGame.ModelsLogic
                     {
                         if (i < 12)
                         {
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[3];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i - 1, k)];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i + 1, (k * 2) + 1)];
-                            Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPiceLocationInArray(i + 1, k * 2)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[3];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, k)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, (k * 2) + 1)];
+                            Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPieceLocationInArray(i + 1, k * 2)];
                         }
                         else
                         {
                             if (k < GameGrid.GetAmountOfColumns(i) - 2 && k > 0)
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[3];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[3];
                             else
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[2];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[2];
                             if (i == 13)
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i - 1, k)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, k)];
                             else
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - 2 - k)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - 2 - k)];
                             if (k < GameGrid.GetAmountOfColumns(i) - 2)
-                                Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 2)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 2)];
                             if (k > 0)
                             {
                                 if (k < GameGrid.GetAmountOfColumns(i) - 2)
-                                    Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
                                 else
-                                    Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
                             }
                         }
                     }
                     else if (i == 23)
                     {
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges = new EdgeLink[2];
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
-                        Vertices[GameGrid.GetPiceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPiceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[2];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
+                    }
+                }
+            }
+        }
+        protected override void SetHexesVertices()
+        {
+            //Set the vertices for each hex tile
+            for(int i = 1; i < 6; i++)
+            {
+                for (int k = 0; k < GameGrid.GetAmountOfColumnsTiles(i); k++)
+                {
+                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[1] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[2] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k + 1)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[3] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[4] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k + 1)];
+                    if (i < 3)
+                    {
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k + 1)];
+                    }
+                    else if(i == 3)
+                    {
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k)];
+                    }
+                    else
+                    {
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k + 1)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k )];
                     }
                 }
             }
         }
 
-        public override void InitBoard(IndexedButton[][] pices, string[] tileTypes, string[] tileNumbers)
+        public override void InitBoard(IndexedButton[][] Pieces, string[] tileTypes, string[] tileNumbers)
         {
             InitHex(tileTypes, tileNumbers);
             InitVertices();
             InitEdges();
             SetEdgesVertices();
             SetVerticesEdegs();
+            SetHexesVertices();
         }
     }
 }

@@ -5,9 +5,8 @@ namespace CatanGame.Models
         public enum PieceType
         {
             None = 0,
-            Road = 1,
-            Town = 2,
-            City = 3
+            Town = 1,
+            City = 2
         }
 
         public enum TerrainType
@@ -30,8 +29,8 @@ namespace CatanGame.Models
         protected abstract void InitVertices();
         protected abstract void SetEdgesVertices();
         protected abstract void SetVerticesEdegs();
+        protected abstract void SetHexesVertices();
 
-
-        public abstract void InitBoard(IndexedButton[][] pices, string[] tileTypes, string[] tileNumbers);
+        public abstract void InitBoard(IndexedButton[][] Pieces, string[] tileTypes, string[] tileNumbers);
     }
 }

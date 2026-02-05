@@ -23,13 +23,13 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center" />
             <Grid
-                x:Name="grdPices"
+                x:Name="grdPieces"
                 HeightRequest="430"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 WidthRequest="430" />
         </Grid>
-        <Grid x:Name="otherPices"
+        <Grid x:Name="otherPieces"
               HorizontalOptions="Start"
               VerticalOptions="End" />
         <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">

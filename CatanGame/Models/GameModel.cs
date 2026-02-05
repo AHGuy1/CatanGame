@@ -54,9 +54,9 @@ namespace CatanGame.Models
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;
         public string[] PlayerNames { get; set; } = [string.Empty];
-        public string[] TileNumbers { get; set; } = new string[25];
-        public string[] TileTypes { get; set; } = new string[25];
-        public string[] BoardPeices { get; set; } = new string[276];
+        public string[] TileNumbers { get; set; } = new string[19];
+        public string[] TileTypes { get; set; } = new string[19];
+        public string[] BoardPieces { get; set; } = new string[276];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
@@ -70,7 +70,7 @@ namespace CatanGame.Models
         protected abstract void RegisterTimer();
         protected abstract void StopTimer();
         protected abstract void OnMessageReceived(long timeleft);
-        protected abstract void IntArrayBoardPices();
+        protected abstract void IntArrayBoardPieces();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
