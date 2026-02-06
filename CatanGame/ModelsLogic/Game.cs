@@ -41,13 +41,14 @@ namespace CatanGame.ModelsLogic
         }
         protected override void OnMessageReceived(long timeleft)
         {
-           
+
             if (timeleft == Keys.FinishedSignal)
             {
                 TimeLeft = Strings.TimeUp;
-                EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
+                if (PlayerTurn == PlayerIndicator + 1)
+                    EndTurnOutOfTime?.Invoke(this, EventArgs.Empty);
             }
-            else if((double)timeleft/1000 <= 10.0)
+            else if ((double)timeleft / 1000 <= 10.0)
             {
                 TimeLeft = double.Round(((double)timeleft / 1000), 1).ToString();
                 TimeLeftChanged?.Invoke(this, EventArgs.Empty);
@@ -97,7 +98,7 @@ namespace CatanGame.ModelsLogic
                     TileNumbers = updatedGame.TileNumbers;
                     TileTypes = updatedGame.TileTypes;
                 }
-                if(PlayerTurn != updatedGame.PlayerTurn)
+                if(Turn != updatedGame.Turn)
                 {
                     PlayerTurn = updatedGame.PlayerTurn;
                     Turn = updatedGame.Turn;

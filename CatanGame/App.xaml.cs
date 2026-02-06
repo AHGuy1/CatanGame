@@ -7,6 +7,8 @@ namespace CatanGame
         {
             InitializeComponent();
             MainPage = new LogInPage();
+            if (Current != null)
+                Current.UserAppTheme = AppTheme.Light;
         }
     }
 }

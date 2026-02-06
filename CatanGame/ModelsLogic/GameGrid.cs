@@ -15,11 +15,6 @@ namespace CatanGame.ModelsLogic
                 BoardPieceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
             }
         }
-
-        private static int GetBigestNumber(int num1, int num2, int num3 = 0, int num4 = 0)
-        {
-            return Math.Max(num1, Math.Max(num2, Math.Max(num3, num4)));
-        }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
             // Determine the tile type and number based on fixed board layout
@@ -66,13 +61,24 @@ namespace CatanGame.ModelsLogic
                 _ => string.Empty,
             };
         }
+        private static double AdjustGridSize()
+        {
+            Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
+            double screenWidth = mainDisplay.Width;
+            double screenHeight = mainDisplay.Height;
+            double density = mainDisplay.Density;
+            double shortestSide = screenWidth;
+            if (screenHeight < screenWidth)
+                shortestSide = screenHeight;
+            return shortestSide / density;
+        }
         private static Grid CreateTileImage(string imageSource)
         {
             Grid grid = [];
             Image image = new()
             {
                 Source = imageSource,
-                HeightRequest = 71,
+                HeightRequest = AdjustGridSize() * 0.19,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
@@ -80,8 +86,8 @@ namespace CatanGame.ModelsLogic
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                HeightRequest = 50,
-                WidthRequest = 50,
+                HeightRequest = AdjustGridSize() * 0.12,
+                WidthRequest = AdjustGridSize() * 0.12,
                 BackgroundColor = Colors.Transparent,
                 IsEnabled = false
             };
@@ -94,7 +100,7 @@ namespace CatanGame.ModelsLogic
             return new()
             {
                 Source = imageSource,
-                HeightRequest = 22,
+                HeightRequest = AdjustGridSize() * 0.05,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
@@ -183,18 +189,18 @@ namespace CatanGame.ModelsLogic
         }
         protected override BoardModel.PieceType GetPieceType(int row, int column)
         {
-            return BoardPieceImages[row][column].ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.City, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.City :
+            return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.City, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.City :
                    BoardModel.PieceType.None;
         }
         protected override int GetPieceIndexFromColor(int row, int column)
         {
-            return BoardPieceImages[row][column].ToString()!.Contains(Strings.Oreange, StringComparison.CurrentCultureIgnoreCase) ? 0 :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Blue, StringComparison.CurrentCultureIgnoreCase) ? 1 :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Yellow, StringComparison.CurrentCultureIgnoreCase) ? 2 :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Red, StringComparison.CurrentCultureIgnoreCase) ? 3 :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
-                   BoardPieceImages[row][column].ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
+            return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Oreange, StringComparison.CurrentCultureIgnoreCase) ? 0 :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Blue, StringComparison.CurrentCultureIgnoreCase) ? 1 :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Yellow, StringComparison.CurrentCultureIgnoreCase) ? 2 :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Red, StringComparison.CurrentCultureIgnoreCase) ? 3 :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
+                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
                    -1;
         }
         protected override void HideButtuns()
@@ -222,8 +228,6 @@ namespace CatanGame.ModelsLogic
                     {
                         BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
                         game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                        if (game.Turn <= game.PlayerCount * 2)
-                            ShowBuildOptions(Strings.Road);
                     }
                     else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                     {
@@ -239,6 +243,8 @@ namespace CatanGame.ModelsLogic
                     game.UpdateFields(dict);
                 }
                 HideButtuns();
+                if (game.Turn <= game.PlayerCount * 2 && button.RowIndex % 2 == 1 && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == game.PlayerIndicator && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
+                    ShowBuildOptions(Strings.Road);
             }
         }
         protected override void CheckLongestRoad()
@@ -274,29 +280,32 @@ namespace CatanGame.ModelsLogic
             int curentBranch;
             visited[GetPieceLocationInArray(edge.Row,edge.Column)] = true;
             //if vertex not owned by another player
-            if (edge.VertexNodeOne.PlayerIndex == -1 ||  edge.VertexNodeOne.PlayerIndex == game.PlayerIndicator)
+            if (edge.VertexNodeOne.PlayerIndex == -1 || edge.VertexNodeOne.PlayerIndex == game.PlayerIndicator)
             {
                 EdgeLink[] edges = edge.VertexNodeOne.Edges;
-                if(edges.Length > 2)
+                if (edges.Length > 2)
                 {
                     //Handele Forks
                     bool a = visited[GetPieceLocationInArray(edges[0].Row, edges[0].Column)];
                     bool b = visited[GetPieceLocationInArray(edges[1].Row, edges[1].Column)];
                     bool c = visited[GetPieceLocationInArray(edges[2].Row, edges[2].Column)];
                     if (!(a && b) && !(b && c) && !(c && a))
-                        for(int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3; i++)
+                            if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
+                            {
+                                curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                                if (curentBranch > longestBranch)
+                                    longestBranch = curentBranch;
+                            }
+                }
+                else
+                    for (int i = 0; i < 2; i++)
+                        if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
                         {
                             curentBranch = CheckLongestRoad(edges[i], visited) + 1;
-                            if(curentBranch > longestBranch)
+                            if (curentBranch > longestBranch)
                                 longestBranch = curentBranch;
                         }
-                }
-                for (int i = 0; i < 2; i++)
-                {
-                    curentBranch = CheckLongestRoad(edges[i], visited) + 1;
-                    if (curentBranch > longestBranch)
-                        longestBranch = curentBranch;
-                }
             }
             if (edge.VertexNodeTwo.PlayerIndex == -1 || edge.VertexNodeTwo.PlayerIndex == game.PlayerIndicator)
             {
@@ -309,18 +318,21 @@ namespace CatanGame.ModelsLogic
                     bool c = visited[GetPieceLocationInArray(edges[2].Row, edges[2].Column)];
                     if (!(a && b) && !(b && c) && !(c && a))
                         for (int i = 0; i < 3; i++)
+                            if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
+                            {
+                                curentBranch = CheckLongestRoad(edges[i], visited) + 1;
+                                if (curentBranch > longestBranch)
+                                    longestBranch = curentBranch;
+                            }
+                }
+                else
+                    for (int i = 0; i < 2; i++)
+                        if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
                         {
                             curentBranch = CheckLongestRoad(edges[i], visited) + 1;
                             if (curentBranch > longestBranch)
                                 longestBranch = curentBranch;
                         }
-                }
-                for (int i = 0; i < 2; i++)
-                {
-                    curentBranch = CheckLongestRoad(edges[i], visited) + 1;
-                    if (curentBranch > longestBranch)
-                        longestBranch = curentBranch;
-                }
             }
             visited[GetPieceLocationInArray(edge.Row, edge.Column)] = false;
             return longestBranch;
@@ -350,11 +362,16 @@ namespace CatanGame.ModelsLogic
         }
         public override void Init(Grid gameBoard, Grid grdPieces,Grid otherPieces)
         {
+            double gridSize = AdjustGridSize() * 0.966;
+            gameBoard.WidthRequest = gridSize;
+            gameBoard.HeightRequest = gridSize;
+            grdPieces.WidthRequest = gridSize * 1.15;
+            grdPieces.HeightRequest = gridSize * 1.15;
             // Define the Rows In gameBoard (for UI/UX layout purposes)
-            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0, GridUnitType.Star) });
+            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
                 gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1.75, GridUnitType.Star) });
+            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
             gameBoard.RowSpacing = 0;
             Grid Row = new()
             {

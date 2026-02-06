@@ -8,182 +8,174 @@
     Title="RegisterPage"
     x:DataType="vm:RegisterPageVM"
     IsBusy="{Binding IsBusy}">
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="25"
+            VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.RegisterTitle}"
+                TextColor="DodgerBlue" />
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
 
-    <VerticalStackLayout
-        Padding="30"
-        Spacing="25"
-        VerticalOptions="Center">
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.UserNameLabel}"
+                        TextColor="DarkOrange" />
 
-        <Label
-            FontAttributes="Bold"
-            FontSize="32"
-            HorizontalOptions="Center"
-            Text="{x:Static m:Strings.RegisterTitle}"
-            TextColor="DodgerBlue" />
-        <Border
-            Padding="10"
-            Stroke="DodgerBlue"
-            StrokeShape="RoundRectangle 16"
-            StrokeThickness="1">
-
-            <Grid RowDefinitions="auto,auto,auto">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="20"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.UserNameLabel}"
-                    TextColor="DarkOrange" />
-
-                <Entry
-                    Grid.Row="1"
-                    FontSize="18"
-                    Text="{Binding UserName}"
-                    TextColor="black" />
-                <Label
-                    Grid.Row="2"
-                    FontAttributes="Bold"
-                    FontSize="12"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisibleUserNameMessege}"
-                    Text="{x:Static m:Strings.UsernameRequiredMessage}"
-                    TextColor="#E32636" />
-            </Grid>
-
-        </Border>
-
-        <Border
-            Padding="10"
-            Stroke="DodgerBlue"
-            StrokeShape="RoundRectangle 16"
-            StrokeThickness="1">
-
-            <Grid RowDefinitions="auto,auto,auto">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="20"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.PasswordLabel}"
-                    TextColor="DarkOrange" />
-                <Grid Grid.Row="1" ColumnDefinitions="*,auto">
                     <Entry
+                        Grid.Row="1"
                         FontSize="18"
-                        IsPassword="{Binding IsPassword}"
-                        Text="{Binding Password}"
+                        Text="{Binding UserName}"
                         TextColor="black" />
-                    <Button
-                        BackgroundColor="Transparent"
-                        BorderWidth="0"
-                        Command="{Binding ToggleIsPasswordCommand}"
-                        FontFamily="MaterialSymbols"
-                        FontSize="24"
-                        HorizontalOptions="End"
-                        Style="{StaticResource IconButtonStyle}"
-                        Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
-                        TextColor="DodgerBlue" />
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisibleUserNameMessege}"
+                        Text="{x:Static m:Strings.UsernameRequiredMessage}"
+                        TextColor="#E32636" />
                 </Grid>
-                <Label
-                    Grid.Row="2"
-                    FontAttributes="Bold"
-                    FontSize="12"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisiblePasswordMessege}"
-                    Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
-                    TextColor="#E32636" />
 
-            </Grid>
-        </Border>
+            </Border>
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
 
-        <Border
-            Padding="10"
-            Stroke="DodgerBlue"
-            StrokeShape="RoundRectangle 16"
-            StrokeThickness="1">
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.PasswordLabel}"
+                        TextColor="DarkOrange" />
+                    <Grid Grid.Row="1" ColumnDefinitions="*,auto">
+                        <Entry
+                            FontSize="18"
+                            IsPassword="{Binding IsPassword}"
+                            Text="{Binding Password}"
+                            TextColor="black" />
+                        <Button
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Command="{Binding ToggleIsPasswordCommand}"
+                            FontFamily="MaterialSymbols"
+                            FontSize="24"
+                            HorizontalOptions="End"
+                            Style="{StaticResource IconButtonStyle}"
+                            Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+                            TextColor="DodgerBlue" />
+                    </Grid>
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisiblePasswordMessege}"
+                        Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
+                        TextColor="#E32636" />
 
-            <Grid RowDefinitions="auto,auto,auto">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="20"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.ConfirmPasswordLabel}"
-                    TextColor="DarkOrange" />
-                <Grid Grid.Row="1" ColumnDefinitions="*,auto">
+                </Grid>
+            </Border>
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.ConfirmPasswordLabel}"
+                        TextColor="DarkOrange" />
+                    <Grid Grid.Row="1" ColumnDefinitions="*,auto">
+                        <Entry
+                            FontSize="18"
+                            IsPassword="{Binding IsPasswordConfirmPassword}"
+                            Text="{Binding ConfirmPassword}"
+                            TextColor="black" />
+                        <Button
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Command="{Binding ToggleIsPasswordCommandConfirmPassword}"
+                            FontFamily="MaterialSymbols"
+                            FontSize="24"
+                            HorizontalOptions="End"
+                            Style="{StaticResource IconButtonStyle}"
+                            Text="{Binding IsPasswordConfirmPassword, Converter={StaticResource passwordIconConvert}}"
+                            TextColor="DodgerBlue"
+                            VerticalOptions="Center" />
+                    </Grid>
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisibleConfirmPasswordMessege}"
+                        Text="{x:Static m:Strings.PasswordsDoNotMatch}"
+                        TextColor="#E32636" />
+                </Grid>
+            </Border>
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.EmailLabel}"
+                        TextColor="DarkOrange" />
+
                     <Entry
+                        Grid.Row="1"
                         FontSize="18"
-                        IsPassword="{Binding IsPasswordConfirmPassword}"
-                        Text="{Binding ConfirmPassword}"
+                        Text="{Binding Email}"
                         TextColor="black" />
-                    <Button
-                        BackgroundColor="Transparent"
-                        BorderWidth="0"
-                        Command="{Binding ToggleIsPasswordCommandConfirmPassword}"
-                        FontFamily="MaterialSymbols"
-                        FontSize="24"
-                        HorizontalOptions="End"
-                        Style="{StaticResource IconButtonStyle}"
-                        Text="{Binding IsPasswordConfirmPassword, Converter={StaticResource passwordIconConvert}}"
-                        TextColor="DodgerBlue"
-                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisibleEmailMessege}"
+                        Text="{x:Static m:Strings.invalidEmail}"
+                        TextColor="#E32636" />
                 </Grid>
-                <Label
-                    Grid.Row="2"
-                    FontAttributes="Bold"
-                    FontSize="12"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisibleConfirmPasswordMessege}"
-                    Text="{x:Static m:Strings.PasswordsDoNotMatch}"
-                    TextColor="#E32636" />
-            </Grid>
+            </Border>
+            <Button
+                Command="{Binding RegisterCommand}"
+                FontAttributes="Bold"
+                FontSize="22"
+                HeightRequest="70"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{x:Static m:Strings.RegisterTitle}"
+                TextColor="White">
 
-        </Border>
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{StaticResource IconApp_registration}">
+                        <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
+                    </FontImageSource>
+                </Button.ImageSource>
 
-        <Border
-            Padding="10"
-            Stroke="DodgerBlue"
-            StrokeShape="RoundRectangle 16"
-            StrokeThickness="1">
-
-            <Grid RowDefinitions="auto,auto,auto">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="20"
-                    HorizontalOptions="Center"
-                    Text="{x:Static m:Strings.EmailLabel}"
-                    TextColor="DarkOrange" />
-
-                <Entry
-                    Grid.Row="1"
-                    FontSize="18"
-                    Text="{Binding Email}"
-                    TextColor="black" />
-                <Label
-                    Grid.Row="2"
-                    FontAttributes="Bold"
-                    FontSize="12"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding IsVisibleEmailMessege}"
-                    Text="{x:Static m:Strings.invalidEmail}"
-                    TextColor="#E32636" />
-            </Grid>
-
-        </Border>
-
-        <Button
-            Command="{Binding RegisterCommand}"
-            FontAttributes="Bold"
-            FontSize="22"
-            HeightRequest="70"
-            IsEnabled="{Binding IsEnabled}"
-            Text="{x:Static m:Strings.RegisterTitle}"
-            TextColor="White">
-
-            <Button.ImageSource>
-                <FontImageSource Glyph="{StaticResource IconApp_registration}">
-                    <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
-                </FontImageSource>
-            </Button.ImageSource>
-
-        </Button>
-
-    </VerticalStackLayout>
-
+            </Button>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

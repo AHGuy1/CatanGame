@@ -32,7 +32,7 @@ namespace CatanGame.ModelsLogic
             // Check what value the tileType contains from the terrainMap, and return the corresponding TerrainType
             foreach (KeyValuePair<string, BoardModel.TerrainType> entry in TerrainMap)
             {
-                if (tileType.Contains(entry.Key))
+                if (tileType != null && tileType.Contains(entry.Key))
                 {
                     return entry.Value;
                 }

@@ -8,43 +8,43 @@
     Title="GamePage"
     x:DataType="vm:GamePageVM"
     IsBusy="{Binding IsBusy}">
-
     <HorizontalStackLayout>
         <Grid HorizontalOptions="Center" VerticalOptions="Center">
-            <Button
+            <Image
                 BackgroundColor="Transparent"
-                HeightRequest="445"
-                HorizontalOptions="Center"
-                ImageSource="boardframe.png"
-                VerticalOptions="Center"
-                WidthRequest="445" />
+                HorizontalOptions="Fill"            
+                Source="boardframe.png"
+                VerticalOptions="Fill"
+                Aspect="AspectFill"
+                />
             <Grid
                 x:Name="grdBoard"
                 HorizontalOptions="Center"
                 VerticalOptions="Center" />
             <Grid
                 x:Name="grdPieces"
-                HeightRequest="430"
                 HorizontalOptions="Center"
-                VerticalOptions="Center"
-                WidthRequest="430" />
+                VerticalOptions="Center"/>
         </Grid>
-        <Grid x:Name="otherPieces"
-              HorizontalOptions="Start"
-              VerticalOptions="End" />
+        <Grid
+            x:Name="otherPieces"
+            HorizontalOptions="Start"
+            VerticalOptions="End" />
         <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">
-            <Frame BorderColor="Black"
-                   CornerRadius="25"
-                   WidthRequest="40"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   HeightRequest="40"/>
-            <Label HorizontalOptions="Center"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center"
-                   Text="{Binding TimeLeft}"
-                   TextColor="{Binding TimeColor}"
-                   Opacity="{Binding TimeOpacity}" />
+            <Frame
+                BorderColor="Black"
+                CornerRadius="25"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                VerticalOptions="Start"
+                WidthRequest="40" />
+            <Label
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Opacity="{Binding TimeOpacity}"
+                Text="{Binding TimeLeft}"
+                TextColor="{Binding TimeColor}"
+                VerticalOptions="Center" />
             <Label
                 Grid.Row="1"
                 HorizontalOptions="Center"
