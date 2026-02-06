@@ -35,14 +35,14 @@ namespace CatanGame.ViewModels
         public double TimeOpacity => animations.TimeOpacity;
         public ICommand EndTurnCommand { get; }
         public ICommand ShowBuildOptionsCommand { get; }
-        public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces)
+        public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
             animations = new Animations();
             EndTurnCommand = new Command(EndTurn, CanEndTurn);
             ShowBuildOptionsCommand = new Command(ShowBuildOptions,CanShowBuildOptions);
             this.game = game;
             board = new(game);
-            board.Init(grdBoard, grdPieces, otherPieces);
+            board.Init(grdBoard, grdPieces, otherPieces,frame);
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;

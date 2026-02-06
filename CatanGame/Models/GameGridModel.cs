@@ -20,7 +20,7 @@ namespace CatanGame.Models
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
 
         public abstract void OnChange();
-        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces);
+        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame);
         public abstract void ShowBuildOptions(string pieceType);
     }
 }

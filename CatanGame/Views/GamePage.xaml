@@ -11,6 +11,7 @@
     <HorizontalStackLayout>
         <Grid HorizontalOptions="Center" VerticalOptions="Center">
             <Image
+                x:Name="frame"
                 BackgroundColor="Transparent"
                 HorizontalOptions="Fill"            
                 Source="boardframe.png"

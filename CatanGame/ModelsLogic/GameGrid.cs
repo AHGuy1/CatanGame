@@ -1,5 +1,6 @@
 ﻿using Android.Hardware.Camera2;
 using CatanGame.Models;
+using Microsoft.Maui.Controls;
 using System;
 
 namespace CatanGame.ModelsLogic
@@ -61,16 +62,12 @@ namespace CatanGame.ModelsLogic
                 _ => string.Empty,
             };
         }
-        private static double AdjustGridSize()
+        private static double AdjustSize()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
-            double screenWidth = mainDisplay.Width;
-            double screenHeight = mainDisplay.Height;
-            double density = mainDisplay.Density;
-            double shortestSide = screenWidth;
-            if (screenHeight < screenWidth)
-                shortestSide = screenHeight;
-            return shortestSide / density;
+            if (mainDisplay.Height < mainDisplay.Width)
+                return mainDisplay.Height / mainDisplay.Density;
+            return mainDisplay.Width / mainDisplay.Density;
         }
         private static Grid CreateTileImage(string imageSource)
         {
@@ -78,7 +75,7 @@ namespace CatanGame.ModelsLogic
             Image image = new()
             {
                 Source = imageSource,
-                HeightRequest = AdjustGridSize() * 0.19,
+                HeightRequest = AdjustSize() * 0.185,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
@@ -86,8 +83,8 @@ namespace CatanGame.ModelsLogic
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                HeightRequest = AdjustGridSize() * 0.12,
-                WidthRequest = AdjustGridSize() * 0.12,
+                HeightRequest = AdjustSize() * 0.12,
+                WidthRequest = AdjustSize() * 0.12,
                 BackgroundColor = Colors.Transparent,
                 IsEnabled = false
             };
@@ -100,26 +97,26 @@ namespace CatanGame.ModelsLogic
             return new()
             {
                 Source = imageSource,
-                HeightRequest = AdjustGridSize() * 0.05,
+                HeightRequest = AdjustSize() * 0.06,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
         }
         private static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 6*1.1, 18*1.1, rotation);
+            return new(rowIndex, colmnIndex, AdjustSize() * 0.0165, AdjustSize() * 0.0495, rotation);
         }
         private static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 10 * 1.5, 10 * 1.4);
+            return new(rowIndex, colmnIndex, AdjustSize() * 0.03525, AdjustSize() * 0.03525);
         }
         private static IndexedImage CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 6 * 1.1, 18 * 1.1, rotation);
+            return new(rowIndex, colmnIndex, AdjustSize() * 0.0165, AdjustSize() * 0.0495, rotation);
         }
         private static IndexedImage CreateApexImage(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, 10 * 1.5, 10 * 1.5);
+            return new(rowIndex, colmnIndex, AdjustSize() * 0.03525, AdjustSize() * 0.03525);
         }
         public static int GetTileLocationInArray(int row, int column)
         {
@@ -162,7 +159,7 @@ namespace CatanGame.ModelsLogic
         public static int GetPieceLocationInArray(int row, int column)
         {
             int location = 0;
-            if(row % 2 == 0)
+            if (row % 2 == 0)
             {
                 for (int i = 2; i < row; i += 2)
                 {
@@ -207,7 +204,7 @@ namespace CatanGame.ModelsLogic
         {
             for (int i = 1; i < 24; i++)
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if(BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
+                    if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                         BoardPieceButtons[i][k].BorderWidth = 0;
         }
         protected override void OnButtonClicked(object? sender, EventArgs e)
@@ -260,10 +257,10 @@ namespace CatanGame.ModelsLogic
                         game.PlayerLongestRoadLength = roadLength;
                 }
             }
-            if(game.PlayerLongestRoadLength > game.LongestRoadLength)
+            if (game.PlayerLongestRoadLength > game.LongestRoadLength)
             {
                 LongestRoad.Opacity = 1;
-                game.LongestRoadLength  = game.PlayerLongestRoadLength;
+                game.LongestRoadLength = game.PlayerLongestRoadLength;
             }
             Dictionary<string, object> dict = new()
                 {
@@ -274,11 +271,11 @@ namespace CatanGame.ModelsLogic
         }
         protected override int CheckLongestRoad(EdgeLink edge, bool[] visited)
         {
-            if (visited[GetPieceLocationInArray(edge.Row,edge.Column)])
+            if (visited[GetPieceLocationInArray(edge.Row, edge.Column)])
                 return 0;
             int longestBranch = 0;
             int curentBranch;
-            visited[GetPieceLocationInArray(edge.Row,edge.Column)] = true;
+            visited[GetPieceLocationInArray(edge.Row, edge.Column)] = true;
             //if vertex not owned by another player
             if (edge.VertexNodeOne.PlayerIndex == -1 || edge.VertexNodeOne.PlayerIndex == game.PlayerIndicator)
             {
@@ -346,7 +343,7 @@ namespace CatanGame.ModelsLogic
                         if (BoardPieceImages[i][k].Source != null && game.BoardPieces[((i - 1) * 12) + k] != null && BoardPieceImages[i][k].Source.ToString()![6..] != game.BoardPieces[((i - 1) * 12) + k])
                         {
                             BoardPieceImages[i][k].Source = game.BoardPieces[((i - 1) * 12) + k];
-                            if(i % 2 == 0)
+                            if (i % 2 == 0)
                                 game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(i, k);
                             else
                             {
@@ -354,21 +351,23 @@ namespace CatanGame.ModelsLogic
                                 game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PieceType = GetPieceType(i, k);
                             }
                         }
-            if(LongestRoad.Opacity != Keys.DoesNotOwn && game.PlayerLongestRoadLength < game.LongestRoadLength)
+            if (LongestRoad.Opacity != Keys.DoesNotOwn && game.PlayerLongestRoadLength < game.LongestRoadLength)
                 LongestRoad.Opacity = Keys.DoesNotOwn;
             if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
                 LargestArmy.Opacity = Keys.DoesNotOwn;
 
         }
-        public override void Init(Grid gameBoard, Grid grdPieces,Grid otherPieces)
+        public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
-            double gridSize = AdjustGridSize() * 0.966;
+            frame.WidthRequest = AdjustSize() * 1.095;
+            frame.HeightRequest = AdjustSize() * 0.95;
+            double gridSize = AdjustSize() * 0.975;
             gameBoard.WidthRequest = gridSize;
             gameBoard.HeightRequest = gridSize;
-            grdPieces.WidthRequest = gridSize * 1.15;
-            grdPieces.HeightRequest = gridSize * 1.15;
+            grdPieces.WidthRequest = gridSize;
+            grdPieces.HeightRequest = gridSize;
             // Define the Rows In gameBoard (for UI/UX layout purposes)
-            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(0.95, GridUnitType.Star) });
             for (int i = 0; i < 5; i++)
                 gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
@@ -467,7 +466,7 @@ namespace CatanGame.ModelsLogic
                         {
                             GetFixedTile(i, k, out sourceTile, out sourceNumber);
                         }
-                        game.TileTypes[GetTileLocationInArray(i,k)] = sourceTile;
+                        game.TileTypes[GetTileLocationInArray(i, k)] = sourceTile;
                         Row.Add(CreateTileImage(sourceTile), k);
                         game.TileNumbers[GetTileLocationInArray(i, k)] = sourceNumber;
                         Row.Add(CreateNumberImage(sourceNumber), k);
@@ -490,7 +489,7 @@ namespace CatanGame.ModelsLogic
             //Connect the game logic board with the UI/UX board
             game.GameBoard.InitBoard(BoardPieceButtons, game.TileTypes, game.TileNumbers);
             // Define the Rows In grdPieces (for UI/UX layout purposes)
-            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
+            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(5, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
             {
                 if (i % 2 == 0)
@@ -502,7 +501,7 @@ namespace CatanGame.ModelsLogic
                 else
                     grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(3.4, GridUnitType.Star) });
             }
-            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(8.4, GridUnitType.Star) });
+            grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(5, GridUnitType.Star) });
             //Initialize the pieces on the game UI/UX board
             for (int i = 1; i < 24; i++)
             {
@@ -521,11 +520,11 @@ namespace CatanGame.ModelsLogic
                         BoardPieceButtons[i][k - 1].Clicked += OnButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
                         BoardPieceImages[i][k - 1] = CreateApexImage(k, i);
-                        BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i-1)*12 + k -1];
+                        BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
                         Row.Add(BoardPieceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                    Row.ColumnSpacing = i == 11 || i == 13 ? 63 : 48;
+                    Row.ColumnSpacing = i == 7 || i == 9 || i == 11 || i == 13 || i == 15 || i == 17 ? 67 : 52;
                 }
                 else
                 {
@@ -541,7 +540,7 @@ namespace CatanGame.ModelsLogic
                         Row.Add(BoardPieceImages[i][k - 1], k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-                    Row.ColumnSpacing = i % 4 == 0 ? i == 12 ? 62.3 : 43 : 12;
+                    Row.ColumnSpacing = i % 4 == 0 ? i == 8 || i == 12 || i == 16 ? 67 : 45 : 12.5;
                     Row.Rotation = i > 12 ? 180 : 0;
                 }
                 grdPieces.Add(Row, 0, i);
@@ -583,10 +582,10 @@ namespace CatanGame.ModelsLogic
                         BoardPieces[i][k] = game.BoardPieces[((i - 1) * 12) + k];
             }
             if (pieceType == Strings.Road || pieceType == Strings.All)
-                for (int i = 1; i < 24; i ++)
+                for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
-                        if(i % 2 == 1)
+                        if (i % 2 == 1)
                         {
                             VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
                             if ((vertexNode.PieceType == BoardModel.PieceType.Town || vertexNode.PieceType == BoardModel.PieceType.City) && vertexNode.PlayerIndex == game.PlayerIndicator)
@@ -619,19 +618,19 @@ namespace CatanGame.ModelsLogic
                                 }
                             }
                         }
-        
+
                     }
             if (pieceType == Strings.All)
-            {         
+            {
                 for (int i = 2; i < 24; i += 2)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
                         EdgeLink edge = game.GameBoard.Edges[GetPieceLocationInArray(i, k)];
                         if (i % 2 == 0 && edge.RoadOwnerPlayerIndex == game.PlayerIndicator)
                         {
-                            if(edge.VertexNodeOne.PlayerIndex == -1)
+                            if (edge.VertexNodeOne.PlayerIndex == -1)
                                 BoardPieceButtons[edge.VertexNodeOne.Row][edge.VertexNodeOne.Column].BorderWidth = Keys.ButtonVisible;
-                            if(edge.VertexNodeTwo.PlayerIndex == -1)
+                            if (edge.VertexNodeTwo.PlayerIndex == -1)
                                 BoardPieceButtons[edge.VertexNodeTwo.Row][edge.VertexNodeTwo.Column].BorderWidth = Keys.ButtonVisible;
                         }
                     }
