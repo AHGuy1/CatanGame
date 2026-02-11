@@ -6,7 +6,7 @@ namespace CatanGame
         public App()
         {
             InitializeComponent();
-            MainPage = new LogInPage();
+            MainPage = new Dice();
             if (Current != null)
                 Current.UserAppTheme = AppTheme.Light;
         }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CatanGame.Views.Dice"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             Title="Dice">
+    <VerticalStackLayout Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+
+        <HorizontalStackLayout Spacing="20">
+            <Grid WidthRequest="150" HeightRequest="150">
+                <skia:SKLottieView x:Name="Dice1Animation"
+                                   Source="diceroll.json"
+                                   RepeatCount="-1"
+                                   IsVisible="False"
+                                   WidthRequest="150" HeightRequest="150"/>
+            </Grid>
+
+            <Grid WidthRequest="150" HeightRequest="150">
+                <skia:SKLottieView x:Name="Dice2Animation"
+                                   Source="diceroll.json"
+                                   RepeatCount="-1"
+                                   IsVisible="False"
+                                   WidthRequest="150" HeightRequest="150"/>
+            </Grid>
+        </HorizontalStackLayout>
+
+        <Label x:Name="ResultLabel" 
+               Text="Roll the dice!" 
+               FontSize="24" 
+               HorizontalOptions="Center"/>
+
+        <Button Text="ROLL" 
+                Clicked="OnRollClicked" 
+                FontSize="20"
+                BackgroundColor="OrangeRed"
+                TextColor="White"/>
+    </VerticalStackLayout>
+</ContentPage>
