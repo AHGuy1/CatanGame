@@ -12,12 +12,11 @@
         <Grid HorizontalOptions="Center" VerticalOptions="Center">
             <Image
                 x:Name="frame"
-                BackgroundColor="Transparent"
-                HorizontalOptions="Fill"            
-                Source="boardframe.png"
-                VerticalOptions="Fill"
                 Aspect="AspectFill"
-                />
+                BackgroundColor="Transparent"
+                HorizontalOptions="Fill"
+                Source="boardframe.png"
+                VerticalOptions="Fill" />
             <Grid
                 x:Name="grdBoard"
                 HorizontalOptions="Center"
@@ -25,12 +24,9 @@
             <Grid
                 x:Name="grdPieces"
                 HorizontalOptions="Center"
-                VerticalOptions="Center"/>
+                VerticalOptions="Center" />
         </Grid>
-        <Grid
-            x:Name="otherPieces"
-            HorizontalOptions="Start"
-            VerticalOptions="End" />
+        <Grid x:Name="otherPieces" />
         <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">
             <Frame
                 BorderColor="Black"

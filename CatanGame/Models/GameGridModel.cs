@@ -1,4 +1,5 @@
 ﻿using CatanGame.ModelsLogic;
+using SkiaSharp.Extended.UI.Controls;
 using System;
 
 namespace CatanGame.Models
@@ -7,12 +8,18 @@ namespace CatanGame.Models
     {
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected IndexedImage[][] BoardPieceImages = new IndexedImage[24][];
-        public EventHandler<IndexedButton>? ButtonClicked;
+        public SKLottieView Dice1Roll { get; set; } = new();
+        public SKLottieView Dice2Roll { get; set; } = new();
+        public Image Dice1Image { get; set; } = new();
+        public Image Dice2Image { get; set; } = new();
         public Image LongestRoad { get; set; } = new();
         public Image LargestArmy { get; set; } = new();
+        public Button RollButton { get; set; } = new();
+        public Label RollLabel { get; set; } = new();
         protected Game game = new();
 
-        protected abstract void OnButtonClicked(object? sender, EventArgs e);
+        protected abstract void OnBuildOptionsButtonClicked(object? sender, EventArgs e);
+        protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void HideButtuns();
         protected abstract void CheckLongestRoad();
         protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);

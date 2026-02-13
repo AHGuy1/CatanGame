@@ -1,7 +1,6 @@
-﻿using Android.Hardware.Camera2;
-using CatanGame.Models;
-using Microsoft.Maui.Controls;
-using System;
+﻿using CatanGame.Models;
+using SkiaSharp.Extended.UI.Controls;
+using static Android.InputMethodServices.Keyboard;
 
 namespace CatanGame.ModelsLogic
 {
@@ -62,7 +61,7 @@ namespace CatanGame.ModelsLogic
                 _ => string.Empty,
             };
         }
-        private static double AdjustSize()
+        private static double GetSizeProportion()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
             if (mainDisplay.Height < mainDisplay.Width)
@@ -75,7 +74,7 @@ namespace CatanGame.ModelsLogic
             Image image = new()
             {
                 Source = imageSource,
-                HeightRequest = AdjustSize() * 0.185,
+                HeightRequest = GetSizeProportion() * 0.185,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
@@ -83,8 +82,8 @@ namespace CatanGame.ModelsLogic
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                HeightRequest = AdjustSize() * 0.12,
-                WidthRequest = AdjustSize() * 0.12,
+                HeightRequest = GetSizeProportion() * 0.12,
+                WidthRequest = GetSizeProportion() * 0.12,
                 BackgroundColor = Colors.Transparent,
                 IsEnabled = false
             };
@@ -92,31 +91,75 @@ namespace CatanGame.ModelsLogic
             grid.Add(image);
             return grid;
         }
+        private static Grid CreateEmptyCenteredGrid()
+        {
+            return new()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+            };
+        }
+        private static SKLottieView CreateDiceAnimation()
+        {
+            double sizeProportion = GetSizeProportion();
+            return new()
+            {
+                Source = new SKFileLottieImageSource { File = Strings.DiceRollAnimation },
+                RepeatCount = -1,
+                IsVisible = false,
+                WidthRequest = sizeProportion * 0.25,
+                HeightRequest = sizeProportion * 0.25,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+        }
+        private static Image CreateDiceImage()
+        {
+            double sizeProportion = GetSizeProportion();
+            return new()
+            {
+                Source = Strings.DiceSixImage,
+                WidthRequest = sizeProportion * 0.15,
+                HeightRequest = sizeProportion * 0.15,
+                IsVisible = true,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+        }
         private static Image CreateNumberImage(string imageSource)
         {
             return new()
             {
                 Source = imageSource,
-                HeightRequest = AdjustSize() * 0.06,
+                HeightRequest = GetSizeProportion() * 0.06,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
         }
         private static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, AdjustSize() * 0.0165, AdjustSize() * 0.0495, rotation);
+            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.0165, GetSizeProportion() * 0.0495, rotation);
         }
         private static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, AdjustSize() * 0.03525, AdjustSize() * 0.03525);
+            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
         }
         private static IndexedImage CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, AdjustSize() * 0.0165, AdjustSize() * 0.0495, rotation);
+            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.0165, GetSizeProportion() * 0.0495, rotation);
         }
         private static IndexedImage CreateApexImage(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, AdjustSize() * 0.03525, AdjustSize() * 0.03525);
+            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
+        }
+        private static string GetDiceImage(int dice)
+        {
+            return dice == 1 ? Strings.DiceOneImage :
+                dice == 2 ? Strings.DiceTwoImage :
+                dice == 3 ? Strings.DiceThreeImage :
+                dice == 4 ? Strings.DiceFourImage :
+                dice == 5 ? Strings.DiceFiveImage :
+                Strings.DiceSixImage;
         }
         public static int GetTileLocationInArray(int row, int column)
         {
@@ -207,7 +250,7 @@ namespace CatanGame.ModelsLogic
                     if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                         BoardPieceButtons[i][k].BorderWidth = 0;
         }
-        protected override void OnButtonClicked(object? sender, EventArgs e)
+        protected override void OnBuildOptionsButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
             if (button.BorderWidth == Keys.ButtonVisible)
@@ -243,6 +286,32 @@ namespace CatanGame.ModelsLogic
                 if (game.Turn <= game.PlayerCount * 2 && button.RowIndex % 2 == 1 && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == game.PlayerIndicator && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);
             }
+        }
+        protected override async void OnRollButtonClicked(object? sender, EventArgs e)
+        {
+            RollButton.IsEnabled = false;
+            Random random = new();
+            Dice1Image.IsVisible = false;
+            Dice2Image.IsVisible = false;
+            Dice1Roll.Progress = TimeSpan.Zero;
+            Dice2Roll.Progress = TimeSpan.Zero;
+            Dice1Roll.IsVisible = true;
+            Dice2Roll.IsVisible = true;
+            Dice1Roll.IsAnimationEnabled = true;
+            Dice2Roll.IsAnimationEnabled = true;
+            RollLabel.Text = Strings.Rolling;
+            game.Roll1 = random.Next(1, 7);
+            game.Roll2 = random.Next(1, 7);
+            await Task.Delay(2200);       
+            Dice1Roll.IsVisible = false;
+            Dice1Roll.IsAnimationEnabled = false;
+            Dice1Image.Source = GetDiceImage(game.Roll1);
+            Dice1Image.IsVisible = true;
+            Dice2Roll.IsAnimationEnabled = false;
+            Dice1Image.Source = GetDiceImage(game.Roll2);
+            Dice2Image.IsVisible = true;
+            Dice2Roll.IsVisible = false;
+            RollLabel.Text = Strings.Rolled + game.RollTotal;
         }
         protected override void CheckLongestRoad()
         {
@@ -359,9 +428,10 @@ namespace CatanGame.ModelsLogic
         }
         public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
-            frame.WidthRequest = AdjustSize() * 1.095;
-            frame.HeightRequest = AdjustSize() * 0.95;
-            double gridSize = AdjustSize() * 0.975;
+            double sizeProportion = GetSizeProportion();
+            frame.WidthRequest = sizeProportion * 1.095;
+            frame.HeightRequest = sizeProportion * 0.95;
+            double gridSize = sizeProportion * 0.975;
             gameBoard.WidthRequest = gridSize;
             gameBoard.HeightRequest = gridSize;
             grdPieces.WidthRequest = gridSize;
@@ -372,11 +442,7 @@ namespace CatanGame.ModelsLogic
                 gameBoard.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
             gameBoard.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
             gameBoard.RowSpacing = 0;
-            Grid Row = new()
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
-            };
+            Grid Row = CreateEmptyCenteredGrid();
             //Initialize the tiles on the UI/UX game board
             if (game.PlayerIndicator != 0)
                 for (int i = 1; i < 6; i++)
@@ -390,11 +456,7 @@ namespace CatanGame.ModelsLogic
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     gameBoard.Add(Row, 0, i);
-                    Row = new()
-                    {
-                        VerticalOptions = LayoutOptions.Center,
-                        HorizontalOptions = LayoutOptions.Center
-                    };
+                    Row = CreateEmptyCenteredGrid();
                 }
             else
             {
@@ -472,11 +534,7 @@ namespace CatanGame.ModelsLogic
                         Row.Add(CreateNumberImage(sourceNumber), k);
                     }
                     gameBoard.Add(Row, 0, i);
-                    Row = new()
-                    {
-                        VerticalOptions = LayoutOptions.Center,
-                        HorizontalOptions = LayoutOptions.Center
-                    };
+                    Row = CreateEmptyCenteredGrid();
                 }
                 Dictionary<string, object> dict = new()
                 {
@@ -505,11 +563,7 @@ namespace CatanGame.ModelsLogic
             //Initialize the pieces on the game UI/UX board
             for (int i = 1; i < 24; i++)
             {
-                Row = new()
-                {
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalOptions = LayoutOptions.Center,
-                };
+                Row = CreateEmptyCenteredGrid();
                 if (i % 2 != 0)
                 {
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
@@ -517,7 +571,7 @@ namespace CatanGame.ModelsLogic
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         BoardPieceButtons[i][k - 1] = CreateApexButton(k, i);
-                        BoardPieceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        BoardPieceButtons[i][k - 1].Clicked += OnBuildOptionsButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
                         BoardPieceImages[i][k - 1] = CreateApexImage(k, i);
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
@@ -533,7 +587,7 @@ namespace CatanGame.ModelsLogic
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         BoardPieceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
-                        BoardPieceButtons[i][k - 1].Clicked += OnButtonClicked;
+                        BoardPieceButtons[i][k - 1].Clicked += OnBuildOptionsButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
                         BoardPieceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
@@ -549,27 +603,93 @@ namespace CatanGame.ModelsLogic
             if (game.PlayerIndicator == 0)
                 ShowBuildOptions(Strings.Town);
             // Define the Rows In otherPieces  (for UI/UX layout purposes)
-            otherPieces.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
-            otherPieces.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            otherPieces.RowSpacing = 5;
+            Row = new()
+            {
+                WidthRequest = sizeProportion * 0.55,
+                ColumnSpacing = 50,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+            SKLottieView diceRoll = CreateDiceAnimation();
+            Image diceImage = CreateDiceImage();
+            for (int i = 0; i < 2; i++)
+            {
+                Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+                if (i == 0)
+                {
+                    Dice1Image = diceImage;
+                    Dice1Roll = diceRoll;
+                    Row.Add(Dice1Image, 1);
+                    Row.Add(Dice1Roll, 1);
+                    diceImage = CreateDiceImage();
+                    diceRoll = CreateDiceAnimation();
+                    Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(2, GridUnitType.Star) });
+                }
+                else
+                {
+                                        Dice2Image = diceImage;
+                    Dice2Roll = diceRoll;
+                    Row.Add(Dice2Image, 2);
+                    Row.Add(Dice2Roll, 2);
+                }
+            }
+            otherPieces.Add(Row);
+            Label rollLabel = new()
+            {
+                Text = Strings.RollLabel,
+                FontSize = 24,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+            RollLabel = rollLabel;
+            otherPieces.Add(RollLabel, 0, 1);
+            Button rollButton = new()
+            {
+                Text = Strings.ButtonRoll,
+                FontSize = 24,
+                WidthRequest = sizeProportion * 0.4,
+                FontAttributes = FontAttributes.Bold,
+                BackgroundColor = Colors.DodgerBlue,
+                TextColor = Colors.White,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+            rollButton.Clicked += OnRollButtonClicked;
+            RollButton = rollButton;
+            otherPieces.Add(RollButton, 0, 2);
+            Row = new()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.End
+            };
+            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             LongestRoad = new()
             {
                 Source = Strings.LongestRoadImage,
-                HeightRequest = 100,
+                HeightRequest = sizeProportion * 0.2,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.End,
                 Opacity = Keys.DoesNotOwn
             };
-            otherPieces.Add(LongestRoad);
+            Row.Add(LongestRoad);
             LargestArmy = new()
             {
                 Source = Strings.LargestArmyImage,
-                HeightRequest = 100,
+                HeightRequest = sizeProportion * 0.2,
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.End,
                 Opacity = Keys.DoesNotOwn
             };
-            otherPieces.Add(LargestArmy, 1, 0);
-            otherPieces.ColumnSpacing = 5;
+            Row.Add(LargestArmy, 1, 0);
+            Row.ColumnSpacing = 5;
+            otherPieces.Add(Row,0,3);
         }
         public override void ShowBuildOptions(string pieceType)
         {

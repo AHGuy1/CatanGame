@@ -22,7 +22,6 @@ namespace CatanGame
                     fonts.AddFont("MaterialSymbolsOutlined.ttf", "MaterialSymbols");
 
                 });
-
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

@@ -40,11 +40,15 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerIndicator { get; set; }
         [Ignored]
+        public int RollTotal => Roll1 + Roll2;
+        [Ignored]
         public bool IsRandomBoard { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string TimeLeft { get; protected set; } = string.Empty;
+        public int Roll1 { get; set;}
+        public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
         public int LargestArmySize { get; set; } = 2;
         public int TurnTime { get; set; }
