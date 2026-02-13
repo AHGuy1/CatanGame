@@ -50,10 +50,16 @@ namespace CatanGame.ViewModels
             this.game.TurnChanged += OnTurnChanged;
             this.game.TimeLeftChanged += UpdateTimeLeft;
             this.game.GridChanged += OnGridChanged;
+            this.game.AnimationStatusChanged += OnAnimationStatusChanged;
             animations.OpacityChanged += OnOpacityChanged;
             OnPropertyChanged(nameof(game.TimeLeft));
             OnPropertyChanged(nameof(board));
             game.StartGame();
+        }
+
+        private void OnAnimationStatusChanged(object? sender, EventArgs e)
+        {
+            board.OnAnimationStatusChanged();
         }
 
         private void OnGridChanged(object? sender, EventArgs e)

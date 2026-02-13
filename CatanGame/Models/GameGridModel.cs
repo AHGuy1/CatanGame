@@ -20,12 +20,16 @@ namespace CatanGame.Models
 
         protected abstract void OnBuildOptionsButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
+        protected abstract void OnDiceUpdated(Task task);
+        protected abstract void StartAnimations();
+        protected abstract void StopAnimations();
         protected abstract void HideButtuns();
         protected abstract void CheckLongestRoad();
         protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);
         protected abstract int GetPieceIndexFromColor(int row, int column);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
 
+        public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();
         public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame);
         public abstract void ShowBuildOptions(string pieceType);

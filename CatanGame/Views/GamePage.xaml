@@ -29,7 +29,7 @@
         <Grid x:Name="otherPieces" />
         <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">
             <Frame
-                BorderColor="Black"
+                BorderColor="DodgerBlue"
                 CornerRadius="25"
                 HeightRequest="40"
                 HorizontalOptions="Center"
@@ -44,6 +44,7 @@
                 VerticalOptions="Center" />
             <Label
                 Grid.Row="1"
+                TextColor="DarkOrange"
                 HorizontalOptions="Center"
                 Text="{Binding StatusMessage}" />
             <Button

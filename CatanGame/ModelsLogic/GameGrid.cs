@@ -1,4 +1,5 @@
 ﻿using CatanGame.Models;
+using CatanGame.Platforms.Android;
 using SkiaSharp.Extended.UI.Controls;
 using static Android.InputMethodServices.Keyboard;
 
@@ -110,7 +111,7 @@ namespace CatanGame.ModelsLogic
                 WidthRequest = sizeProportion * 0.25,
                 HeightRequest = sizeProportion * 0.25,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.End
             };
         }
         private static Image CreateDiceImage()
@@ -123,7 +124,7 @@ namespace CatanGame.ModelsLogic
                 HeightRequest = sizeProportion * 0.15,
                 IsVisible = true,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.End
             };
         }
         private static Image CreateNumberImage(string imageSource)
@@ -287,32 +288,6 @@ namespace CatanGame.ModelsLogic
                     ShowBuildOptions(Strings.Road);
             }
         }
-        protected override async void OnRollButtonClicked(object? sender, EventArgs e)
-        {
-            RollButton.IsEnabled = false;
-            Random random = new();
-            Dice1Image.IsVisible = false;
-            Dice2Image.IsVisible = false;
-            Dice1Roll.Progress = TimeSpan.Zero;
-            Dice2Roll.Progress = TimeSpan.Zero;
-            Dice1Roll.IsVisible = true;
-            Dice2Roll.IsVisible = true;
-            Dice1Roll.IsAnimationEnabled = true;
-            Dice2Roll.IsAnimationEnabled = true;
-            RollLabel.Text = Strings.Rolling;
-            game.Roll1 = random.Next(1, 7);
-            game.Roll2 = random.Next(1, 7);
-            await Task.Delay(2200);       
-            Dice1Roll.IsVisible = false;
-            Dice1Roll.IsAnimationEnabled = false;
-            Dice1Image.Source = GetDiceImage(game.Roll1);
-            Dice1Image.IsVisible = true;
-            Dice2Roll.IsAnimationEnabled = false;
-            Dice1Image.Source = GetDiceImage(game.Roll2);
-            Dice2Image.IsVisible = true;
-            Dice2Roll.IsVisible = false;
-            RollLabel.Text = Strings.Rolled + game.RollTotal;
-        }
         protected override void CheckLongestRoad()
         {
             EdgeLink[] edges = game.GameBoard.Edges;
@@ -403,7 +378,71 @@ namespace CatanGame.ModelsLogic
             visited[GetPieceLocationInArray(edge.Row, edge.Column)] = false;
             return longestBranch;
         }
+        protected override void OnRollButtonClicked(object? sender, EventArgs e)
+        {
+            RollButton.IsEnabled = false;
+            Random random = new();
+            game.Roll1 = random.Next(1, 7);
+            game.Roll2 = random.Next(1, 7);
+            game.IsRolling = true;
+            StartAnimations();
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(game.Roll1), game.Roll1 },
+                { nameof(game.Roll2), game.Roll2 },
+                { nameof(game.IsRolling), game.IsRolling }
+            };
+            game.UpdateFields(OnDiceUpdated, dict);
+        }
+        protected override async void OnDiceUpdated(Task task)
+        {
+            await Task.Delay(2000);
+            if (task.IsCompletedSuccessfully)
+            {
+                StopAnimations();
+                game.IsRolling = false;
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(game.IsRolling), game.IsRolling }
+                };
+                game.UpdateFields(dict);
+            }
+        }
+        protected override void StartAnimations()
+        {
+            Dice1Image.IsVisible = false;
+            Dice2Image.IsVisible = false;
+            Dice1Roll.Progress = TimeSpan.Zero;
+            Dice2Roll.Progress = TimeSpan.Zero;
+            Dice1Roll.IsVisible = true;
+            Dice2Roll.IsVisible = true;
+            Dice1Roll.IsAnimationEnabled = true;
+            Dice2Roll.IsAnimationEnabled = true;
+            RollLabel.Text = Strings.Rolling;
+        }
+        protected override void StopAnimations()
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Dice1Roll.IsVisible = false;
+                Dice1Roll.IsAnimationEnabled = false;
+                Dice1Image.Source = GetDiceImage(game.Roll1);
+                Dice1Image.IsVisible = true;
+                Dice2Roll.IsAnimationEnabled = false;
+                Dice2Image.Source = GetDiceImage(game.Roll2);
+                Dice2Image.IsVisible = true;
+                Dice2Roll.IsVisible = false;
+                RollLabel.Text = Strings.Rolled + game.RollTotal;
+            });
+        }
 
+        public override void OnAnimationStatusChanged()
+        {
+            if (game.IsRolling)
+                StartAnimations();
+            else
+                StopAnimations();
+        }
         public override void OnChange()
         {
             if (game.BoardPieces != null && BoardPieceImages != null && BoardPieceButtons != null)
@@ -604,16 +643,16 @@ namespace CatanGame.ModelsLogic
                 ShowBuildOptions(Strings.Town);
             // Define the Rows In otherPieces  (for UI/UX layout purposes)
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.4, GridUnitType.Star) });
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
             otherPieces.RowSpacing = 5;
             Row = new()
             {
-                WidthRequest = sizeProportion * 0.55,
+                WidthRequest = sizeProportion * 0.50,
                 ColumnSpacing = 50,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.End
             };
             SKLottieView diceRoll = CreateDiceAnimation();
             Image diceImage = CreateDiceImage();
@@ -632,7 +671,7 @@ namespace CatanGame.ModelsLogic
                 }
                 else
                 {
-                                        Dice2Image = diceImage;
+                    Dice2Image = diceImage;
                     Dice2Roll = diceRoll;
                     Row.Add(Dice2Image, 2);
                     Row.Add(Dice2Roll, 2);
@@ -643,6 +682,7 @@ namespace CatanGame.ModelsLogic
             {
                 Text = Strings.RollLabel,
                 FontSize = 24,
+                TextColor = Colors.DarkOrange,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
@@ -653,7 +693,7 @@ namespace CatanGame.ModelsLogic
             {
                 Text = Strings.ButtonRoll,
                 FontSize = 24,
-                WidthRequest = sizeProportion * 0.4,
+                WidthRequest = sizeProportion * 0.35,
                 FontAttributes = FontAttributes.Bold,
                 BackgroundColor = Colors.DodgerBlue,
                 TextColor = Colors.White,

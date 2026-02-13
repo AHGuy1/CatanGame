@@ -93,6 +93,8 @@ namespace CatanGame.ModelsLogic
                 IsFull = updatedGame.IsFull;
                 PlayerNames = updatedGame.PlayerNames;
                 TurnTime = updatedGame.TurnTime;
+                Roll1 = updatedGame.Roll1;
+                Roll2 = updatedGame.Roll2;
                 if (TileTypes[0] == null)
                 {
                     TileNumbers = updatedGame.TileNumbers;
@@ -117,6 +119,11 @@ namespace CatanGame.ModelsLogic
                     LongestRoadLength = updatedGame.LongestRoadLength;
                     LargestArmySize = updatedGame.LargestArmySize;
                     gridChanged = true;
+                }
+                if(IsRolling != updatedGame.IsRolling)
+                {
+                    IsRolling = updatedGame.IsRolling;
+                    AnimationStatusChanged?.Invoke(this, EventArgs.Empty);
                 }
                 if (gridChanged)
                     GridChanged?.Invoke(this, EventArgs.Empty);

@@ -1,4 +1,5 @@
-﻿using CatanGame.ModelsLogic;
+﻿using Android.Media;
+using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
@@ -29,6 +30,8 @@ namespace CatanGame.Models
         public EventHandler? GridChanged;
         [Ignored]
         public EventHandler? TurnChanged;
+        [Ignored]
+        public EventHandler? AnimationStatusChanged;
         [Ignored]
         public EventHandler<string>? GameDeleted;
         [Ignored]
@@ -64,6 +67,7 @@ namespace CatanGame.Models
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
+        public bool IsRolling { get; set; }
         protected abstract void UpdateStatus();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void OnCompletePlayerLeft(Task task);
