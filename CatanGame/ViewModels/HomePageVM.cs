@@ -11,6 +11,7 @@ namespace CatanGame.ViewModels
         private readonly Games games = new();
         private string GameCodePri { get; set; } = string.Empty;
         private string SelectedBoardTypePri = string.Empty;
+
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
         public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;

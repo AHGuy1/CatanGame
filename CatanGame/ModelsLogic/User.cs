@@ -183,6 +183,7 @@ namespace CatanGame.ModelsLogic
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);

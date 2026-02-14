@@ -10,6 +10,7 @@ namespace CatanGame.ViewModels
     public partial class WaitingRoomPageVM : ObservableObject
     {
         private readonly Game game;
+
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
@@ -21,6 +22,12 @@ namespace CatanGame.ViewModels
         public string Player4Name => PlayerCount > 3 ? PlayerIndector == 3 ? Strings.Player4 + PlayerNames[3] + Strings.You : Strings.Player4 + PlayerNames[3] : string.Empty;
         public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
         public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
+        public string AvatarUrl1 => PlayerCount > 0 ? !String.IsNullOrWhiteSpace(PlayerNames[0]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[0]}" : string.Empty : string.Empty;
+        public string AvatarUrl2 => PlayerCount > 1 ? !String.IsNullOrWhiteSpace(PlayerNames[1]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[1]}" : string.Empty : string.Empty;
+        public string AvatarUrl3 => PlayerCount > 2 ? !String.IsNullOrWhiteSpace(PlayerNames[2]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[2]}" : string.Empty : string.Empty;
+        public string AvatarUrl4 => PlayerCount > 3 ? !String.IsNullOrWhiteSpace(PlayerNames[3]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[3]}" : string.Empty : string.Empty;
+        public string AvatarUrl5 => PlayerCount > 4 ? !String.IsNullOrWhiteSpace(PlayerNames[4]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[4]}" : string.Empty : string.Empty;
+        public string AvatarUrl6 => PlayerCount > 5 ? !String.IsNullOrWhiteSpace(PlayerNames[5]) ? $"{Keys.AvatrBaseUrl}?seed={PlayerNames[5]}" : string.Empty : string.Empty;
         public bool IsBusy { get; set; } = false;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
@@ -103,6 +110,12 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(Player4Name));
             OnPropertyChanged(nameof(Player5Name));
             OnPropertyChanged(nameof(Player6Name));
+            OnPropertyChanged(nameof(AvatarUrl1));
+            OnPropertyChanged(nameof(AvatarUrl2));
+            OnPropertyChanged(nameof(AvatarUrl3));
+            OnPropertyChanged(nameof(AvatarUrl4));
+            OnPropertyChanged(nameof(AvatarUrl5));
+            OnPropertyChanged(nameof(AvatarUrl6));
             OnPropertyChanged(nameof(StatusMessage));
             (StartGameCommand as Command)?.ChangeCanExecute();
         }

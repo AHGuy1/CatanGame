@@ -1,9 +1,7 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
-using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using System.Timers;
 using System.Windows.Input;
 
 namespace CatanGame.ViewModels
