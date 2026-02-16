@@ -291,26 +291,34 @@ namespace CatanGame.ModelsLogic
         protected override void CheckLongestRoad()
         {
             EdgeLink[] edges = game.GameBoard.Edges;
+            int playerLongestRoad = 0;
             for (int i = 0; i < edges.Length; i++)
             {
                 if (edges[i].RoadOwnerPlayerIndex == game.PlayerIndicator)
                 {
                     bool[] visited = new bool[edges.Length];
                     int roadLength = CheckLongestRoad(edges[i], visited);
-                    if (roadLength > game.PlayerLongestRoadLength)
-                        game.PlayerLongestRoadLength = roadLength;
+                    if (roadLength > playerLongestRoad)
+                        playerLongestRoad = roadLength;
                 }
             }
+            game.PlayerLongestRoadLength = playerLongestRoad;
             if (game.PlayerLongestRoadLength > game.LongestRoadLength)
             {
                 LongestRoad.Opacity = 1;
                 game.LongestRoadLength = game.PlayerLongestRoadLength;
             }
+            else if(LongestRoad.Opacity == 1)
+            {
+                game.LongestRoadLength = game.PlayerLongestRoadLength;
+                if(game.LongestRoadLength < 5)
+                    LongestRoad.Opacity = Keys.DoesNotOwn;
+            }
             Dictionary<string, object> dict = new()
-                {
-                    { nameof(game.BoardPieces), game.BoardPieces },
-                    { nameof(game.LongestRoadLength), game.LongestRoadLength }
-                };
+            {
+                { nameof(game.BoardPieces), game.BoardPieces },
+                { nameof(game.LongestRoadLength), game.LongestRoadLength }
+            };
             game.UpdateFields(dict);
         }
         protected override int CheckLongestRoad(EdgeLink edge, bool[] visited)
@@ -455,10 +463,23 @@ namespace CatanGame.ModelsLogic
                                 game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(i, k);
                             else
                             {
-                                game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PlayerIndex = GetPieceIndexFromColor(i, k);
-                                game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PieceType = GetPieceType(i, k);
+                                VertexNode vertex = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                                vertex.PlayerIndex = GetPieceIndexFromColor(i, k);
+                                vertex.PieceType = GetPieceType(i, k);
+                                if(vertex.PieceType == BoardModel.PieceType.Town)
+                                    CheckLongestRoad();
                             }
                         }
+            if(game.PlayerLongestRoadLength > game.LongestRoadLength)
+            {
+                LongestRoad.Opacity = 1;
+                game.LongestRoadLength = game.PlayerLongestRoadLength;
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(game.LongestRoadLength), game.LongestRoadLength }
+                };
+                game.UpdateFields(dict);
+            }
             if (LongestRoad.Opacity != Keys.DoesNotOwn && game.PlayerLongestRoadLength < game.LongestRoadLength)
                 LongestRoad.Opacity = Keys.DoesNotOwn;
             if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
@@ -789,23 +810,58 @@ namespace CatanGame.ModelsLogic
                         if (i % 2 == 0 && edge.RoadOwnerPlayerIndex == game.PlayerIndicator)
                         {
                             if (edge.VertexNodeOne.PlayerIndex == -1)
-                                BoardPieceButtons[edge.VertexNodeOne.Row][edge.VertexNodeOne.Column].BorderWidth = Keys.ButtonVisible;
+                            {
+                                bool cenBuild = true;
+                                EdgeLink[] edges = edge.VertexNodeOne.Edges;
+                                for (int j = 0; j < edges.Length; j++)
+                                    if (edges[j].VertexNodeOne.PlayerIndex != -1 || edges[j].VertexNodeTwo.PlayerIndex != -1)
+                                        cenBuild = false;
+                                if(cenBuild)
+                                    BoardPieceButtons[edge.VertexNodeOne.Row][edge.VertexNodeOne.Column].BorderWidth = Keys.ButtonVisible;
+                            }
                             if (edge.VertexNodeTwo.PlayerIndex == -1)
-                                BoardPieceButtons[edge.VertexNodeTwo.Row][edge.VertexNodeTwo.Column].BorderWidth = Keys.ButtonVisible;
+                            {
+                                bool cenBuild = true;
+                                EdgeLink[] edges = edge.VertexNodeTwo.Edges;
+                                for (int j = 0; j < edges.Length; j++)
+                                    if (edges[j].VertexNodeOne.PlayerIndex != -1 || edges[j].VertexNodeTwo.PlayerIndex != -1)
+                                        cenBuild = false;
+                                if (cenBuild)
+                                    BoardPieceButtons[edge.VertexNodeTwo.Row][edge.VertexNodeTwo.Column].BorderWidth = Keys.ButtonVisible;
+                            }
                         }
                     }
             }
             if (pieceType == Strings.City || pieceType == Strings.All)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPieces[i][k].Equals(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
-                            BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
+                    {
+                        if(i % 2 == 1)
+                        {
+                            VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            if (vertexNode.PieceType == BoardModel.PieceType.Town && vertexNode.PlayerIndex == game.PlayerIndicator)
+                                BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
+                        }
+                    }
             if (pieceType == Strings.Town)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                        if (BoardPieces[i][k].Equals(string.Empty) && i % 2 == 1)
-                            BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
-
+                    {
+                        if(i % 2 == 1)
+                        {
+                            VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            if (vertexNode.PlayerIndex == -1)
+                            {
+                                bool cenBuild = true;
+                                EdgeLink[] edges = vertexNode.Edges;
+                                for (int j = 0; j < edges.Length; j++)
+                                    if (edges[j].VertexNodeOne.PlayerIndex != -1 || edges[j].VertexNodeTwo.PlayerIndex != -1)
+                                        cenBuild = false;
+                                if (cenBuild)
+                                    BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
+                            }
+                        }
+                    }
         }
     }
 }
