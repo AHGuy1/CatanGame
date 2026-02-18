@@ -47,7 +47,13 @@ namespace CatanGame.Models
         [Ignored]
         public int RollTotal => Roll1 + Roll2;
         [Ignored]
-        public bool IsRandomBoard { get; set; }
+        public int PlayerCityCount { get; set; }
+        [Ignored]
+        public int PlayerTownCount { get; set; }
+        [Ignored]
+        public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0;
+        [Ignored]
+        public bool IsRandomBoard { get; set; } 
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
@@ -55,6 +61,7 @@ namespace CatanGame.Models
         public int Roll1 { get; set;}
         public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
+        public int LongestRoadOwnerIndex { get; set; } = 0;
         public int LargestArmySize { get; set; } = 2;
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
@@ -66,7 +73,6 @@ namespace CatanGame.Models
         public string[] TileTypes { get; set; } = new string[19];
         public string[] BoardPieces { get; set; } = new string[276];
         public string[] PlayerNames { get; set; } = [string.Empty];
-        public int[] PlayerPoints { get; set; } = [];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
@@ -82,7 +88,6 @@ namespace CatanGame.Models
         protected abstract void StopTimer();
         protected abstract void OnMessageReceived(long timeleft);
         protected abstract void IntArrayBoardPieces();
-        public abstract void UpdatePlayerPoints();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

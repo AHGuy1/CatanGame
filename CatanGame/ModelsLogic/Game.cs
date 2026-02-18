@@ -18,7 +18,6 @@ namespace CatanGame.ModelsLogic
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
-            PlayerPoints = new int[PlayerCount];
             Created = DateTime.Now;
             UpdateStatus();
             IntArrayBoardPieces();
@@ -186,10 +185,6 @@ namespace CatanGame.ModelsLogic
             StatusColor = GetStatusColor(PlayerTurn);
         }
 
-        public override void UpdatePlayerPoints()
-        {
-            
-        }
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);

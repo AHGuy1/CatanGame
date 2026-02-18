@@ -8,6 +8,7 @@ namespace CatanGame.Models
     {
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected IndexedImage[][] BoardPieceImages = new IndexedImage[24][];
+        protected ImageButton[][] RoberImages = new ImageButton[5][];
         public SKLottieView Dice1Roll { get; set; } = new();
         public SKLottieView Dice2Roll { get; set; } = new();
         public Image Dice1Image { get; set; } = new();
@@ -18,7 +19,7 @@ namespace CatanGame.Models
         public Label RollLabel { get; set; } = new();
         protected Game game = new();
 
-        protected abstract void OnBuildOptionsButtonClicked(object? sender, EventArgs e);
+        protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnDiceUpdated(Task task);
         protected abstract void StartAnimations();

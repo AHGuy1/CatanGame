@@ -12,7 +12,7 @@
         }
         public TurnTime()
         {
-            Time = 30;
+            Time = 45;
         }
     }
 }

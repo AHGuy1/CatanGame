@@ -15,6 +15,8 @@ namespace CatanGame.ModelsLogic
                 BoardPieceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
                 BoardPieceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
             }
+            for (int i = 1;i < 6; i++)
+                RoberImages[i] = new ImageButton[GetAmountOfColumnsTiles(i) - 1];
         }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
@@ -69,28 +71,16 @@ namespace CatanGame.ModelsLogic
                 return mainDisplay.Height / mainDisplay.Density;
             return mainDisplay.Width / mainDisplay.Density;
         }
-        private static Grid CreateTileImage(string imageSource)
+        private static Image CreateTileImage(string imageSource)
         {
-            Grid grid = [];
-            Image image = new()
+
+            return new()
             {
                 Source = imageSource,
                 HeightRequest = GetSizeProportion() * 0.185,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
-            };
-            Button button = new()
-            {
-                HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                HeightRequest = GetSizeProportion() * 0.12,
-                WidthRequest = GetSizeProportion() * 0.12,
-                BackgroundColor = Colors.Transparent,
-                IsEnabled = false
-            };
-            grid.Add(button);
-            grid.Add(image);
-            return grid;
+            }; 
         }
         private static Grid CreateEmptyCenteredGrid()
         {
@@ -162,6 +152,26 @@ namespace CatanGame.ModelsLogic
                 dice == 5 ? Strings.DiceFiveImage :
                 Strings.DiceSixImage;
         }
+
+        protected Grid CreateRoberImage(int row, int column)
+        {
+            Grid grid = CreateEmptyCenteredGrid();
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.7, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
+            ImageButton imageButton = new()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BorderColor = Colors.White,
+                HeightRequest = GetSizeProportion() * 0.06,
+                WidthRequest = GetSizeProportion() * 0.06,
+                CornerRadius = 45
+            };
+            RoberImages[row][column] = imageButton;
+            grid.Add(imageButton, 0, 1);
+            return grid;
+        }
+
         public static int GetTileLocationInArray(int row, int column)
         {
             int location = 0;
@@ -251,7 +261,7 @@ namespace CatanGame.ModelsLogic
                     if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                         BoardPieceButtons[i][k].BorderWidth = 0;
         }
-        protected override void OnBuildOptionsButtonClicked(object? sender, EventArgs e)
+        protected override void OnBuildButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
             if (button.BorderWidth == Keys.ButtonVisible)
@@ -269,11 +279,13 @@ namespace CatanGame.ModelsLogic
                     {
                         BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
                         game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    }
+                        game.PlayerTownCount++;                    }
                     else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                     {
                         BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
                         game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
+                        game.PlayerTownCount--;
+                        game.PlayerCityCount++;
                     }
                     game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = GetPieceIndexFromColor(button.RowIndex, button.ColumnIndex - 1);
                     game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = GetPieceType(button.RowIndex, button.ColumnIndex - 1);
@@ -307,6 +319,7 @@ namespace CatanGame.ModelsLogic
             {
                 LongestRoad.Opacity = 1;
                 game.LongestRoadLength = game.PlayerLongestRoadLength;
+                game.LongestRoadOwnerIndex = game.PlayerIndicator;
             }
             else if(LongestRoad.Opacity == 1)
             {
@@ -484,7 +497,6 @@ namespace CatanGame.ModelsLogic
                 LongestRoad.Opacity = Keys.DoesNotOwn;
             if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
                 LargestArmy.Opacity = Keys.DoesNotOwn;
-
         }
         public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
@@ -585,13 +597,12 @@ namespace CatanGame.ModelsLogic
                             }
                         }
                         else
-                        {
                             GetFixedTile(i, k, out sourceTile, out sourceNumber);
-                        }
                         game.TileTypes[GetTileLocationInArray(i, k)] = sourceTile;
                         Row.Add(CreateTileImage(sourceTile), k);
                         game.TileNumbers[GetTileLocationInArray(i, k)] = sourceNumber;
                         Row.Add(CreateNumberImage(sourceNumber), k);
+                        Row.Add(CreateRoberImage(i - 1, k - 1));
                     }
                     gameBoard.Add(Row, 0, i);
                     Row = CreateEmptyCenteredGrid();
@@ -631,7 +642,7 @@ namespace CatanGame.ModelsLogic
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         BoardPieceButtons[i][k - 1] = CreateApexButton(k, i);
-                        BoardPieceButtons[i][k - 1].Clicked += OnBuildOptionsButtonClicked;
+                        BoardPieceButtons[i][k - 1].Clicked += OnBuildButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
                         BoardPieceImages[i][k - 1] = CreateApexImage(k, i);
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
@@ -647,7 +658,7 @@ namespace CatanGame.ModelsLogic
                     {
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                         BoardPieceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
-                        BoardPieceButtons[i][k - 1].Clicked += OnBuildOptionsButtonClicked;
+                        BoardPieceButtons[i][k - 1].Clicked += OnBuildButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
                         BoardPieceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
