@@ -18,6 +18,7 @@ namespace CatanGame.ModelsLogic
             PlayerCount = slectedAmountOfPlayers.Size;
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
+            PlayerPoints = new int[PlayerCount];
             Created = DateTime.Now;
             UpdateStatus();
             IntArrayBoardPieces();
@@ -25,6 +26,21 @@ namespace CatanGame.ModelsLogic
         public Game()
         {
             IntArrayBoardPieces();
+        }
+
+        private static Color GetStatusColor(int playerTurn)
+        {
+            return playerTurn switch
+            {
+                1 => Colors.DarkOrange,
+                2 => Colors.Navy,
+                3 => Colors.Gold,
+                4 => Colors.Red,
+                5 => Colors.LimeGreen,
+                6 => Colors.Cyan,
+                //Should not happen
+                _ => Colors.Black
+            };
         }
 
         protected override void IntArrayBoardPieces()
@@ -167,6 +183,12 @@ namespace CatanGame.ModelsLogic
             _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
                 PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
                 (GameStatus.Status)status.GetValue(PlayerTurn - 1)!;
+            StatusColor = GetStatusColor(PlayerTurn);
+        }
+
+        public override void UpdatePlayerPoints()
+        {
+            
         }
         public override void SetDocument(Action<Task> OnComplete)
         {

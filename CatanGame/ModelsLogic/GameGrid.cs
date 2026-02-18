@@ -723,6 +723,7 @@ namespace CatanGame.ModelsLogic
             };
             rollButton.Clicked += OnRollButtonClicked;
             RollButton = rollButton;
+            RollButton.IsEnabled = false;
             otherPieces.Add(RollButton, 0, 2);
             Row = new()
             {

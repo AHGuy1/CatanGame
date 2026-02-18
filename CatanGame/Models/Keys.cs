@@ -12,7 +12,7 @@ namespace CatanGame.Models
         public const string EmailKey = "Email";
         public const string PasswordKey = "Password";
         public const string IsRememberedKey = "IsRemembered";
-        public const string AvatrBaseUrl = "https://api.dicebear.com/9.x/bottts/png";
+        public const string AvatrBaseUrl = "https://api.dicebear.com/9.x/bottts/png?eyes=bulging,dizzy,eva,frame1,frame2,glow,robocop,round,roundFrame01,roundFrame02,sensor,shade01&mouth=bite,diagram,grill01,grill02,grill03,square01,square02&seed=";
         public const string FbApiKey = "AIzaSyBiMqS0AFWWQFeV3mnZuVYH1VC3SGaNtQ0";
         public const string FbApiAuthDomain = "acatangameh.firebaseapp.com";
         public const string GamesCollection = "Games";

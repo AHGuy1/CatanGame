@@ -18,6 +18,8 @@ namespace CatanGame.Models
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
         [Ignored]
+        public Color StatusColor { get; set; } = Colors.Black;
+        [Ignored]
         //= new()?
         public Board GameBoard { get; } = new();
         [Ignored]
@@ -60,10 +62,11 @@ namespace CatanGame.Models
         public bool GameStarted { get; set; }
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;
-        public string[] PlayerNames { get; set; } = [string.Empty];
         public string[] TileNumbers { get; set; } = new string[19];
         public string[] TileTypes { get; set; } = new string[19];
         public string[] BoardPieces { get; set; } = new string[276];
+        public string[] PlayerNames { get; set; } = [string.Empty];
+        public int[] PlayerPoints { get; set; } = [];
         public DateTime Created { get; set; }
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
@@ -79,6 +82,7 @@ namespace CatanGame.Models
         protected abstract void StopTimer();
         protected abstract void OnMessageReceived(long timeleft);
         protected abstract void IntArrayBoardPieces();
+        public abstract void UpdatePlayerPoints();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

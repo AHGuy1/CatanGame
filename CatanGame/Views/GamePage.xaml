@@ -42,11 +42,25 @@
                 Text="{Binding TimeLeft}"
                 TextColor="{Binding TimeColor}"
                 VerticalOptions="Center" />
-            <Label
-                Grid.Row="1"
-                TextColor="DarkOrange"
-                HorizontalOptions="Center"
-                Text="{Binding StatusMessage}" />
+            <Grid ColumnDefinitions="auto,auto"
+                  Grid.Row="1">
+                <Label TextColor="{Binding StatusColor}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.Column="1"
+                       Text="{Binding StatusMessage}" />
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30"
+                       VerticalOptions="Center"
+                       IsVisible="{Binding AvatarVisible}">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+            </Grid>
             <Button
                 Grid.Row="2"
                 Command="{Binding EndTurnCommand}"

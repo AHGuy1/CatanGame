@@ -15,20 +15,12 @@ namespace CatanGame.ViewModels
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
         public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn-1] + game.StatusMessage;
-        public string GameCode => Strings.GameCode + game.GameCode;
-        public string Player1Name => PlayerCount > 0 ? PlayerIndector == 0 ? Strings.Player1Host + PlayerNames[0] + Strings.You : Strings.Player1Host + PlayerNames[0] : string.Empty;
-        public string Player2Name => PlayerCount > 1 ? PlayerIndector == 1 ? Strings.Player2 + PlayerNames[1] + Strings.You : Strings.Player2 + PlayerNames[1] : string.Empty;
-        public string Player3Name => PlayerCount > 2 ? PlayerIndector == 2 ? Strings.Player3 + PlayerNames[2] + Strings.You : Strings.Player3 + PlayerNames[2] : string.Empty;
-        public string Player4Name => PlayerCount > 3 ? PlayerIndector == 3 ? Strings.Player4 + PlayerNames[3] + Strings.You : Strings.Player4 + PlayerNames[3] : string.Empty;
-        public string Player5Name => PlayerCount > 4 ? PlayerIndector == 4 ? Strings.Player5 + PlayerNames[4] + Strings.You : Strings.Player5 + PlayerNames[4] : string.Empty;
-        public string Player6Name => PlayerCount > 5 ? PlayerIndector == 5 ? Strings.Player6 + PlayerNames[5] + Strings.You : Strings.Player6 + PlayerNames[5] : string.Empty;
+        public Color StatusColor => game.StatusColor;
+        public string AvatarUrl => Keys.AvatrBaseUrl + PlayerNames[game.PlayerTurn - 1];
         public string TimeLeft => game.TimeLeft;
+        public bool AvatarVisible => game.StatusMessage != GameStatus.Status.PleseWait.ToString() ;
         public bool ShouldGameBeDeleted = true;
         public bool IsBusy { get; set; } = false;
-        public bool IsVisiblePlayer3Visible => PlayerCount > 2;
-        public bool IsVisiblePlayer4Visible => PlayerCount > 3;
-        public bool IsVisiblePlayer5Visible => PlayerCount > 4;
-        public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public Color? TimeColor => animations.TimeColor;
         public double TimeOpacity => animations.TimeOpacity;
         public ICommand EndTurnCommand { get; }
@@ -72,8 +64,14 @@ namespace CatanGame.ViewModels
         }
         private void OnTurnChanged(object? sender, EventArgs e)
         {
-            if (game.Turn <= game.PlayerCount*2 && game.PlayerTurn == game.PlayerIndicator + 1)
-                board.ShowBuildOptions(Strings.Town);
+            if (game.Turn <= game.PlayerCount*2)
+            {
+                if(game.PlayerTurn == game.PlayerIndicator + 1)
+                    board.ShowBuildOptions(Strings.Town);
+            }
+            else if (game.PlayerTurn == game.PlayerIndicator + 1)
+                board.RollButton.IsEnabled = true;
+
         }
 
         private bool CanShowBuildOptions()
@@ -153,14 +151,11 @@ namespace CatanGame.ViewModels
         {
             IsBusy = false;
             OnPropertyChanged(nameof(IsBusy));
-            OnPropertyChanged(nameof(Player1Name));
-            OnPropertyChanged(nameof(Player2Name));
-            OnPropertyChanged(nameof(Player3Name));
-            OnPropertyChanged(nameof(Player4Name));
-            OnPropertyChanged(nameof(Player5Name));
-            OnPropertyChanged(nameof(Player6Name));
             OnPropertyChanged(nameof(StatusMessage));
             OnPropertyChanged(nameof(TimeLeft));
+            OnPropertyChanged(nameof(AvatarUrl));
+            OnPropertyChanged(nameof(AvatarVisible));
+            OnPropertyChanged(nameof(StatusColor));
             (EndTurnCommand as Command)?.ChangeCanExecute();
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
         }
