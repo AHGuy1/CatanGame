@@ -165,11 +165,17 @@ namespace CatanGame.ModelsLogic
                 BorderColor = Colors.White,
                 HeightRequest = GetSizeProportion() * 0.06,
                 WidthRequest = GetSizeProportion() * 0.06,
-                CornerRadius = 45
+                CornerRadius = 45,
+                BorderWidth = 1.5
             };
             RoberImages[row][column] = imageButton;
+            RoberImages[row][column].Clicked += OnRoberPlacementClicked;
             grid.Add(imageButton, 0, 1);
             return grid;
+        }
+        protected void OnRoberPlacementClicked(object? sender, EventArgs e)
+        {
+
         }
 
         public static int GetTileLocationInArray(int row, int column)
