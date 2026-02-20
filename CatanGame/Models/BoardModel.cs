@@ -4,20 +4,20 @@ namespace CatanGame.Models
     {
         public enum PieceType
         {
-            None = 0,
-            Town = 1,
-            City = 2
+            None,
+            Town,
+            City
         }
 
         public enum TerrainType
         {
-            None = 0,
-            Fields = 1,
-            Mountien = 2,
-            Forest = 3,
-            Hills = 4,
-            Pasture = 5,
-            Desert = 6
+            None,
+            Fields,
+            Mountien,
+            Forest,
+            Hills,
+            Pasture,
+            Desert
         }
 
         public VertexNode[] Vertices { get; set; } = [];

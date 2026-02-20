@@ -1,9 +1,6 @@
-﻿using Android.Hardware.Lights;
-using static Android.InputMethodServices.Keyboard;
-
-namespace CatanGame.Models
+﻿namespace CatanGame.Models
 {
-    public class Avatar
+    public class AvatarModel
     {
         public string Url { get; set; } = Keys.AvatrBaseUrl;
 
@@ -61,13 +58,13 @@ namespace CatanGame.Models
         }
         public enum Sides
         {
-            antenna01,
-            antenna02,
-            cables01,
-            cables02,
-            round,
-            square,
-            squareAssymetric
+            Antenna01,
+            Antenna02,
+            Cables01,
+            Cables02,
+            Round,
+            Square,
+            SquareAssymetric
         }
         public enum Texture
         {

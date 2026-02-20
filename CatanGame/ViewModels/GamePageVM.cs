@@ -23,16 +23,14 @@ namespace CatanGame.ViewModels
         public bool IsBusy { get; set; } = false;
         public Color? TimeColor => animations.TimeColor;
         public double TimeOpacity => animations.TimeOpacity;
-        public ICommand EndTurnCommand { get; }
-        public ICommand ShowBuildOptionsCommand { get; }
+
         public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
             animations = new Animations();
-            EndTurnCommand = new Command(EndTurn, CanEndTurn);
-            ShowBuildOptionsCommand = new Command(ShowBuildOptions,CanShowBuildOptions);
             this.game = game;
             board = new(game);
             board.Init(grdBoard, grdPieces, otherPieces,frame);
+            board.EndTurnOnClicked += EndTurn;
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;
@@ -51,7 +49,6 @@ namespace CatanGame.ViewModels
         {
             board.OnAnimationStatusChanged();
         }
-
         private void OnGridChanged(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() => board.OnChange());
@@ -73,21 +70,10 @@ namespace CatanGame.ViewModels
                 board.RollButton.IsEnabled = true;
 
         }
-
-        private bool CanShowBuildOptions()
-        {
-            return StatusMessage == Strings.YourTurn;
-        }
-
-        private void ShowBuildOptions()
-        {
-            board.ShowBuildOptions(Strings.All);
-        }
         private void UpdateTimeLeft(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(TimeLeft));
         }
-
         private void OutOfTimeEndTurn(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -96,7 +82,10 @@ namespace CatanGame.ViewModels
             });
             EndTurn();
         }
-
+        private void EndTurn(object? sender, EventArgs e)
+        {
+            EndTurn();
+        }
         private void OnGameDeleted(object? sender, string messgae)
         {
             ShouldGameBeDeleted = false;
@@ -134,19 +123,6 @@ namespace CatanGame.ViewModels
                     Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
                 });
         }
-
-        private bool CanEndTurn()
-        {
-            return game.PlayerIndicator + 1 == game.PlayerTurn && game.IsFull;
-        }
-
-        private void EndTurn()
-        {
-            IsBusy = true;
-            OnPropertyChanged(nameof(IsBusy));
-            game.EndTurn();
-        }
-
         private void OnGameChanged(object? sender, EventArgs e)
         {
             IsBusy = false;
@@ -156,8 +132,12 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(AvatarUrl));
             OnPropertyChanged(nameof(AvatarVisible));
             OnPropertyChanged(nameof(StatusColor));
-            (EndTurnCommand as Command)?.ChangeCanExecute();
-            (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
+        }
+        private void EndTurn()
+        {
+            IsBusy = true;
+            OnPropertyChanged(nameof(IsBusy));
+            game.EndTurn();
         }
 
         public void RemoveSnapshotListener()

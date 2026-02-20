@@ -1,5 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.Platforms.Android;
+using IntelliJ.Lang.Annotations;
 using SkiaSharp.Extended.UI.Controls;
 using static Android.InputMethodServices.Keyboard;
 
@@ -16,7 +17,7 @@ namespace CatanGame.ModelsLogic
                 BoardPieceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
             }
             for (int i = 1;i < 6; i++)
-                RoberImages[i] = new ImageButton[GetAmountOfColumnsTiles(i) - 1];
+                RoberImages[i-1] = new ImageButton[GetAmountOfColumnsTiles(i)];
         }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
@@ -153,31 +154,6 @@ namespace CatanGame.ModelsLogic
                 Strings.DiceSixImage;
         }
 
-        protected Grid CreateRoberImage(int row, int column)
-        {
-            Grid grid = CreateEmptyCenteredGrid();
-            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.7, GridUnitType.Star) });
-            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
-            ImageButton imageButton = new()
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                BorderColor = Colors.White,
-                HeightRequest = GetSizeProportion() * 0.06,
-                WidthRequest = GetSizeProportion() * 0.06,
-                CornerRadius = 45,
-                BorderWidth = 1.5
-            };
-            RoberImages[row][column] = imageButton;
-            RoberImages[row][column].Clicked += OnRoberPlacementClicked;
-            grid.Add(imageButton, 0, 1);
-            return grid;
-        }
-        protected void OnRoberPlacementClicked(object? sender, EventArgs e)
-        {
-
-        }
-
         public static int GetTileLocationInArray(int row, int column)
         {
             int location = 0;
@@ -244,6 +220,27 @@ namespace CatanGame.ModelsLogic
                 return location;
             }
         }
+
+        protected override Grid CreateRoberImage(int row, int column)
+        {
+            Grid grid = CreateEmptyCenteredGrid();
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.7, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
+            ImageButton imageButton = new()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BorderColor = Colors.White,
+                HeightRequest = GetSizeProportion() * 0.06,
+                WidthRequest = GetSizeProportion() * 0.06,
+                CornerRadius = 45,
+                BorderWidth = 1.5
+            };
+            RoberImages[row][column] = imageButton;
+            RoberImages[row][column].Clicked += OnRoberPlacementClicked;
+            grid.Add(imageButton, 0, 1);
+            return grid;
+        }
         protected override BoardModel.PieceType GetPieceType(int row, int column)
         {
             return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
@@ -259,6 +256,14 @@ namespace CatanGame.ModelsLogic
                    BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
                    BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
                    -1;
+        }
+        protected override void OnRoberPlacementClicked(object? sender, EventArgs e)
+        {
+
+        }
+        protected override void ShowBuildOptions()
+        {
+            ShowBuildOptions(Strings.All);
         }
         protected override void HideButtuns()
         {
@@ -461,6 +466,20 @@ namespace CatanGame.ModelsLogic
                 Dice2Roll.IsVisible = false;
                 RollLabel.Text = Strings.Rolled + game.RollTotal;
             });
+        }
+        protected override bool CanShowBuildOptions()
+        {
+            return game.StatusMessage == Strings.YourTurn;
+        }
+        protected override bool CanEndTurn()
+        {
+            return game.PlayerIndicator + 1 == game.PlayerTurn && game.IsFull;
+        }
+
+        protected override void EndTurn()
+        {
+            EndTurnOnClicked?.Invoke(this, EventArgs.Empty);
+
         }
 
         public override void OnAnimationStatusChanged()
@@ -681,13 +700,15 @@ namespace CatanGame.ModelsLogic
                 ShowBuildOptions(Strings.Town);
             // Define the Rows In otherPieces  (for UI/UX layout purposes)
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.4, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.25, GridUnitType.Star) });
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.85, GridUnitType.Star) });
             otherPieces.RowSpacing = 5;
             Row = new()
             {
-                WidthRequest = sizeProportion * 0.50,
+                WidthRequest = sizeProportion * 0.5,
                 ColumnSpacing = 50,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.End
@@ -719,7 +740,7 @@ namespace CatanGame.ModelsLogic
             Label rollLabel = new()
             {
                 Text = Strings.RollLabel,
-                FontSize = 24,
+                FontSize = 22,
                 TextColor = Colors.DarkOrange,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Center,
@@ -730,23 +751,45 @@ namespace CatanGame.ModelsLogic
             Button rollButton = new()
             {
                 Text = Strings.ButtonRoll,
-                FontSize = 24,
-                WidthRequest = sizeProportion * 0.35,
+                FontSize = 20,
                 FontAttributes = FontAttributes.Bold,
+                WidthRequest =  sizeProportion * 0.28,
                 BackgroundColor = Colors.DodgerBlue,
                 TextColor = Colors.White,
+                IsEnabled = true,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
             rollButton.Clicked += OnRollButtonClicked;
             RollButton = rollButton;
-            RollButton.IsEnabled = false;
+            RollButton.IsEnabled = true;
             otherPieces.Add(RollButton, 0, 2);
+            Button buildOptionsButton = new()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                Text = Strings.BuildOptions,
+                FontSize = 18,
+                WidthRequest = sizeProportion * 0.35,
+                Command = new Command(EndTurn, CanEndTurn)
+            };
+            otherPieces.Add(buildOptionsButton, 0, 3);
+            Button endTurnButton = new()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = sizeProportion * 0.28,
+                FontSize = 18,
+                Text = Strings.EndTurn,
+                Command = new Command(ShowBuildOptions, CanShowBuildOptions)
+            };
+            otherPieces.Add(endTurnButton, 0, 4);
             Row = new()
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.End
             };
+            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
+            Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
             LongestRoad = new()
@@ -766,20 +809,20 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End,
                 Opacity = Keys.DoesNotOwn
             };
-            Row.Add(LargestArmy, 1, 0);
+            Row.Add(LargestArmy, 1);
+            BuildingCost = new()
+            {
+                Source = Strings.BuildingCostImage,
+                HeightRequest = sizeProportion * 0.2,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.End
+            };
+            Row.Add(BuildingCost, 2);
             Row.ColumnSpacing = 5;
-            otherPieces.Add(Row,0,3);
+            otherPieces.Add(Row,0,5);
         }
         public override void ShowBuildOptions(string pieceType)
         {
-            string[][] BoardPieces = new string[24][];
-            for (int i = 1; i < 24; i++)
-            {
-                BoardPieces[i] = new string[GetAmountOfColumns(i) - 1];
-                for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    if (game.BoardPieces[((i - 1) * 12) + k] != null)
-                        BoardPieces[i][k] = game.BoardPieces[((i - 1) * 12) + k];
-            }
             if (pieceType == Strings.Road || pieceType == Strings.All)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)

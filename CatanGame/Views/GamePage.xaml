@@ -61,7 +61,7 @@
                     </Image.Source>
                 </Image>
             </Grid>
-            <Button
+            <!--<Button
                 Grid.Row="2"
                 Command="{Binding EndTurnCommand}"
                 HeightRequest="50"
@@ -72,7 +72,7 @@
                 Command="{Binding ShowBuildOptionsCommand}"
                 HeightRequest="50"
                 HorizontalOptions="Center"
-                Text="{x:Static m:Strings.BuildOptions}" />
+                Text="{x:Static m:Strings.BuildOptions}" />-->
         </Grid>
     </HorizontalStackLayout>
 </ContentPage>
