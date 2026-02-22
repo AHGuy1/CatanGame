@@ -1,83 +1,118 @@
 ﻿namespace CatanGame.Models
 {
-    public class AvatarModel
+    public abstract class AvatarModel
     {
-        public string Url { get; set; } = Keys.AvatrBaseUrl;
+        public string[] ColorCodes { get; set; } = [Strings.CyanCode,Strings.BlueCode,Strings.DeepPurpleCode,Strings.BrownCode,Strings.LightGreenCode,Strings.PurpleCode,Strings.LightBlueCode,Strings.GreenCode,Strings.BlueGreyCode,
+                Strings.TealCode,Strings.IndigoCode,Strings.GreyCode,Strings.YellowGreenCode,Strings.PinkCode,Strings.RedCode,Strings.OrangeRedCode,Strings.OrangeCode,Strings.YellowCode,Strings.AmberCode];
+        public Colors[] SelectedColors { get; set; } = [];
+        public Eyes[] SelectedEyes { get; set; } = [];
+        public Mouth[] SelectedMouths { get; set; } = [];
+        public Sides[] SelectedSides { get; set; } = [];
+        public Texture[] SelectedTextures { get; set; } = [];
+        public Face[] SelectedFaces { get; set; } = [];
+        public Top[] SelectedTops { get; set; } = [];
 
-        Dictionary<string, string> colors = new Dictionary<string, string>
+        public enum Colors
         {
-            { "Black", "#000000" },
-            { "Cyan", "#00ACC1" },
-            { "Blue", "#1E88E5" },
-            { "Deep Purple", "#5E35B1" },
-            { "Brown", "#6D4C41" },
-            { "Light Green", "#7CB342" },
-            { "Purple", "#8E24AA" },
-            { "Light Blue", "#039BE5" },
-            { "Green", "#43A047" },
-            { "Blue Grey", "#546E7A" },
-            { "Teal", "#00897B" },
-            { "Indigo", "#3949AB" },
-            { "Grey", "#757575" },
-            { "Lime", "#C0CA33" },
-            { "Pink", "#D81B60" },
-            { "Red", "#E53935" },
-            { "Orange Red", "#F4511E" },
-            { "Orange", "#FB8C00" },
-            { "Yellow", "#FDD835" },
-            { "Amber", "#FFB300" }
-        };
+            none,
+            cyan,
+            blue,
+            deepPurple,
+            brown,
+            lightGreen,
+            purple,
+            lightBlue,
+            green,
+            blueGrey,
+            teal,
+            indigo,
+            grey,
+            yellowGreen,
+            pink,
+            red,
+            orangeRed,
+            orange,
+            yellow,
+            amber
+        }
         public enum Eyes
         {
-            Bulging,
-            Dizzy,
-            Eva,
-            Frame1,
-            Frame2,
-            Glow,
-            Happy,
-            Hearts,
-            Robocop,
-            Round,
-            RoundFrame01,
-            RoundFrame02,
-            Sensor,
-            Shade01
+            none,
+            bulging,
+            dizzy,
+            eva,
+            frame1,
+            frame2,
+            glow,
+            happy,
+            hearts,
+            robocop,
+            round,
+            roundFrame01,
+            roundFrame02,
+            sensor,
+            shade01
         }
-        public enum Moth
+        public enum Mouth
         {
-            Bite,
-            Diagram,
-            Grill01,
-            Grill02,
-            Grill03,
-            Smile01,
-            Smile02,
-            Square01,
-            Square02
+            none,
+            bite,
+            diagram,
+            grill01,
+            grill02,
+            grill03,
+            smile01,
+            smile02,
+            square01,
+            square02
         }
         public enum Sides
         {
-            Antenna01,
-            Antenna02,
-            Cables01,
-            Cables02,
-            Round,
-            Square,
-            SquareAssymetric
+            none,
+            antenna01,
+            antenna02,
+            cables01,
+            cables02,
+            round,
+            aquare,
+            aquareAssymetric
         }
         public enum Texture
         {
-            Camo01,
-            Camo02,
-            Circuits,
-            Dirty01,
-            Dirty02,
-            Dots,
-            Grunge01,
-            Grunge02
+            none,
+            camo01,
+            camo02,
+            circuits,
+            dirty01,
+            dirty02,
+            dots,
+            grunge01,
+            grunge02
+        }
+        public enum Face
+        {
+            none,
+            round01,
+            round02,
+            square01,
+            square02,
+            square03,
+            square04
+        }
+        public enum Top
+        {
+            none,
+            antenna,
+            antennaCrooked,
+            bulb01,
+            glowingBulb01,
+            glowingBulb02,
+            horns,
+            lights,
+            pyramid,
+            radar
         }
 
+        public abstract string GetUrlWithString(string seed);
     }
 }
-

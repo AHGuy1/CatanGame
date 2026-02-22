@@ -1,8 +1,5 @@
 ﻿using CatanGame.Models;
-using CatanGame.Platforms.Android;
-using IntelliJ.Lang.Annotations;
 using SkiaSharp.Extended.UI.Controls;
-using static Android.InputMethodServices.Keyboard;
 
 namespace CatanGame.ModelsLogic
 {
@@ -14,10 +11,10 @@ namespace CatanGame.ModelsLogic
             for (int i = 1; i < 24; i++)
             {
                 BoardPieceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
-                BoardPieceImages[i] = new IndexedImage[GetAmountOfColumns(i) - 1];
+                BoardPieceImages[i] = new Image[GetAmountOfColumns(i) - 1];
             }
             for (int i = 1;i < 6; i++)
-                RoberImages[i-1] = new ImageButton[GetAmountOfColumnsTiles(i)];
+                RobberImages[i-1] = new ImageButton[GetAmountOfColumnsTiles(i)];
         }
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
@@ -81,7 +78,7 @@ namespace CatanGame.ModelsLogic
                 HeightRequest = GetSizeProportion() * 0.185,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-            }; 
+            };
         }
         private static Grid CreateEmptyCenteredGrid()
         {
@@ -136,13 +133,23 @@ namespace CatanGame.ModelsLogic
         {
             return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
         }
-        private static IndexedImage CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
+        private static Image CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.0165, GetSizeProportion() * 0.0495, rotation);
+            return new()
+            {
+                HeightRequest = GetSizeProportion() * 0.0165,
+                WidthRequest = GetSizeProportion() * 0.0495,
+                HorizontalOptions = LayoutOptions.Center,
+                Rotation = rotation,
+            };
         }
-        private static IndexedImage CreateApexImage(int colmnIndex, int rowIndex)
+        private static Image CreateApexImage(int colmnIndex, int rowIndex)
         {
-            return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
+            return new()
+            {
+                HeightRequest = GetSizeProportion() * 0.03525,
+                WidthRequest = GetSizeProportion() * 0.03525,
+            };
         }
         private static string GetDiceImage(int dice)
         {
@@ -220,26 +227,40 @@ namespace CatanGame.ModelsLogic
                 return location;
             }
         }
-
-        protected override Grid CreateRoberImage(int row, int column)
+        protected override Grid CreateRobberImage(int row, int column)
         {
             Grid grid = CreateEmptyCenteredGrid();
-            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.7, GridUnitType.Star) });
-            grid.RowDefinitions.Add(new RowDefinition { Height = new(0.3, GridUnitType.Star) });
-            ImageButton imageButton = new()
+            grid.RowSpacing = GetSizeProportion() * 0.05;
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
+            IndexedImageButton imageButton = new(row, column, GameGrid.GetSizeProportion() * 0.055);
+            if (row == game.RobberPlacment[0] && column == game.RobberPlacment[1])
             {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                BorderColor = Colors.White,
-                HeightRequest = GetSizeProportion() * 0.06,
-                WidthRequest = GetSizeProportion() * 0.06,
-                CornerRadius = 45,
-                BorderWidth = 1.5
-            };
-            RoberImages[row][column] = imageButton;
-            RoberImages[row][column].Clicked += OnRoberPlacementClicked;
+                imageButton.Source = Strings.RobberImage;
+            }
+            RobberImages[row][column] = imageButton;
+            RobberImages[row][column].Clicked += OnRobberPlacementClicked;
             grid.Add(imageButton, 0, 1);
             return grid;
+        }
+        protected override void OnRobberPlacementClicked(object? sender, EventArgs e)
+        {
+                IndexedImageButton? imageButton = (IndexedImageButton)sender!;
+                if (imageButton != null && imageButton.BorderWidth == Keys.ButtonVisible)
+                {
+                    RobberImages[game.RobberPlacment[0]][game.RobberPlacment[1]].Source = null;
+                    imageButton.Source = Strings.RobberImage;
+                    game.GameBoard.Hexes[GetTileLocationInArray(game.RobberPlacment[0], game.RobberPlacment[1])].HasRobber = false;
+                    game.RobberPlacment[0] = imageButton.RowIndex;
+                    game.RobberPlacment[1] = imageButton.ColumnIndex;
+                    game.GameBoard.Hexes[GetTileLocationInArray(game.RobberPlacment[0], game.RobberPlacment[1])].HasRobber = true;
+                    Dictionary<string, object> dict = new()
+                    {
+                        { nameof(game.RobberPlacment), game.RobberPlacment }
+                    };
+                    game.UpdateFields(dict);
+                    HideRobberButtuns();
+                }
         }
         protected override BoardModel.PieceType GetPieceType(int row, int column)
         {
@@ -257,13 +278,26 @@ namespace CatanGame.ModelsLogic
                    BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
                    -1;
         }
-        protected override void OnRoberPlacementClicked(object? sender, EventArgs e)
-        {
-
-        }
         protected override void ShowBuildOptions()
         {
             ShowBuildOptions(Strings.All);
+        }
+        protected override void ShowRobberPlacmentOptions()
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                for (int i = 0; i < 5; i++)
+                    for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
+                        if (!game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && RobberImages[i][k] != null)
+                            RobberImages[i][k].BorderWidth = Keys.ButtonVisible;
+            });
+        }
+        protected override void HideRobberButtuns()
+        {
+            for (int i = 0; i < 5; i++)
+                for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
+                    if (RobberImages[i][k].BorderWidth == Keys.ButtonVisible)
+                        RobberImages[i][k].BorderWidth = 0;
         }
         protected override void HideButtuns()
         {
@@ -432,6 +466,8 @@ namespace CatanGame.ModelsLogic
             if (task.IsCompletedSuccessfully)
             {
                 StopAnimations();
+                if (game.RollTotal == 7)
+                    ShowRobberPlacmentOptions();
                 game.IsRolling = false;
                 Dictionary<string, object> dict = new()
                 {
@@ -508,7 +544,19 @@ namespace CatanGame.ModelsLogic
                                     CheckLongestRoad();
                             }
                         }
-            if(game.PlayerLongestRoadLength > game.LongestRoadLength)
+            for (int i = 0; i < 5; i++)
+                for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
+                    if (game.GameBoard.Hexes[GetTileLocationInArray(i + 1,k + 1)].HasRobber &&( i != game.RobberPlacment[0] || k != game.RobberPlacment[1]))
+                    {
+                        RobberImages[i][k].Source = null;
+                        game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = false;
+                    }
+                    else if (i == game.RobberPlacment[0] && k == game.RobberPlacment[1])
+                    {
+                        RobberImages[i][k].Source = Strings.RobberImage;
+                        game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = true;
+                    }
+            if (game.PlayerLongestRoadLength > game.LongestRoadLength)
             {
                 LongestRoad.Opacity = 1;
                 game.LongestRoadLength = game.PlayerLongestRoadLength;
@@ -550,6 +598,7 @@ namespace CatanGame.ModelsLogic
                         Row.ColumnDefinitions.Add(new ColumnDefinition { Width = new(2, GridUnitType.Star) });
                         Row.Add(CreateTileImage(game.TileTypes[GetTileLocationInArray(i, k)]), k);
                         Row.Add(CreateNumberImage(game.TileNumbers[GetTileLocationInArray(i, k)]), k);
+                        Row.Add(CreateRobberImage(i - 1, k - 1), k);
                     }
                     Row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                     gameBoard.Add(Row, 0, i);
@@ -627,7 +676,12 @@ namespace CatanGame.ModelsLogic
                         Row.Add(CreateTileImage(sourceTile), k);
                         game.TileNumbers[GetTileLocationInArray(i, k)] = sourceNumber;
                         Row.Add(CreateNumberImage(sourceNumber), k);
-                        Row.Add(CreateRoberImage(i - 1, k - 1));
+                        if (sourceTile == Strings.Desert)
+                        {
+                            game.RobberPlacment[0] = i - 1;
+                            game.RobberPlacment[1] = k - 1;
+                        }
+                        Row.Add(CreateRobberImage(i - 1, k - 1), k);
                     }
                     gameBoard.Add(Row, 0, i);
                     Row = CreateEmptyCenteredGrid();
@@ -635,13 +689,15 @@ namespace CatanGame.ModelsLogic
                 Dictionary<string, object> dict = new()
                 {
                     {nameof(game.TileNumbers), game.TileNumbers },
-                    {nameof(game.TileTypes), game.TileTypes }
+                    {nameof(game.TileTypes), game.TileTypes },
+                    {nameof(game.RobberPlacment), game.RobberPlacment   }
                 };
                 //Update the firebase with the new tile types and numbers
                 game.UpdateFields(dict);
             }
             //Connect the game logic board with the UI/UX board
             game.GameBoard.InitBoard(BoardPieceButtons, game.TileTypes, game.TileNumbers);
+            game.GameBoard.Hexes[GetTileLocationInArray(game.RobberPlacment[0] + 1, game.RobberPlacment[1] + 1)].HasRobber = true;
             // Define the Rows In grdPieces (for UI/UX layout purposes)
             grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(5, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
@@ -700,10 +756,10 @@ namespace CatanGame.ModelsLogic
                 ShowBuildOptions(Strings.Town);
             // Define the Rows In otherPieces  (for UI/UX layout purposes)
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.25, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
-            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.5, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.31, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.48, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.48, GridUnitType.Star) });
+            otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.48, GridUnitType.Star) });
             otherPieces.RowDefinitions.Add(new RowDefinition { Height = new(0.85, GridUnitType.Star) });
             otherPieces.RowSpacing = 5;
             Row = new()
@@ -818,7 +874,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End
             };
             Row.Add(BuildingCost, 2);
-            Row.ColumnSpacing = 5;
+            Row.ColumnSpacing = 4.5;
             otherPieces.Add(Row,0,5);
         }
         public override void ShowBuildOptions(string pieceType)

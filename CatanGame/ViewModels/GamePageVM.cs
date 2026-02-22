@@ -16,7 +16,7 @@ namespace CatanGame.ViewModels
         public string[] PlayerNames => game.PlayerNames;
         public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn-1] + game.StatusMessage;
         public Color StatusColor => game.StatusColor;
-        public string AvatarUrl => Keys.AvatrBaseUrl + PlayerNames[game.PlayerTurn - 1];
+        public string AvatarUrl => game.PlayerAvatar.GetUrlWithString(PlayerNames[game.PlayerTurn - 1]);
         public string TimeLeft => game.TimeLeft;
         public bool AvatarVisible => game.StatusMessage != GameStatus.Status.PleseWait.ToString() ;
         public bool ShouldGameBeDeleted = true;

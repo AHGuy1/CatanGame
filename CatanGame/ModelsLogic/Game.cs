@@ -19,12 +19,16 @@ namespace CatanGame.ModelsLogic
             AmountOfPointsNeeded = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
+            for (int i = 0; i < 2; i++)
+                RobberPlacment[i] = -1;
             UpdateStatus();
             IntArrayBoardPieces();
+            InitAvatar();
         }
         public Game()
         {
             IntArrayBoardPieces();
+            InitAvatar();
         }
 
         private static Color GetStatusColor(int playerTurn)
@@ -41,7 +45,16 @@ namespace CatanGame.ModelsLogic
                 _ => Colors.Black
             };
         }
-
+        protected override void InitAvatar()
+        {
+            PlayerAvatar.SelectedEyes = [AvatarModel.Eyes.bulging, AvatarModel.Eyes.dizzy, AvatarModel.Eyes.eva, AvatarModel.Eyes.frame1, AvatarModel.Eyes.frame2, AvatarModel.Eyes.glow, AvatarModel.Eyes.robocop, AvatarModel.Eyes.round,
+                AvatarModel.Eyes.roundFrame01, AvatarModel.Eyes.roundFrame02, AvatarModel.Eyes.sensor, AvatarModel.Eyes.shade01];
+            PlayerAvatar.SelectedMouths = [AvatarModel.Mouth.bite, AvatarModel.Mouth.diagram, AvatarModel.Mouth.grill01, AvatarModel.Mouth.grill02, AvatarModel.Mouth.grill03, AvatarModel.Mouth.square01, AvatarModel.Mouth.square02];
+            PlayerAvatar.SelectedFaces = [AvatarModel.Face.round01, AvatarModel.Face.round02, AvatarModel.Face.square01, AvatarModel.Face.square02];
+            PlayerAvatar.SelectedColors = [AvatarModel.Colors.orangeRed, AvatarModel.Colors.orange, AvatarModel.Colors.indigo, AvatarModel.Colors.cyan, AvatarModel.Colors.blueGrey, AvatarModel.Colors.blue, AvatarModel.Colors.brown, AvatarModel.Colors.green,
+                AvatarModel.Colors.yellowGreen, AvatarModel.Colors.yellow, AvatarModel.Colors.red, AvatarModel.Colors.lightGreen, AvatarModel.Colors.lightBlue, AvatarModel.Colors.grey, AvatarModel.Colors.amber, AvatarModel.Colors.teal, AvatarModel.Colors.pink];
+            PlayerAvatar.SelectedTops = [AvatarModel.Top.antenna, AvatarModel.Top.antennaCrooked, AvatarModel.Top.bulb01, AvatarModel.Top.glowingBulb01, AvatarModel.Top.glowingBulb02, AvatarModel.Top.lights, AvatarModel.Top.pyramid, AvatarModel.Top.radar];
+        }
         protected override void IntArrayBoardPieces()
         {
             for (int i = 0; i < 276; i++)
@@ -135,7 +148,12 @@ namespace CatanGame.ModelsLogic
                     LargestArmySize = updatedGame.LargestArmySize;
                     gridChanged = true;
                 }
-                if(IsRolling != updatedGame.IsRolling)
+                if (RobberPlacment[0] != updatedGame.RobberPlacment[0] || RobberPlacment[1] != updatedGame.RobberPlacment[1])
+                {
+                    RobberPlacment = updatedGame.RobberPlacment;
+                    gridChanged = true;
+                }
+                if (IsRolling != updatedGame.IsRolling)
                 {
                     IsRolling = updatedGame.IsRolling;
                     AnimationStatusChanged?.Invoke(this, EventArgs.Empty);

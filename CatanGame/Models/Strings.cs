@@ -1,4 +1,5 @@
 ﻿using Android.Net.Wifi.Aware;
+using static CatanGame.Models.AvatarModel;
 
 namespace CatanGame.Models
 {
@@ -153,5 +154,35 @@ namespace CatanGame.Models
         public const string Oreange = "oreange";
         public const string Yellow = "yellow";
         public const string Cyan = "cyan";
+        public const string CyanCode = "00ACC1";
+        public const string BlueCode = "1E88E5";
+        public const string DeepPurpleCode = "5E35B1";
+        public const string BrownCode = "6D4C41";
+        public const string LightGreenCode = "7CB342";
+        public const string PurpleCode = "8E24AA";
+        public const string LightBlueCode = "039BE5";
+        public const string GreenCode = "43A047";
+        public const string BlueGreyCode = "546E7A";
+        public const string TealCode = "00897B";
+        public const string IndigoCode = "3949AB";
+        public const string GreyCode = "757575";
+        public const string YellowGreenCode = "C0CA33";
+        public const string PinkCode = "D81B60";
+        public const string RedCode = "E53935";
+        public const string OrangeRedCode = "F4511E";
+        public const string OrangeCode = "FB8C00";
+        public const string YellowCode = "FDD835";
+        public const string AmberCode = "FFB300";
+        public const string ColorLabel = "baseColor";
+        public const string EyesLabel = "eyes";
+        public const string MouthLabel = "mouth";
+        public const string SidesLabel = "sides";
+        public const string TextureLabel = "texture";
+        public const string FaceLabel = "face";
+        public const string TopLabel = "top";
+        public const string SeedLabel = "seed";
+        public const string Comma = ",";
+        public const string EqualSign = "=";
+        public const string Ampersand = "&";
     }
 }

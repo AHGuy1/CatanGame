@@ -8,6 +8,7 @@ namespace CatanGame.Models
         public int Column { get; set; }
         public BoardModel.TerrainType Terrain { get; set; }
         public int NumberToken { get; set; }
+        public bool HasRobber { get; set; }
         public VertexNode[] Corners { get; set; } = new VertexNode[6];
 
         public HexTile()

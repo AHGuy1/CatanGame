@@ -14,6 +14,8 @@ namespace CatanGame.Models
         protected IListenerRegistration? ilr;
         protected GameStatus _status = new();
         [Ignored]
+        public Avatar PlayerAvatar { get; set; } = new Avatar();
+        [Ignored]
         public abstract GameStatus Status { get; }
         [Ignored]
         public string StatusMessage => Status.StatusMessage;
@@ -66,6 +68,7 @@ namespace CatanGame.Models
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
         public int AmountOfPointsNeeded { get; set; }
+        public int[] RobberPlacment { get; set; } = new int[2];
         public bool GameStarted { get; set; }
         public int PlayerTurn { get; set; } = 1;
         public string GameCode { get; set; } = string.Empty;
@@ -77,6 +80,7 @@ namespace CatanGame.Models
         public int PlayerCount { get; set; }
         public bool IsFull { get; set; }
         public bool IsRolling { get; set; }
+        protected abstract void InitAvatar();
         protected abstract void UpdateStatus();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void OnCompletePlayerLeft(Task task);

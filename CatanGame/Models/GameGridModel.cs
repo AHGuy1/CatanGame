@@ -9,8 +9,8 @@ namespace CatanGame.Models
     public abstract class GameGridModel : Grid
     {
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
-        protected IndexedImage[][] BoardPieceImages = new IndexedImage[24][];
-        protected ImageButton[][] RoberImages = new ImageButton[5][];
+        protected Image[][] BoardPieceImages = new Image[24][];
+        protected ImageButton[][] RobberImages = new ImageButton[5][];
         protected Game game = new();
 
         public EventHandler? EndTurnOnClicked;
@@ -30,13 +30,15 @@ namespace CatanGame.Models
         protected abstract void StartAnimations();
         protected abstract void StopAnimations();
         protected abstract void HideButtuns();
+        protected abstract void HideRobberButtuns();
         protected abstract void CheckLongestRoad();
         protected abstract void ShowBuildOptions();
+        protected abstract void ShowRobberPlacmentOptions();
         protected abstract void EndTurn();
-        protected abstract void OnRoberPlacementClicked(object? sender, EventArgs e);
+        protected abstract void OnRobberPlacementClicked(object? sender, EventArgs e);
         protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);
         protected abstract int GetPieceIndexFromColor(int row, int column);
-        protected abstract Grid CreateRoberImage(int row, int column);
+        protected abstract Grid CreateRobberImage(int row, int column);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
