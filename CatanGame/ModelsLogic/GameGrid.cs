@@ -312,12 +312,26 @@ namespace CatanGame.ModelsLogic
             if (button.BorderWidth == Keys.ButtonVisible)
             {
                 if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
+                {
                     BuildRoad(button.RowIndex, button.ColumnIndex - 1);
+                    if (game.Turn > game.PlayerCount * 2)
+                    {
+                        game.PlayerBrickCount--;
+                        game.PlayerWoodCount--;
+                    }
+                }
                 else
                 {
                     if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                     {
-                        BuildTown(button.RowIndex, button.ColumnIndex - 1);                 
+                        BuildTown(button.RowIndex, button.ColumnIndex - 1);
+                        if(game.Turn > game.PlayerCount * 2)
+                        {
+                            game.PlayerBrickCount--;
+                            game.PlayerWheatCount--;
+                            game.PlayerSheepCount--;
+                            game.PlayerWoodCount--;
+                        }
                     }
                     else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                     {
@@ -327,6 +341,8 @@ namespace CatanGame.ModelsLogic
                         game.PlayerCityCount++;
                         game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = game.PlayerIndicator;
                         game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = BoardModel.PieceType.City;
+                        game.PlayerStoneCount -= 3;
+                        game.PlayerWheatCount -= 2;
                     }
                     Dictionary<string, object> dict = new()
                     {
@@ -534,11 +550,14 @@ namespace CatanGame.ModelsLogic
         }
         protected override void BuildTown(int row, int column)
         {
-            BoardPieceImages[row][column].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
-            game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
-            game.PlayerTownCount++;
-            game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = game.PlayerIndicator;
-            game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
+            MainThread.InvokeOnMainThreadAsync(()=> 
+            {
+                BoardPieceImages[row][column].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
+                game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
+                game.PlayerTownCount++;
+                game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = game.PlayerIndicator;
+                game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
+            });
         }
         protected override void BuildRoadAtFirstPosition()
         {
@@ -634,16 +653,17 @@ namespace CatanGame.ModelsLogic
             }
             if (game.Turn <= game.PlayerCount * 2)
             {
-                if(game.PlayerTownCount < game.Turn / 2)
+                if(game.PlayerTownCount <= game.Turn / game.PlayerCount)
                 {
                     BuildTownAtFirstPosition();
                     await Task.Delay(2000);
                 }
-                if (game.PlayerRoadCount < game.Turn / 2)
+                if (game.PlayerRoadCount <= game.Turn / game.PlayerCount)
                 {
                     BuildRoadAtFirstPosition();
                     await Task.Delay(2000);
                 }
+
             }
             game.EndTurn();
         }
