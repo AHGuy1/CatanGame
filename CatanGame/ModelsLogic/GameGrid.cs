@@ -312,28 +312,22 @@ namespace CatanGame.ModelsLogic
             if (button.BorderWidth == Keys.ButtonVisible)
             {
                 if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
-                {
-                    BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
-                    game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                    game.GameBoard.Edges[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(button.RowIndex, button.ColumnIndex - 1);
-                    CheckLongestRoad();
-                }
+                    BuildRoad(button.RowIndex, button.ColumnIndex - 1);
                 else
                 {
                     if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                     {
-                        BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
-                        game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
-                        game.PlayerTownCount++;                    }
+                        BuildTown(button.RowIndex, button.ColumnIndex - 1);                 
+                    }
                     else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                     {
                         BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.City).ToLower();
                         game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
                         game.PlayerTownCount--;
                         game.PlayerCityCount++;
+                        game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = game.PlayerIndicator;
+                        game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = BoardModel.PieceType.City;
                     }
-                    game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = GetPieceIndexFromColor(button.RowIndex, button.ColumnIndex - 1);
-                    game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = GetPieceType(button.RowIndex, button.ColumnIndex - 1);
                     Dictionary<string, object> dict = new()
                     {
                         { nameof(game.BoardPieces), game.BoardPieces }
@@ -341,6 +335,7 @@ namespace CatanGame.ModelsLogic
                     game.UpdateFields(dict);
                 }
                 HideButtuns();
+                //if just built a town and is one of the first 2 turns show road building options
                 if (game.Turn <= game.PlayerCount * 2 && button.RowIndex % 2 == 1 && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == game.PlayerIndicator && game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);
             }
@@ -446,6 +441,10 @@ namespace CatanGame.ModelsLogic
         }
         protected override void OnRollButtonClicked(object? sender, EventArgs e)
         {
+            RollDice();
+        }
+        protected override void RollDice()
+        {
             RollButton.IsEnabled = false;
             Random random = new();
             game.Roll1 = random.Next(1, 7);
@@ -468,6 +467,8 @@ namespace CatanGame.ModelsLogic
                 StopAnimations();
                 if (game.RollTotal == 7)
                     ShowRobberPlacmentOptions();
+                else
+                    game.AllocateResources();
                 game.IsRolling = false;
                 Dictionary<string, object> dict = new()
                 {
@@ -511,11 +512,56 @@ namespace CatanGame.ModelsLogic
         {
             return game.PlayerIndicator + 1 == game.PlayerTurn && game.IsFull;
         }
-
         protected override void EndTurn()
         {
             EndTurnOnClicked?.Invoke(this, EventArgs.Empty);
-
+        }
+        protected override void BuildTownAtFirstPosition()
+        {
+            bool foundPlaceToBuild = false;
+            for (int i = 1; i < 24 && !foundPlaceToBuild; i += 2)
+                for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                    if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
+                    {
+                        if (game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PieceType == BoardModel.PieceType.None)
+                        {
+                            BuildTown(i, k);
+                            HideButtuns();
+                            ShowBuildOptions(Strings.Road);
+                            foundPlaceToBuild = true;
+                        }
+                    }
+        }
+        protected override void BuildTown(int row, int column)
+        {
+            BoardPieceImages[row][column].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Town).ToLower();
+            game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
+            game.PlayerTownCount++;
+            game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = game.PlayerIndicator;
+            game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
+        }
+        protected override void BuildRoadAtFirstPosition()
+        {
+            bool foundPlaceToBuild = false;
+            for (int i = 2; i < 24 && !foundPlaceToBuild; i += 2)
+                for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                    if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
+                    {
+                        if (game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex == -1)
+                        {
+                            BuildRoad(i,k);
+                            HideButtuns();
+                            foundPlaceToBuild = true;
+                        }
+                    }
+        }
+        protected override void BuildRoad(int row, int column)
+        {
+            BoardPieceImages[row][column].Source = (GetPiecesColor(game.PlayerIndicator + 1) + Strings.Road).ToLower();
+            game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
+            game.GameBoard.Edges[GetPieceLocationInArray(row, column)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(row, column);
+            game.PlayerRoadCount++;
+            CheckLongestRoad();
         }
 
         public override void OnAnimationStatusChanged()
@@ -523,7 +569,11 @@ namespace CatanGame.ModelsLogic
             if (game.IsRolling)
                 StartAnimations();
             else
+            {
+                if(game.RollTotal != 7)
+                    game.AllocateResources();
                 StopAnimations();
+            }
         }
         public override void OnChange()
         {
@@ -570,6 +620,32 @@ namespace CatanGame.ModelsLogic
                 LongestRoad.Opacity = Keys.DoesNotOwn;
             if (LargestArmy.Opacity != Keys.DoesNotOwn && game.PlayerLargestArmySize < game.LargestArmySize)
                 LargestArmy.Opacity = Keys.DoesNotOwn;
+        }
+        public override async void EnsurePlayerPlayed()
+        {
+            if (RollButton.IsEnabled)
+            {
+                RollDice();
+                await Task.Delay(5000);
+            }
+            else if (game.IsRolling)
+            {
+                await Task.Delay(3000);
+            }
+            if (game.Turn <= game.PlayerCount * 2)
+            {
+                if(game.PlayerTownCount < game.Turn / 2)
+                {
+                    BuildTownAtFirstPosition();
+                    await Task.Delay(2000);
+                }
+                if (game.PlayerRoadCount < game.Turn / 2)
+                {
+                    BuildRoadAtFirstPosition();
+                    await Task.Delay(2000);
+                }
+            }
+            game.EndTurn();
         }
         public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame)
         {
@@ -812,13 +888,12 @@ namespace CatanGame.ModelsLogic
                 WidthRequest =  sizeProportion * 0.28,
                 BackgroundColor = Colors.DodgerBlue,
                 TextColor = Colors.White,
-                IsEnabled = true,
+                IsEnabled = false,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
             rollButton.Clicked += OnRollButtonClicked;
             RollButton = rollButton;
-            RollButton.IsEnabled = true;
             otherPieces.Add(RollButton, 0, 2);
             Button buildOptionsButton = new()
             {
@@ -879,7 +954,8 @@ namespace CatanGame.ModelsLogic
         }
         public override void ShowBuildOptions(string pieceType)
         {
-            if (pieceType == Strings.Road || pieceType == Strings.All)
+            //Shows all options for building a road, if the player has the resources to build it, or if the player just built a town as part of the first two turns
+            if (pieceType == Strings.Road || (pieceType == Strings.All && game.PlayerWoodCount >= 1 && game.PlayerBrickCount >= 1))
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
@@ -918,7 +994,8 @@ namespace CatanGame.ModelsLogic
                         }
 
                     }
-            if (pieceType == Strings.All)
+            //Shows all options for buiding a town, if the player has the resources to build it, if there are any
+            if (pieceType == Strings.All && game.PlayerWoodCount >= 1 && game.PlayerBrickCount >= 1 && game.PlayerSheepCount >= 1 && game.PlayerWheatCount >= 1)
             {
                 for (int i = 2; i < 24; i += 2)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
@@ -949,22 +1026,12 @@ namespace CatanGame.ModelsLogic
                         }
                     }
             }
-            if (pieceType == Strings.City || pieceType == Strings.All)
-                for (int i = 1; i < 24; i++)
-                    for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
-                    {
-                        if(i % 2 == 1)
-                        {
-                            VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
-                            if (vertexNode.PieceType == BoardModel.PieceType.Town && vertexNode.PlayerIndex == game.PlayerIndicator)
-                                BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
-                        }
-                    }
+            //Shows all options for buiding a town, if its one of the first two turns of the game for said player
             if (pieceType == Strings.Town)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
-                        if(i % 2 == 1)
+                        if (i % 2 == 1)
                         {
                             VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
                             if (vertexNode.PlayerIndex == -1)
@@ -977,6 +1044,18 @@ namespace CatanGame.ModelsLogic
                                 if (cenBuild)
                                     BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
                             }
+                        }
+                    }
+            //Shows all options for building a city, if the player has the resources to build it, if there are any
+            if (pieceType == Strings.All && game.PlayerWheatCount >= 3 && game.PlayerStoneCount >= 2)
+                for (int i = 1; i < 24; i++)
+                    for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
+                    {
+                        if(i % 2 == 1)
+                        {
+                            VertexNode vertexNode = game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            if (vertexNode.PieceType == BoardModel.PieceType.Town && vertexNode.PlayerIndex == game.PlayerIndicator)
+                                BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
                         }
                     }
         }

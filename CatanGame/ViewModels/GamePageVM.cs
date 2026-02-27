@@ -137,6 +137,7 @@ namespace CatanGame.ViewModels
         {
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
+            board.EnsurePlayerPlayed();
             game.EndTurn();
         }
 

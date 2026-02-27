@@ -47,13 +47,13 @@ namespace CatanGame.ModelsLogic
         }
         protected override void InitAvatar()
         {
-            PlayerAvatar.SelectedEyes = [AvatarModel.Eyes.bulging, AvatarModel.Eyes.dizzy, AvatarModel.Eyes.eva, AvatarModel.Eyes.frame1, AvatarModel.Eyes.frame2, AvatarModel.Eyes.glow, AvatarModel.Eyes.robocop, AvatarModel.Eyes.round,
-                AvatarModel.Eyes.roundFrame01, AvatarModel.Eyes.roundFrame02, AvatarModel.Eyes.sensor, AvatarModel.Eyes.shade01];
-            PlayerAvatar.SelectedMouths = [AvatarModel.Mouth.bite, AvatarModel.Mouth.diagram, AvatarModel.Mouth.grill01, AvatarModel.Mouth.grill02, AvatarModel.Mouth.grill03, AvatarModel.Mouth.square01, AvatarModel.Mouth.square02];
-            PlayerAvatar.SelectedFaces = [AvatarModel.Face.round01, AvatarModel.Face.round02, AvatarModel.Face.square01, AvatarModel.Face.square02];
-            PlayerAvatar.SelectedColors = [AvatarModel.Colors.orangeRed, AvatarModel.Colors.orange, AvatarModel.Colors.indigo, AvatarModel.Colors.cyan, AvatarModel.Colors.blueGrey, AvatarModel.Colors.blue, AvatarModel.Colors.brown, AvatarModel.Colors.green,
-                AvatarModel.Colors.yellowGreen, AvatarModel.Colors.yellow, AvatarModel.Colors.red, AvatarModel.Colors.lightGreen, AvatarModel.Colors.lightBlue, AvatarModel.Colors.grey, AvatarModel.Colors.amber, AvatarModel.Colors.teal, AvatarModel.Colors.pink];
-            PlayerAvatar.SelectedTops = [AvatarModel.Top.antenna, AvatarModel.Top.antennaCrooked, AvatarModel.Top.bulb01, AvatarModel.Top.glowingBulb01, AvatarModel.Top.glowingBulb02, AvatarModel.Top.lights, AvatarModel.Top.pyramid, AvatarModel.Top.radar];
+            PlayerAvatar.SelectedEyes = [AvatarModel.Eyes.Bulging, AvatarModel.Eyes.Dizzy, AvatarModel.Eyes.Eva, AvatarModel.Eyes.Frame1, AvatarModel.Eyes.Frame2, AvatarModel.Eyes.Glow, AvatarModel.Eyes.Robocop, AvatarModel.Eyes.Round,
+                AvatarModel.Eyes.RoundFrame01, AvatarModel.Eyes.RoundFrame02, AvatarModel.Eyes.Sensor, AvatarModel.Eyes.Shade01];
+            PlayerAvatar.SelectedMouths = [AvatarModel.Mouth.Bite, AvatarModel.Mouth.Diagram, AvatarModel.Mouth.Grill01, AvatarModel.Mouth.Grill02, AvatarModel.Mouth.Grill03, AvatarModel.Mouth.Square01, AvatarModel.Mouth.Square02];
+            PlayerAvatar.SelectedFaces = [AvatarModel.Face.Round01, AvatarModel.Face.Round02, AvatarModel.Face.Square01, AvatarModel.Face.Square02];
+            PlayerAvatar.SelectedColors = [AvatarModel.Colors.OrangeRed, AvatarModel.Colors.Orange, AvatarModel.Colors.Indigo, AvatarModel.Colors.Cyan, AvatarModel.Colors.BlueGrey, AvatarModel.Colors.Blue, AvatarModel.Colors.Brown, AvatarModel.Colors.Green,
+                AvatarModel.Colors.YellowGreen, AvatarModel.Colors.Yellow, AvatarModel.Colors.Red, AvatarModel.Colors.LightGreen, AvatarModel.Colors.LightBlue, AvatarModel.Colors.Grey, AvatarModel.Colors.Amber, AvatarModel.Colors.Teal, AvatarModel.Colors.Pink];
+            PlayerAvatar.SelectedTops = [AvatarModel.Top.Antenna, AvatarModel.Top.AntennaCrooked, AvatarModel.Top.Bulb01, AvatarModel.Top.GlowingBulb01, AvatarModel.Top.GlowingBulb02, AvatarModel.Top.Lights, AvatarModel.Top.Pyramid, AvatarModel.Top.Radar];
         }
         protected override void IntArrayBoardPieces()
         {
@@ -307,6 +307,32 @@ namespace CatanGame.ModelsLogic
                     PlayerIndicator = i;
                     addedName = true;
                 }
+        }
+        public override void AllocateResources()
+        {
+            HexTile[] hexTiles = GameBoard.Hexes;
+            for(int i = 0; i < hexTiles.Length;i++)
+            {
+                if(hexTiles[i].NumberToken == RollTotal && !hexTiles[i].HasRobber)
+                {
+                    VertexNode[] corners = hexTiles[i].Corners;
+                    for (int k = 0; k < corners.Length; k++)
+                        if (corners[k].PlayerIndex == PlayerIndicator)
+                        {
+                            int resourceAmount = corners[k].PieceType == BoardModel.PieceType.Town ? 1 : 2;
+                            if (hexTiles[i].Terrain == BoardModel.TerrainType.Mountien)
+                                PlayerStoneCount += resourceAmount;
+                            else if (hexTiles[i].Terrain == BoardModel.TerrainType.Hills)
+                                PlayerBrickCount += resourceAmount;
+                            else if (hexTiles[i].Terrain == BoardModel.TerrainType.Fields)
+                                PlayerWheatCount += resourceAmount;
+                            else if (hexTiles[i].Terrain == BoardModel.TerrainType.Pasture)
+                                PlayerSheepCount += resourceAmount;
+                            else if (hexTiles[i].Terrain == BoardModel.TerrainType.Forest)
+                                PlayerWoodCount += 1;
+                        }
+                }
+            }
         }
     }
 }

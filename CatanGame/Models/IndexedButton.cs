@@ -4,7 +4,9 @@ namespace CatanGame.Models
 {
     public class IndexedButton : Button
     {
+        //Row >= 1
         public int RowIndex { get; set; }
+        //Column >= 1
         public int ColumnIndex { get; set; }
         public IndexedButton(int rowIndex, int columnIndex,double heightRequest, double widthRequest,int rotation=0)
         {

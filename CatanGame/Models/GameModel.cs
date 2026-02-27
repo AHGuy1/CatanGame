@@ -53,7 +53,19 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerTownCount { get; set; }
         [Ignored]
+        public int PlayerRoadCount { get; set; }
+        [Ignored]
         public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0;
+        [Ignored]
+        public int PlayerStoneCount { get; set; }
+        [Ignored]
+        public int PlayerBrickCount { get; set; }
+        [Ignored]
+        public int PlayerWoodCount { get; set; }
+        [Ignored]
+        public int PlayerWheatCount { get; set; }
+        [Ignored]
+        public int PlayerSheepCount { get; set; }
         [Ignored]
         public bool IsRandomBoard { get; set; } 
         [Ignored]
@@ -92,6 +104,7 @@ namespace CatanGame.Models
         protected abstract void StopTimer();
         protected abstract void OnMessageReceived(long timeleft);
         protected abstract void IntArrayBoardPieces();
+        public abstract void AllocateResources();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();

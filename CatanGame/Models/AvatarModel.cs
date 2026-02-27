@@ -14,103 +14,109 @@
 
         public enum Colors
         {
-            none,
-            cyan,
-            blue,
-            deepPurple,
-            brown,
-            lightGreen,
-            purple,
-            lightBlue,
-            green,
-            blueGrey,
-            teal,
-            indigo,
-            grey,
-            yellowGreen,
-            pink,
-            red,
-            orangeRed,
-            orange,
-            yellow,
-            amber
+            None,
+            Cyan,
+            Blue,
+            DeepPurple,
+            Brown,
+            LightGreen,
+            Purple,
+            LightBlue,
+            Green,
+            BlueGrey,
+            Teal,
+            Indigo,
+            Grey,
+            YellowGreen,
+            Pink,
+            Red,
+            OrangeRed,
+            Orange,
+            Yellow,
+            Amber
         }
+
         public enum Eyes
         {
-            none,
-            bulging,
-            dizzy,
-            eva,
-            frame1,
-            frame2,
-            glow,
-            happy,
-            hearts,
-            robocop,
-            round,
-            roundFrame01,
-            roundFrame02,
-            sensor,
-            shade01
+            None,
+            Bulging,
+            Dizzy,
+            Eva,
+            Frame1,
+            Frame2,
+            Glow,
+            Happy,
+            Hearts,
+            Robocop,
+            Round,
+            RoundFrame01,
+            RoundFrame02,
+            Sensor,
+            Shade01
         }
+
         public enum Mouth
         {
-            none,
-            bite,
-            diagram,
-            grill01,
-            grill02,
-            grill03,
-            smile01,
-            smile02,
-            square01,
-            square02
+            None,
+            Bite,
+            Diagram,
+            Grill01,
+            Grill02,
+            Grill03,
+            Smile01,
+            Smile02,
+            Square01,
+            Square02
         }
+
         public enum Sides
         {
-            none,
-            antenna01,
-            antenna02,
-            cables01,
-            cables02,
-            round,
-            aquare,
-            aquareAssymetric
+            None,
+            Antenna01,
+            Antenna02,
+            Cables01,
+            Cables02,
+            Round,
+            Aquare,
+            AquareAssymetric
         }
+
         public enum Texture
         {
-            none,
-            camo01,
-            camo02,
-            circuits,
-            dirty01,
-            dirty02,
-            dots,
-            grunge01,
-            grunge02
+            None,
+            Camo01,
+            Camo02,
+            Circuits,
+            Dirty01,
+            Dirty02,
+            Dots,
+            Grunge01,
+            Grunge02
         }
+
         public enum Face
         {
-            none,
-            round01,
-            round02,
-            square01,
-            square02,
-            square03,
-            square04
+            None,
+            Round01,
+            Round02,
+            Square01,
+            Square02,
+            Square03,
+            Square04
         }
+
         public enum Top
         {
-            none,
-            antenna,
-            antennaCrooked,
-            bulb01,
-            glowingBulb01,
-            glowingBulb02,
-            horns,
-            lights,
-            pyramid,
-            radar
+            None,
+            Antenna,
+            AntennaCrooked,
+            Bulb01,
+            GlowingBulb01,
+            GlowingBulb02,
+            Horns,
+            Lights,
+            Pyramid,
+            Radar
         }
 
         public abstract string GetUrlWithString(string seed);

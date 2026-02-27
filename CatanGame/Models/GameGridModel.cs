@@ -27,12 +27,17 @@ namespace CatanGame.Models
         protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnDiceUpdated(Task task);
+        protected abstract void RollDice();
         protected abstract void StartAnimations();
         protected abstract void StopAnimations();
         protected abstract void HideButtuns();
         protected abstract void HideRobberButtuns();
         protected abstract void CheckLongestRoad();
         protected abstract void ShowBuildOptions();
+        protected abstract void BuildTown(int row, int column);
+        protected abstract void BuildRoad(int row, int column);
+        protected abstract void BuildTownAtFirstPosition();
+        protected abstract void BuildRoadAtFirstPosition();
         protected abstract void ShowRobberPlacmentOptions();
         protected abstract void EndTurn();
         protected abstract void OnRobberPlacementClicked(object? sender, EventArgs e);
@@ -43,6 +48,7 @@ namespace CatanGame.Models
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
 
+        public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();
         public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame);
