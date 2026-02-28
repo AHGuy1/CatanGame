@@ -14,6 +14,7 @@ namespace CatanGame.ViewModels
 
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
+        public bool IsEnabled => !IsBusy;
         public static ObservableCollection<int> AmountOfPointsNeeded => Games.AmountOfPointsNeeded;
         public static ObservableCollection<string> BoardTypes => Games.BoardTypes;
         public static string DisplayName => string.Empty;
@@ -72,6 +73,7 @@ namespace CatanGame.ViewModels
         {
             games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBoard);
             OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(IsEnabled));
         }
         private void OnGamesChanged(object? sender, EventArgs e)
         {
@@ -80,6 +82,7 @@ namespace CatanGame.ViewModels
         private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(IsEnabled));
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);

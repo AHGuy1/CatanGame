@@ -6,12 +6,12 @@ namespace CatanGame.ModelsLogic
     {
         private static readonly Dictionary<string, BoardModel.TerrainType> TerrainMap = new()
         {
-            { Board.TerrainType.Forest.ToString(),   BoardModel.TerrainType.Forest },
-            { Board.TerrainType.Fields.ToString(),   BoardModel.TerrainType.Fields },
-            { Board.TerrainType.Hills.ToString(),    BoardModel.TerrainType.Hills },
-            { Board.TerrainType.Mountien.ToString(), BoardModel.TerrainType.Mountien },
-            { Board.TerrainType.Pasture.ToString(),  BoardModel.TerrainType.Pasture },
-            { Board.TerrainType.Desert.ToString(),   BoardModel.TerrainType.Desert }
+            { Board.TerrainType.Forest.ToString().ToLower(),   BoardModel.TerrainType.Forest },
+            { Board.TerrainType.Fields.ToString().ToLower(),   BoardModel.TerrainType.Fields },
+            { Board.TerrainType.Hills.ToString().ToLower(),    BoardModel.TerrainType.Hills },
+            { Board.TerrainType.Mountien.ToString().ToLower(), BoardModel.TerrainType.Mountien },
+            { Board.TerrainType.Pasture.ToString().ToLower(),  BoardModel.TerrainType.Pasture },
+            { Board.TerrainType.Desert.ToString().ToLower(),   BoardModel.TerrainType.Desert }
         };
         private static readonly Dictionary<string, int> NumberTokenMap = new()
         {
@@ -224,24 +224,24 @@ namespace CatanGame.ModelsLogic
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumnsTiles(i); k++)
                 {
-                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[1] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k)];
-                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[2] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k + 1)];
-                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[3] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k)];
-                    Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[4] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k + 1)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[1] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[2] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 1, k + 1)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[3] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k)];
+                    Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[4] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 1, k + 1)];
                     if (i < 3)
                     {
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k + 1)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k + 1)];
                     }
                     else if(i == 3)
                     {
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k)];
                     }
                     else
                     {
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k + 1)];
-                        Hexes[GameGrid.GetTileLocationInArray(i, k)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k )];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k + 1)];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k )];
                     }
                 }
             }

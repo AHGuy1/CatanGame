@@ -26,53 +26,48 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center" />
         </Grid>
-        <Grid x:Name="otherPieces" />
-        <Grid RowDefinitions="auto,auto,auto,auto" VerticalOptions="Center">
-            <Frame
-                BorderColor="DodgerBlue"
-                CornerRadius="25"
-                HeightRequest="40"
-                HorizontalOptions="Center"
-                VerticalOptions="Start"
-                WidthRequest="40" />
-            <Label
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                Opacity="{Binding TimeOpacity}"
-                Text="{Binding TimeLeft}"
-                TextColor="{Binding TimeColor}"
-                VerticalOptions="Center" />
-            <Grid ColumnDefinitions="auto,auto"
-                  Grid.Row="1">
-                <Label TextColor="{Binding StatusColor}"
+        <Grid>
+            <Grid x:Name="otherPieces" />
+            <Grid RowDefinitions="auto,auto"
+                  ColumnDefinitions="*,*"
+                  VerticalOptions="Start"
+                  HorizontalOptions="Center"
+                  ColumnSpacing="220">
+                <Frame BorderColor="DodgerBlue"
+                       CornerRadius="25"
+                       HeightRequest="40"
                        HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       WidthRequest="40"
+                       Grid.Column="1"/>
+                <Label FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Opacity="{Binding TimeOpacity}"
+                       Text="{Binding TimeLeft}"
+                       TextColor="{Binding TimeColor}"
                        VerticalOptions="Center"
-                       Grid.Column="1"
-                       Text="{Binding StatusMessage}" />
-                <Image Aspect="AspectFill"
-                       HeightRequest="30"
-                       WidthRequest="30"
-                       VerticalOptions="Center"
-                       IsVisible="{Binding AvatarVisible}">
-                    <Image.Source>
-                        <UriImageSource Uri="{Binding AvatarUrl}"
-                                        CachingEnabled="True"
-                                        CacheValidity="14:00:00:00" />
-                    </Image.Source>
-                </Image>
+                       Grid.Column="1"/>
+                <Grid ColumnDefinitions="auto,auto"
+                      Grid.Row="1"
+                      Grid.Column="1">
+                    <Label TextColor="{Binding StatusColor}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Grid.Column="1"
+                           Text="{Binding StatusMessage}" />
+                    <Image Aspect="AspectFill"
+                           HeightRequest="30"
+                           WidthRequest="30"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding AvatarVisible}">
+                        <Image.Source>
+                            <UriImageSource Uri="{Binding AvatarUrl}"
+                                            CachingEnabled="True"
+                                            CacheValidity="14:00:00:00" />
+                        </Image.Source>
+                    </Image>
+                </Grid>
             </Grid>
-            <!--<Button
-                Grid.Row="2"
-                Command="{Binding EndTurnCommand}"
-                HeightRequest="50"
-                HorizontalOptions="Center"
-                Text="{x:Static m:Strings.EndTurn}" />
-            <Button
-                Grid.Row="3"
-                Command="{Binding ShowBuildOptionsCommand}"
-                HeightRequest="50"
-                HorizontalOptions="Center"
-                Text="{x:Static m:Strings.BuildOptions}" />-->
         </Grid>
     </HorizontalStackLayout>
 </ContentPage>

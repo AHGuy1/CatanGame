@@ -12,6 +12,8 @@ namespace CatanGame.Models
         protected Image[][] BoardPieceImages = new Image[24][];
         protected ImageButton[][] RobberImages = new ImageButton[5][];
         protected Game game = new();
+        protected ICommand? ShowBuildOptionsCommand { get; set; }
+        protected ICommand? EndTurnCommand { get; set; }
 
         public EventHandler? EndTurnOnClicked;
         public SKLottieView Dice1Roll { get; set; } = new();
@@ -20,10 +22,13 @@ namespace CatanGame.Models
         public Image Dice2Image { get; set; } = new();
         public Image LongestRoad { get; set; } = new();
         public Image LargestArmy { get; set; } = new();
-        public Image BuildingCost { get; set; } = new();
         public Button RollButton { get; set; } = new();
         public Label RollLabel { get; set; } = new();
-
+        public Label WoodCountLabel { get; set; } = new();
+        public Label BrickCountLabel { get; set; } = new();
+        public Label SheepCountLabel { get; set; } = new();
+        public Label WheatCountLabel { get; set; } = new();
+        public Label StoneCountLabel { get; set; } = new();
         protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnDiceUpdated(Task task);
@@ -47,7 +52,8 @@ namespace CatanGame.Models
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
-
+        protected abstract void UpdateBoardPices();
+        protected abstract void UpdateResourceCounters();
         public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();

@@ -29,6 +29,7 @@ namespace CatanGame.ViewModels
         public string AvatarUrl5 => PlayerCount > 4 ? !String.IsNullOrWhiteSpace(PlayerNames[4]) ? game.PlayerAvatar.GetUrlWithString(PlayerNames[4]) : string.Empty : string.Empty;
         public string AvatarUrl6 => PlayerCount > 5 ? !String.IsNullOrWhiteSpace(PlayerNames[5]) ? game.PlayerAvatar.GetUrlWithString(PlayerNames[5]) : string.Empty : string.Empty;
         public bool IsBusy { get; set; } = false;
+        public bool IsEnabled => !IsBusy;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
@@ -87,12 +88,13 @@ namespace CatanGame.ViewModels
 
         private bool CanStartGame()
         {
-            return true; /*!String.IsNullOrWhiteSpace(game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;*/
+            return !String.IsNullOrWhiteSpace(game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;
         }
 
         private void StartGame()
         {
             IsBusy = true;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
             MainThread.InvokeOnMainThreadAsync(() =>
             {
@@ -104,6 +106,7 @@ namespace CatanGame.ViewModels
         {
             IsBusy = false;
             OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(Player1Name));
             OnPropertyChanged(nameof(Player2Name));
             OnPropertyChanged(nameof(Player3Name));

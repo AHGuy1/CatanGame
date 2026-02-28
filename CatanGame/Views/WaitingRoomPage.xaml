@@ -6,7 +6,8 @@
              xmlns:vm="clr-namespace:CatanGame.ViewModels"
              Title="WaitingRoom"
              x:DataType="vm:WaitingRoomPageVM"
-             IsBusy="{Binding IsBusy}">
+             IsBusy="{Binding IsBusy}"
+             IsEnabled="{Binding IsEnabled}">
     <ScrollView>
         <VerticalStackLayout>
             <Label HorizontalOptions="Center"

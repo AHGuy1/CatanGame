@@ -128,14 +128,15 @@ namespace CatanGame.ModelsLogic
                     TileNumbers = updatedGame.TileNumbers;
                     TileTypes = updatedGame.TileTypes;
                 }
-                if(Turn != updatedGame.Turn)
+                bool gridChanged = false;
+                if (Turn != updatedGame.Turn)
                 {
                     PlayerTurn = updatedGame.PlayerTurn;
                     Turn = updatedGame.Turn;
                     TurnChanged?.Invoke(this, EventArgs.Empty);
+                    gridChanged = true;
                     StartTimer();
                 }
-                bool gridChanged = false;
                 for (int i = 0; i < BoardPieces.Length; i++)
                     if(BoardPieces[i] != updatedGame.BoardPieces[i])
                     {
@@ -329,7 +330,7 @@ namespace CatanGame.ModelsLogic
                             else if (hexTiles[i].Terrain == BoardModel.TerrainType.Pasture)
                                 PlayerSheepCount += resourceAmount;
                             else if (hexTiles[i].Terrain == BoardModel.TerrainType.Forest)
-                                PlayerWoodCount += 1;
+                                PlayerWoodCount += resourceAmount;
                         }
                 }
             }

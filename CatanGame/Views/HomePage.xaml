@@ -6,7 +6,8 @@
     xmlns:m="clr-namespace:CatanGame.Models"
     xmlns:vm="clr-namespace:CatanGame.ViewModels"
     x:DataType="vm:HomePageVM"
-    IsBusy="{Binding IsBusy}">
+    IsBusy="{Binding IsBusy}"
+    IsEnabled="{Binding IsEnabled}">
     <Shell.TitleView>
         <HorizontalStackLayout FlowDirection="LeftToRight">
             <Label
