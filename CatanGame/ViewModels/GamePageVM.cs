@@ -2,7 +2,6 @@
 using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {

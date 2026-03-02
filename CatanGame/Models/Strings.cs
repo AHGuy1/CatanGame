@@ -133,7 +133,7 @@ namespace CatanGame.Models
         public const string WoodImage = "wood.png";
         public const string SheepImage = "sheep.png";
         public const string WheatImage = "wheat.png";
-        public const string StoneImage = "stone.png";
+        public const string OreImage = "ore.png";
         public const string DiceRollAnimation = "diceroll.json";
         public const string RollLabel = "Roll The Dice";
         public const string ButtonRoll = "ROLL";
@@ -184,5 +184,6 @@ namespace CatanGame.Models
         public const string Comma = ",";
         public const string EqualSign = "=";
         public const string Ampersand = "&";
+        public const string FourTwoOne = "4  :  1";
     }
 }

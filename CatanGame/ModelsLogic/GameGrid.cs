@@ -147,7 +147,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.Center
             };
         }
-        private static Image CreateRoadImage(int rotation, int colmnIndex, int rowIndex)
+        private static Image CreateRoadImage(int rotation)
         {
             return new()
             {
@@ -157,7 +157,7 @@ namespace CatanGame.ModelsLogic
                 Rotation = rotation,
             };
         }
-        private static Image CreateApexImage(int colmnIndex, int rowIndex)
+        private static Image CreateApexImage()
         {
             return new()
             {
@@ -374,7 +374,7 @@ namespace CatanGame.ModelsLogic
                         game.PlayerCityCount++;
                         game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = game.PlayerIndicator;
                         game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = BoardModel.PieceType.City;
-                        game.PlayerStoneCount -= 3;
+                        game.PlayerOreCount -= 3;
                         game.PlayerWheatCount -= 2;
                     }
                     UpdateBoardPices();
@@ -637,8 +637,8 @@ namespace CatanGame.ModelsLogic
                     SheepCountLabel.Text = game.PlayerSheepCount.ToString();
                 if (WheatCountLabel != null && WheatCountLabel.Text != game.PlayerWheatCount.ToString())
                     WheatCountLabel.Text = game.PlayerWheatCount.ToString();
-                if (StoneCountLabel != null && StoneCountLabel.Text != game.PlayerStoneCount.ToString())
-                    StoneCountLabel.Text = game.PlayerStoneCount.ToString();
+                if (OreCountLabel != null && OreCountLabel.Text != game.PlayerOreCount.ToString())
+                    OreCountLabel.Text = game.PlayerOreCount.ToString();
             });
 
         }
@@ -883,7 +883,7 @@ namespace CatanGame.ModelsLogic
                         BoardPieceButtons[i][k - 1] = CreateApexButton(k, i);
                         BoardPieceButtons[i][k - 1].Clicked += OnBuildButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
-                        BoardPieceImages[i][k - 1] = CreateApexImage(k, i);
+                        BoardPieceImages[i][k - 1] = CreateApexImage();
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
                         Row.Add(BoardPieceImages[i][k - 1], k);
                     }
@@ -899,7 +899,7 @@ namespace CatanGame.ModelsLogic
                         BoardPieceButtons[i][k - 1] = CreateRoadButton(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
                         BoardPieceButtons[i][k - 1].Clicked += OnBuildButtonClicked;
                         Row.Add(BoardPieceButtons[i][k - 1], k);
-                        BoardPieceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30, k, i);
+                        BoardPieceImages[i][k - 1] = CreateRoadImage(i % 4 == 0 ? 90 : k % 2 == 0 ? 30 : -30);
                         BoardPieceImages[i][k - 1].Source = game.BoardPieces[(i - 1) * 12 + k - 1];
                         Row.Add(BoardPieceImages[i][k - 1], k);
                     }
@@ -1022,7 +1022,7 @@ namespace CatanGame.ModelsLogic
             Row.Add(CreateLastRowImage(Strings.BrickImage), 1);
             Row.Add(CreateLastRowImage(Strings.SheepImage), 2);
             Row.Add(CreateLastRowImage(Strings.WheatImage), 3);
-            Row.Add(CreateLastRowImage(Strings.StoneImage), 4);
+            Row.Add(CreateLastRowImage(Strings.OreImage), 4);
             WoodCountLabel = CreateResourceCounterLabel();
             WoodCountLabel.Text = game.PlayerWoodCount.ToString();
             Row.Add(WoodCountLabel);
@@ -1035,9 +1035,9 @@ namespace CatanGame.ModelsLogic
             WheatCountLabel = CreateResourceCounterLabel();
             WheatCountLabel.Text = game.PlayerWheatCount.ToString();
             Row.Add(WheatCountLabel, 3);
-            StoneCountLabel = CreateResourceCounterLabel();
-            StoneCountLabel.Text = game.PlayerStoneCount.ToString();
-            Row.Add(StoneCountLabel, 4);
+            OreCountLabel = CreateResourceCounterLabel();
+            OreCountLabel.Text = game.PlayerOreCount.ToString();
+            Row.Add(OreCountLabel, 4);
             otherPieces.Add(Row, 1, 5);
         }
         public override void ShowBuildOptions(string pieceType)
@@ -1135,7 +1135,7 @@ namespace CatanGame.ModelsLogic
                         }
                     }
             //Shows all options for building a city, if the player has the resources to build it, if there are any
-            if (pieceType == Strings.All && game.PlayerWheatCount >= 3 && game.PlayerStoneCount >= 2)
+            if (pieceType == Strings.All && game.PlayerWheatCount >= 3 && game.PlayerOreCount >= 2)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {

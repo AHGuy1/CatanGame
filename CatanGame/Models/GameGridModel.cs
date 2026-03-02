@@ -28,7 +28,7 @@ namespace CatanGame.Models
         public Label BrickCountLabel { get; set; } = new();
         public Label SheepCountLabel { get; set; } = new();
         public Label WheatCountLabel { get; set; } = new();
-        public Label StoneCountLabel { get; set; } = new();
+        public Label OreCountLabel { get; set; } = new();
         protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnDiceUpdated(Task task);

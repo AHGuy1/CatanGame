@@ -322,7 +322,7 @@ namespace CatanGame.ModelsLogic
                         {
                             int resourceAmount = corners[k].PieceType == BoardModel.PieceType.Town ? 1 : 2;
                             if (hexTiles[i].Terrain == BoardModel.TerrainType.Mountien)
-                                PlayerStoneCount += resourceAmount;
+                                PlayerOreCount += resourceAmount;
                             else if (hexTiles[i].Terrain == BoardModel.TerrainType.Hills)
                                 PlayerBrickCount += resourceAmount;
                             else if (hexTiles[i].Terrain == BoardModel.TerrainType.Fields)
@@ -332,6 +332,31 @@ namespace CatanGame.ModelsLogic
                             else if (hexTiles[i].Terrain == BoardModel.TerrainType.Forest)
                                 PlayerWoodCount += resourceAmount;
                         }
+                }
+            }
+        }
+        public override void TradeWithBank(object parameter)
+        {
+            if (parameter is object[] data && data.Length >= 2)
+            {
+                if (data[0] is String tradeType)
+                {
+                    if (data[1] is string resourceType)
+                    {
+                        if(tradeType == Strings.FourTwoOne)
+                        {
+                            if (resourceType == Strings.WoodImage)
+                                PlayerWoodCount -= 4;
+                            else if (resourceType == Strings.BrickImage)
+                                PlayerBrickCount -= 4;
+                            else if (resourceType == Strings.SheepImage)
+                                PlayerSheepCount -= 4;
+                            else if (resourceType == Strings.WheatImage)
+                                PlayerWheatCount -= 4;
+                            else if (resourceType == Strings.OreImage)
+                                PlayerOreCount -= 4;
+                        }
+                    }
                 }
             }
         }

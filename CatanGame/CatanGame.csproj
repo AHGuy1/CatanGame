@@ -68,6 +68,9 @@
 	  <Compile Update="Views\BoardTest.xaml.cs">
 	    <DependentUpon>BoardTest.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\TradePage.xaml.cs">
+	    <DependentUpon>TradePage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -90,6 +93,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LogInPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TradePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PassWordResetPage.xaml">

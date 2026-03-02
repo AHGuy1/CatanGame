@@ -1,0 +1,133 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:m="clr-namespace:CatanGame.Models"
+               xmlns:vm="clr-namespace:CatanGame.ViewModels"
+               x:Class="CatanGame.Views.TradePage"
+               x:Name="TradePopup"
+               x:DataType="vm:TradePageVM"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Color="Transparent">
+    <Border StrokeShape="RoundRectangle 30,30,30,30"
+            BackgroundColor="#E6FFFFFF"
+            Padding="20"
+            WidthRequest="600"
+            HeightRequest="300">
+        <VerticalStackLayout>
+            <Grid RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*"
+                  IsVisible="{Binding IsVisibleTradeHub}">
+                <Label Text="Welcome to The Trade Hub"
+                       FontAttributes="Bold"
+                       FontSize="25"
+                       TextColor="DarkOrange"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       Grid.RowSpan="3"
+                       Grid.ColumnSpan="2" />
+                <Button Text="Back"
+                        FontAttributes="Bold"
+                        FontSize="23"
+                        Grid.RowSpan="3"
+                        Grid.ColumnSpan="2"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        Command="{Binding ClosePopupCommand}"
+                        CommandParameter="{x:Reference TradePopup}" />
+                <Button Text="Trade With Player"
+                        FontAttributes="Bold"
+                        FontSize="23"
+                        Grid.Row="1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Command="{Binding GoToTradeWithPlayerCommand}" />
+                <Button Text="Trade With Bank"
+                        FontAttributes="Bold"
+                        FontSize="23"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Command="{Binding GoToTradeWithBankCommand}" />
+            </Grid>
+            <Grid IsVisible="{Binding IsVisibleTradeWithBank}"
+                  RowDefinitions="*,*"
+                  ColumnDefinitions="*,*">
+                <Label Text="{x:Static m:Strings.FourTwoOne}"
+                       FontAttributes="Bold"
+                       FontSize="25"
+                       TextColor="DarkOrange"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       Grid.ColumnSpan="2" />
+                <Grid ColumnDefinitions="*,*,*,*,*"
+                      Grid.ColumnSpan="2">
+                    <ImageButton Source="{x:Static m:Strings.WoodImage}"
+                                 Grid.Column="0"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.WoodImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.BrickImage}"
+                                 Grid.Column="1"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.BrickImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.SheepImage}"
+                                 Grid.Column="2"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.SheepImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.WheatImage}"
+                                 Grid.Column="3"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.WheatImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.OreImage}"
+                                 Grid.Column="4"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.OreImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                </Grid>
+            </Grid>
+            <Grid IsVisible="{Binding IsVisibleTradeWithPlayer}">
+
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>
