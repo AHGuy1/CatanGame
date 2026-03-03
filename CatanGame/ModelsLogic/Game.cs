@@ -29,6 +29,11 @@ namespace CatanGame.ModelsLogic
         {
             IntArrayBoardPieces();
             InitAvatar();
+            PlayerWoodCount = 3;
+            PlayerWheatCount = 3;
+            PlayerSheepCount = 3;
+            PlayerBrickCount = 2;
+            OwnsHarbors = [true, true, false, true, true, true];
         }
 
         private static Color GetStatusColor(int playerTurn)
@@ -123,6 +128,13 @@ namespace CatanGame.ModelsLogic
                 TurnTime = updatedGame.TurnTime;
                 Roll1 = updatedGame.Roll1;
                 Roll2 = updatedGame.Roll2;
+                if(TradeMessage != updatedGame.TradeMessage)
+                {
+                    TradeMessage = updatedGame.TradeMessage;
+                    if (TradeMessage != string.Empty)
+                        ShowTradeAlert();
+                }
+                TradeMessage = string.Empty;
                 if (TileTypes[0] == null)
                 {
                     TileNumbers = updatedGame.TileNumbers;
@@ -179,6 +191,13 @@ namespace CatanGame.ModelsLogic
                 else
                     GameDeleted?.Invoke(this, string.Empty);
             }
+        }
+        protected override void ShowTradeAlert()
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(TradeMessage, ToastDuration.Long, 18).Show();
+            });
         }
         protected override void OnCompleteDeleted(Task task)
         {
@@ -336,29 +355,101 @@ namespace CatanGame.ModelsLogic
             }
         }
         public override void TradeWithBank(object parameter)
-        {
-            if (parameter is object[] data && data.Length >= 2)
+       {
+            if (parameter is object[] data && data.Length == 2)
             {
                 if (data[0] is String tradeType)
                 {
                     if (data[1] is string resourceType)
                     {
-                        if(tradeType == Strings.FourTwoOne)
+                        TradeMessage = PlayerNames[PlayerIndicator] + Strings.EmptySpace + Strings.Traded;
+                        int amountToGive = 0;
+                        if (tradeType == Strings.FourToOne)
+                            amountToGive = 4;
+                        else if (tradeType == Strings.ThreeToOne)
+                            amountToGive = 3;
+                        else if (tradeType == Strings.TwoToOne)
+                            amountToGive = 2;
+                        TradeMessage += amountToGive + Strings.EmptySpace;
+                        if (resourceType == Strings.WoodImage)
                         {
-                            if (resourceType == Strings.WoodImage)
-                                PlayerWoodCount -= 4;
-                            else if (resourceType == Strings.BrickImage)
-                                PlayerBrickCount -= 4;
-                            else if (resourceType == Strings.SheepImage)
-                                PlayerSheepCount -= 4;
-                            else if (resourceType == Strings.WheatImage)
-                                PlayerWheatCount -= 4;
-                            else if (resourceType == Strings.OreImage)
-                                PlayerOreCount -= 4;
+                            PlayerWoodCount -= amountToGive;
+                            TradeMessage += Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
+                        }
+                        else if (resourceType == Strings.BrickImage)
+                        {
+                            PlayerBrickCount -= amountToGive;
+                            TradeMessage += Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
+                        }
+                        else if (resourceType == Strings.SheepImage)
+                        {
+                            PlayerSheepCount -= amountToGive;
+                            TradeMessage += Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
+                        }
+                        else if (resourceType == Strings.WheatImage)
+                        {
+                            PlayerWheatCount -= amountToGive;
+                            TradeMessage += Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
+                        }
+                        else if (resourceType == Strings.OreImage)
+                        {
+                            PlayerOreCount -= amountToGive;
+                            TradeMessage += Strings.OreImage[..Strings.OreImage.IndexOf('.')];
                         }
                     }
                 }
             }
+        }
+        public override void PickCardToGet(object parameter)
+        {
+            if (parameter is ImageButton button)
+            {
+                SelectedTradeCard = button.Source.ToString()!;
+                button.BorderWidth = 5;
+                ResetSelctedCardBorder();
+                PreviselySelctedCard = button;
+            }
+        }
+        public override void ConfirmTradeWithBank()
+        {
+            TradeMessage += Strings.EmptySpace + Strings.For + 1 + Strings.EmptySpace;
+            if (SelectedTradeCard.Contains(Strings.WoodImage))
+            {
+                PlayerWoodCount += 1;
+                TradeMessage += Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
+            }
+            else if (SelectedTradeCard.Contains(Strings.BrickImage))
+            {
+                PlayerBrickCount += 1;
+                TradeMessage += Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
+            }
+            else if (SelectedTradeCard.Contains(Strings.SheepImage))
+            {
+                PlayerSheepCount += 1;
+                TradeMessage += Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
+            }
+            else if (SelectedTradeCard.Contains(Strings.WheatImage))
+            {
+                PlayerWheatCount += 1;
+                TradeMessage += Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
+            }
+            else if (SelectedTradeCard.Contains(Strings.OreImage))
+            {
+                PlayerOreCount += 1;
+                TradeMessage += Strings.OreImage[..Strings.OreImage.IndexOf('.')];
+            }
+            ResetSelctedCardBorder();
+            Dictionary<string, object> dict = new()
+            {
+                {nameof(TradeMessage),TradeMessage }
+            };
+            UpdateFields(dict);
+            ShowTradeAlert();
+        }
+        protected override void ResetSelctedCardBorder()
+        {
+            if (PreviselySelctedCard != null)
+                PreviselySelctedCard.BorderWidth = 0;
         }
     }
 }

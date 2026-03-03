@@ -184,6 +184,19 @@ namespace CatanGame.Models
         public const string Comma = ",";
         public const string EqualSign = "=";
         public const string Ampersand = "&";
-        public const string FourTwoOne = "4  :  1";
+        public const string FourToOne = "4  :  1";
+        public const string ThreeToOne = "3  :  1";
+        public const string TwoToOne = "2  :  1";
+        public const string SpecialTrades = "Special Trades:";
+        public const string GetSpecialTrades = "To get special trades, build a town or a city on a harbor signaled at various locations at the age of the map";
+        public const string Traded = "Traded: ";
+        public const string For = "For: ";
+        public const string PickACardToGet = "Pick a card to get";
+        public const string ConfirmTrade = "Confirm trade";
+        public const string WelcomeToTheTradeHub = "Welcome to the trade hub";
+        public const string Back = "Back";
+        public const string TradeWithPlayer = "Trade with player";
+        public const string TradeWithBank = "Trade with bank";
+        public const string Trade = "Trade";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
+using CatanGame.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 
@@ -23,12 +24,12 @@ namespace CatanGame.ViewModels
         public Color? TimeColor => animations.TimeColor;
         public double TimeOpacity => animations.TimeOpacity;
 
-        public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces, Image frame)
+        public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage)
         {
             animations = new Animations();
             this.game = game;
             board = new(game);
-            board.Init(grdBoard, grdPieces, otherPieces,frame);
+            board.Init(grdBoard, grdPieces, otherPieces, frame, gamePage);
             board.EndTurnOnClicked += EndTurn;
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.GameDeleted += OnGameDeleted;

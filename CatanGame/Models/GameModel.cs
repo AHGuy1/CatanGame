@@ -72,6 +72,13 @@ namespace CatanGame.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string TimeLeft { get; protected set; } = string.Empty;
+        [Ignored]
+        // Index 0 = 3:1, 1 = Wood, 2 = Brick, 3 = Sheep, 4 = Wheat, 5 = Ore
+        public bool[] OwnsHarbors { get; set; } = new bool[6];
+        [Ignored]
+        public string SelectedTradeCard { get; set; } = string.Empty;
+        [Ignored]
+        public ImageButton? PreviselySelctedCard { get; set; }
         public int Roll1 { get; set;}
         public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
@@ -83,6 +90,7 @@ namespace CatanGame.Models
         public int[] RobberPlacment { get; set; } = new int[2];
         public bool GameStarted { get; set; }
         public int PlayerTurn { get; set; } = 1;
+        public string TradeMessage { get; set; } = string.Empty;
         public string GameCode { get; set; } = string.Empty;
         public string[] TileNumbers { get; set; } = new string[19];
         public string[] TileTypes { get; set; } = new string[19];
@@ -99,12 +107,16 @@ namespace CatanGame.Models
         protected abstract void OnCompleteDeleted(Task task);
         protected abstract void OnCompleteAddPlayerName(Task task);
         protected abstract void OnTurnChanged(Task task);
+        protected abstract void OnMessageReceived(long timeleft);
         protected abstract void StartTimer();
         protected abstract void RegisterTimer();
         protected abstract void StopTimer();
-        protected abstract void OnMessageReceived(long timeleft);
         protected abstract void IntArrayBoardPieces();
+        protected abstract void ResetSelctedCardBorder();
+        protected abstract void ShowTradeAlert();
         public abstract void TradeWithBank(object parameter);
+        public abstract void PickCardToGet(object paramater);
+        public abstract void ConfirmTradeWithBank();
         public abstract void AllocateResources();
         public abstract void StartGame();
         public abstract void AddPlayerName();

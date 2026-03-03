@@ -15,34 +15,35 @@
             WidthRequest="600"
             HeightRequest="300">
         <VerticalStackLayout>
-            <Grid RowDefinitions="*,*,*"
-                  ColumnDefinitions="*,*"
-                  IsVisible="{Binding IsVisibleTradeHub}">
-                <Label Text="Welcome to The Trade Hub"
+            <Grid RowDefinitions="auto,auto,auto"
+                  ColumnDefinitions="auto,auto"
+                  IsVisible="{Binding IsVisibleTradeHub}"
+                  ColumnSpacing="120"
+                  RowSpacing="60">
+                <Label Text="{x:Static m:Strings.WelcomeToTheTradeHub}"
                        FontAttributes="Bold"
                        FontSize="25"
                        TextColor="DarkOrange"
                        HorizontalOptions="Center"
                        VerticalOptions="Start"
-                       Grid.RowSpan="3"
                        Grid.ColumnSpan="2" />
-                <Button Text="Back"
+                <Button Text="{x:Static m:Strings.Back}"
                         FontAttributes="Bold"
                         FontSize="23"
-                        Grid.RowSpan="3"
+                        Grid.Row="2"
                         Grid.ColumnSpan="2"
                         HorizontalOptions="Center"
                         VerticalOptions="End"
                         Command="{Binding ClosePopupCommand}"
                         CommandParameter="{x:Reference TradePopup}" />
-                <Button Text="Trade With Player"
+                <Button Text="{x:Static m:Strings.TradeWithPlayer}"
                         FontAttributes="Bold"
                         FontSize="23"
                         Grid.Row="1"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         Command="{Binding GoToTradeWithPlayerCommand}" />
-                <Button Text="Trade With Bank"
+                <Button Text="{x:Static m:Strings.TradeWithBank}"
                         FontAttributes="Bold"
                         FontSize="23"
                         Grid.Column="1"
@@ -52,25 +53,32 @@
                         Command="{Binding GoToTradeWithBankCommand}" />
             </Grid>
             <Grid IsVisible="{Binding IsVisibleTradeWithBank}"
-                  RowDefinitions="*,*"
-                  ColumnDefinitions="*,*">
-                <Label Text="{x:Static m:Strings.FourTwoOne}"
+                  RowDefinitions="auto,auto,auto,auto,auto,auto"
+                  ColumnDefinitions="auto,auto"
+                  RowSpacing="5"
+                  ColumnSpacing="20">
+                <Label Text="{x:Static m:Strings.FourToOne}"
                        FontAttributes="Bold"
-                       FontSize="25"
+                       FontSize="18"
                        TextColor="DarkOrange"
                        HorizontalOptions="Center"
-                       VerticalOptions="Start"
+                       VerticalOptions="Center"
                        Grid.ColumnSpan="2" />
-                <Grid ColumnDefinitions="*,*,*,*,*"
-                      Grid.ColumnSpan="2">
+                <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
+                      Grid.Row="1"
+                      Grid.ColumnSpan="2"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center">
                     <ImageButton Source="{x:Static m:Strings.WoodImage}"
-                                 Grid.Column="0"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
+                                 IsEnabled="{Binding CenTradeFourToOne[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
                             <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.WoodImage}" />
                             </MultiBinding>
                         </ImageButton.CommandParameter>
@@ -79,10 +87,13 @@
                                  Grid.Column="1"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
+                                 IsEnabled="{Binding CenTradeFourToOne[1]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
                             <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.BrickImage}" />
                             </MultiBinding>
                         </ImageButton.CommandParameter>
@@ -91,10 +102,13 @@
                                  Grid.Column="2"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
+                                 IsEnabled="{Binding CenTradeFourToOne[2]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
                             <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.SheepImage}" />
                             </MultiBinding>
                         </ImageButton.CommandParameter>
@@ -103,10 +117,13 @@
                                  Grid.Column="3"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
+                                 IsEnabled="{Binding CenTradeFourToOne[3]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
                             <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.WheatImage}" />
                             </MultiBinding>
                         </ImageButton.CommandParameter>
@@ -115,15 +132,309 @@
                                  Grid.Column="4"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
+                                 IsEnabled="{Binding CenTradeFourToOne[4]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
                             <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                <Binding Source="{x:Static m:Strings.FourTwoOne}" />
+                                <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.OreImage}" />
                             </MultiBinding>
                         </ImageButton.CommandParameter>
                     </ImageButton>
                 </Grid>
+                <Label Text="{x:Static m:Strings.SpecialTrades}"
+                       FontAttributes="Bold"
+                       FontSize="25"
+                       TextColor="DarkOrange"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2" />
+                <Label Text="{x:Static m:Strings.GetSpecialTrades}"
+                       FontAttributes="Bold"
+                       FontSize="11"
+                       TextColor="DodgerBlue"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.Row="3"
+                       Grid.ColumnSpan="2" />
+                <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
+                      RowDefinitions="auto,auto"
+                      Grid.Row="4"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Start">
+                    <Label Text="{x:Static m:Strings.ThreeToOne}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="DarkOrange"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Grid.ColumnSpan="5" />
+                    <ImageButton Source="{x:Static m:Strings.WoodImage}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeThreeToOne[0]}"
+                                 IsVisible="{Binding OwnsHarbors[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                            <ImageButton.CommandParameter>
+                                <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                   <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                    <Binding Source="{x:Static m:Strings.WoodImage}" />
+                                </MultiBinding>
+                            </ImageButton.CommandParameter>
+                        </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.BrickImage}"
+                                 Grid.Column="1"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeThreeToOne[1]}"
+                                 IsVisible="{Binding OwnsHarbors[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                <Binding Source="{x:Static m:Strings.BrickImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.SheepImage}"
+                                 Grid.Column="2"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeThreeToOne[2]}"
+                                 IsVisible="{Binding OwnsHarbors[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                <Binding Source="{x:Static m:Strings.SheepImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.WheatImage}"
+                                 Grid.Column="3"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeThreeToOne[3]}"
+                                 IsVisible="{Binding OwnsHarbors[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                <Binding Source="{x:Static m:Strings.WheatImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.OreImage}"
+                                 Grid.Column="4"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeThreeToOne[4]}"
+                                 IsVisible="{Binding OwnsHarbors[0]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                <Binding Source="{x:Static m:Strings.OreImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                </Grid>
+                <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
+                      RowDefinitions="auto,auto"
+                      Grid.Column="1"
+                      Grid.Row="4"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Start">
+                    <Label Text="{x:Static m:Strings.TwoToOne}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="DarkOrange"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Grid.ColumnSpan="5" />
+                    <ImageButton Source="{x:Static m:Strings.WoodImage}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeTwoToOne[0]}"
+                                 IsVisible="{Binding OwnsHarbors[1]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.TwoToOne}" />
+                                <Binding Source="{x:Static m:Strings.WoodImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.BrickImage}"
+                                 Grid.Column="1"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeTwoToOne[1]}"
+                                 IsVisible="{Binding OwnsHarbors[2]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.TwoToOne}" />
+                                <Binding Source="{x:Static m:Strings.BrickImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.SheepImage}"
+                                 Grid.Column="2"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeTwoToOne[2]}"
+                                 IsVisible="{Binding OwnsHarbors[3]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.TwoToOne}" />
+                                <Binding Source="{x:Static m:Strings.SheepImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.WheatImage}"
+                                 Grid.Column="3"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeTwoToOne[3]}"
+                                 IsVisible="{Binding OwnsHarbors[4]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.TwoToOne}" />
+                                <Binding Source="{x:Static m:Strings.WheatImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                    <ImageButton Source="{x:Static m:Strings.OreImage}"
+                                 Grid.Column="4"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Grid.Row="1"
+                                 IsEnabled="{Binding CenTradeTwoToOne[4]}"
+                                 IsVisible="{Binding OwnsHarbors[5]}"
+                                 HeightRequest="53"
+                                 WidthRequest="53"
+                                 Command="{Binding TradeWithBankCommand}">
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                <Binding Source="{x:Static m:Strings.TwoToOne}" />
+                                <Binding Source="{x:Static m:Strings.OreImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
+                </Grid>
+            </Grid>
+            <Grid IsVisible="{Binding IsVisiblePickACard}"
+                  RowDefinitions="auto,auto,auto"
+                  ColumnDefinitions="auto,auto,auto,auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  RowSpacing="30"
+                  ColumnSpacing="20">
+                <Label Text="{x:Static m:Strings.PickACardToGet}"
+                       FontAttributes="Bold"
+                       FontSize="30"
+                       TextColor="DarkOrange"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.ColumnSpan="5" />
+                <ImageButton Source="{x:Static m:Strings.WoodImage}"
+                             x:Name="WoodPickImage"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Grid.Row="1"
+                             BorderColor="Red"
+                             CornerRadius="8"
+                             HeightRequest="110"
+                             WidthRequest="78"
+                             Command="{Binding PickCardToGetCommand}"
+                             CommandParameter="{x:Reference WoodPickImage}" />
+                <ImageButton Source="{x:Static m:Strings.BrickImage}"
+                             x:Name="BrickPickImage"
+                             Grid.Column="1"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Grid.Row="1"
+                             BorderColor="Red"
+                             CornerRadius="8"
+                             HeightRequest="110"
+                             WidthRequest="78"
+                             Command="{Binding PickCardToGetCommand}"
+                             CommandParameter="{x:Reference BrickPickImage}" />
+                <ImageButton Source="{x:Static m:Strings.SheepImage}"
+                             x:Name="SheepPickImage"
+                             Grid.Column="2"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Grid.Row="1"
+                             BorderColor="Red"
+                             CornerRadius="8"
+                             HeightRequest="110"
+                             WidthRequest="78"
+                             Command="{Binding PickCardToGetCommand}"
+                             CommandParameter="{x:Reference SheepPickImage}" />
+                <ImageButton Source="{x:Static m:Strings.WheatImage}"
+                             x:Name="WheatPickButton"
+                             Grid.Column="3"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Grid.Row="1"
+                             BorderColor="Red"
+                             CornerRadius="8"
+                             HeightRequest="110"
+                             WidthRequest="78"
+                             Command="{Binding PickCardToGetCommand}"
+                             CommandParameter="{x:Reference WheatPickButton}" />
+                <ImageButton Source="{x:Static m:Strings.OreImage}"
+                             x:Name="OrePickButton"
+                             Grid.Column="4"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Grid.Row="1"
+                             BorderColor="Red"
+                             CornerRadius="8"
+                             HeightRequest="110"
+                             WidthRequest="78"
+                             Command="{Binding PickCardToGetCommand}"
+                             CommandParameter="{x:Reference OrePickButton}" />
+                <Button Grid.Row="2"
+                        Grid.ColumnSpan="5"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="{x:Static m:Strings.ConfirmTrade}"
+                        Command="{Binding ConfirmTradeWithBankCommand}"/>
             </Grid>
             <Grid IsVisible="{Binding IsVisibleTradeWithPlayer}">
 

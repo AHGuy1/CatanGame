@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
-
+using CatanGame.ModelsLogic;
 namespace CatanGame.Views
 {
     public partial class MainPage : ContentPage
@@ -11,7 +11,8 @@ namespace CatanGame.Views
 
         private void OnCounterClicked(object sender, EventArgs e)
         {
-            TradePage popup = new();
+            Game game = new();
+            TradePage popup = new(game);
             this.ShowPopup(popup);
         }
     }

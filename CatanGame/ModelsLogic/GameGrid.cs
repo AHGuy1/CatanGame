@@ -1,6 +1,8 @@
 ﻿using CatanGame.Models;
-using Google.Firestore.V1;
+using CatanGame.Views;
 using SkiaSharp.Extended.UI.Controls;
+using CommunityToolkit.Maui.Views;
+
 
 namespace CatanGame.ModelsLogic
 {
@@ -729,8 +731,9 @@ namespace CatanGame.ModelsLogic
             }
             game.EndTurn();
         }
-        public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame)
+        public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage)
         {
+            CurrentGamePage = gamePage;
             double sizeProportion = GetSizeProportion();
             frame.WidthRequest = sizeProportion * 1.095;
             frame.HeightRequest = sizeProportion * 0.95;
@@ -1039,6 +1042,24 @@ namespace CatanGame.ModelsLogic
             OreCountLabel.Text = game.PlayerOreCount.ToString();
             Row.Add(OreCountLabel, 4);
             otherPieces.Add(Row, 1, 5);
+            Button button = new()
+            {
+                Text = Strings.Trade,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                FontSize = sizeProportion * 0.055,
+                HeightRequest = sizeProportion * 0.12,
+                WidthRequest = sizeProportion * 0.37,
+                FontAttributes = FontAttributes.Bold,
+                Command = new Command(OnCounterClicked)
+            };
+            otherPieces.Add(button, 1, 4);
+        }
+
+        protected void OnCounterClicked()
+        {
+            TradePage popup = new(game);
+            CurrentGamePage?.ShowPopup(popup);
         }
         public override void ShowBuildOptions(string pieceType)
         {

@@ -1,4 +1,5 @@
 ﻿using CatanGame.ModelsLogic;
+using CatanGame.Views;
 using IntelliJ.Lang.Annotations;
 using SkiaSharp.Extended.UI.Controls;
 using System;
@@ -8,6 +9,7 @@ namespace CatanGame.Models
 {
     public abstract class GameGridModel : Grid
     {
+        protected GamePage? CurrentGamePage;
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected Image[][] BoardPieceImages = new Image[24][];
         protected ImageButton[][] RobberImages = new ImageButton[5][];
@@ -57,7 +59,7 @@ namespace CatanGame.Models
         public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();
-        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame);
+        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage);
         public abstract void ShowBuildOptions(string pieceType);
     }
 }
