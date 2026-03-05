@@ -29,11 +29,11 @@ namespace CatanGame.ModelsLogic
         {
             IntArrayBoardPieces();
             InitAvatar();
-            PlayerWoodCount = 3;
-            PlayerWheatCount = 3;
-            PlayerSheepCount = 3;
             PlayerBrickCount = 2;
-            OwnsHarbors = [true, true, false, true, true, true];
+            PlayerWoodCount = 2;
+            PlayerWheatCount = 3;
+            PlayerSheepCount = 1;
+            PlayerOreCount = 4;
         }
 
         private static Color GetStatusColor(int playerTurn)

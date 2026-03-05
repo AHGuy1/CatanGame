@@ -74,7 +74,7 @@ namespace CatanGame.Models
         public string TimeLeft { get; protected set; } = string.Empty;
         [Ignored]
         // Index 0 = 3:1, 1 = Wood, 2 = Brick, 3 = Sheep, 4 = Wheat, 5 = Ore
-        public bool[] OwnsHarbors { get; set; } = new bool[6];
+        public bool[] PlayerOwnedHarbors { get; set; } = new bool[6];
         [Ignored]
         public string SelectedTradeCard { get; set; } = string.Empty;
         [Ignored]
@@ -87,11 +87,21 @@ namespace CatanGame.Models
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
         public int AmountOfPointsNeeded { get; set; }
+        public int PlayerTurn { get; set; } = 1;
         public int[] RobberPlacment { get; set; } = new int[2];
         public bool GameStarted { get; set; }
-        public int PlayerTurn { get; set; } = 1;
         public string TradeMessage { get; set; } = string.Empty;
         public string GameCode { get; set; } = string.Empty;
+        public string WoodGiveAmount { get; set; } = Strings.Zero;
+        public string BrickGiveAmount { get; set; } = Strings.Zero;
+        public string SheepGiveAmount { get; set; } = Strings.Zero;
+        public string WheatGiveAmount { get; set; } = Strings.Zero;
+        public string OreGiveAmount { get; set; } = Strings.Zero;
+        public string WoodGetAmount { get; set; } = Strings.Zero;
+        public string BrickGetAmount { get; set; } = Strings.Zero;
+        public string SheepGetAmount { get; set; } = Strings.Zero;
+        public string WheatGetAmount { get; set; } = Strings.Zero;
+        public string OreGetAmount { get; set; } = Strings.Zero;
         public string[] TileNumbers { get; set; } = new string[19];
         public string[] TileTypes { get; set; } = new string[19];
         public string[] BoardPieces { get; set; } = new string[276];

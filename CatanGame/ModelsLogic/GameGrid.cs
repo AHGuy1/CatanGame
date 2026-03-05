@@ -593,7 +593,25 @@ namespace CatanGame.ModelsLogic
                 game.PlayerTownCount++;
                 game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = game.PlayerIndicator;
                 game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
+                CheckIfOnHarbor(row, column);
             });
+        }
+        protected override void CheckIfOnHarbor(int row, int column)
+        {
+            int harborType;
+            harborType = (row, column) switch
+            {
+                (1, 0) or (3, 0) or (11, 5) or (11, 5) or (21, 0) or (21, 2) or (23, 0) or (23, 1) => 0,
+                (7, 0) or (9, 0) => 1,
+                (15, 0) or (17, 0) => 2,
+                (17, 4) or (19, 3) => 3,
+                (1, 1) or (3, 2) => 4,
+                (5, 3) or (7, 4) => 5,
+                //No harbor
+                _ => -1,
+            };
+            if (harborType != -1)
+                game.PlayerOwnedHarbors[harborType] = true;
         }
         protected override void BuildRoadAtFirstPosition()
         {

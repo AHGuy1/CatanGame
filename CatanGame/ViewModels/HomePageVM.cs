@@ -9,9 +9,8 @@ namespace CatanGame.ViewModels
     public partial class HomePageVM : ObservableObject
     {
         private readonly Games games = new();
-        private string GameCodePri { get; set; } = string.Empty;
-        private string SelectedBoardTypePri = string.Empty;
-
+        private string GameCodePrivate { get; set; } = string.Empty;
+        private string SelectedBoardTypePrivate = string.Empty;
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
         public bool IsEnabled => !IsBusy;
@@ -28,20 +27,20 @@ namespace CatanGame.ViewModels
         public TurnTime SelectedTurnTime { get; set; } = new TurnTime();
         public string GameCode
         {
-            get => GameCodePri;
+            get => GameCodePrivate;
             set
             {
-                GameCodePri = value;
+                GameCodePrivate = value;
                 (JoinGameWithCodeCommand as Command)?.ChangeCanExecute();
             }
         }
         public string SelectedBoardType
         {
-            get => SelectedBoardTypePri;
+            get => SelectedBoardTypePrivate;
             set
             {
                 IsRandomBoard = value == Strings.RandomBoardLabel;
-                SelectedBoardTypePri = value;
+                SelectedBoardTypePrivate = value;
             }
         }
         public Game? SelectedItem

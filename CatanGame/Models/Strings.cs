@@ -198,5 +198,9 @@ namespace CatanGame.Models
         public const string TradeWithPlayer = "Trade with player";
         public const string TradeWithBank = "Trade with bank";
         public const string Trade = "Trade";
+        public const string SelectPlayer = "Select player to trade with";
+        public const string SelectCardsToGive = "Select cards to give";
+        public const string SelectCardsToGet = "Select cards to get";
+        public const string Zero = "0";
     }
 }
