@@ -645,16 +645,21 @@ namespace CatanGame.ModelsLogic
             };
             game.UpdateFields(dict);
         }
-        protected override void OnTradeClicked()
+        protected override void Trade()
         {
             if(CurrentTradePopUp != null)
                 CloseTradePopUp();
             CurrentTradePopUp = new(game);
             CurrentGamePage?.ShowPopup(CurrentTradePopUp);
         }
+        protected override bool CenTrade()
+        {
+            return game.PlayerTurn == game.PlayerIndicator + 1;
+        }
         public override void CloseTradePopUp()
         {
-            CurrentTradePopUp?.Close();
+            if (CurrentTradePopUp != null)
+                MainThread.BeginInvokeOnMainThread(() => CurrentTradePopUp.Close());
             CurrentTradePopUp = null;
         }
         public override void UpdateResourceCounters()
@@ -757,6 +762,11 @@ namespace CatanGame.ModelsLogic
                     BuildRoadAtFirstPosition();
                     await Task.Delay(2000);
                 }
+            }
+            if(game.TradeInProgress)
+            {
+                game.CancelTradeRequest();
+                await Task.Delay(2000);
             }
             game.EndTurn();
         }
@@ -1080,7 +1090,7 @@ namespace CatanGame.ModelsLogic
                 HeightRequest = sizeProportion * 0.12,
                 WidthRequest = sizeProportion * 0.37,
                 FontAttributes = FontAttributes.Bold,
-                Command = new Command(OnTradeClicked)
+                Command = new Command(Trade,CenTrade)
             };
             otherPieces.Add(TradeButton, 1, 4);
         }

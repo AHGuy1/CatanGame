@@ -49,7 +49,7 @@ namespace CatanGame.ViewModels
 
         private void OnCloseTradePopUp(object? sender, EventArgs e)
         {
-            board.CloseTradePopUp();
+            MainThread.BeginInvokeOnMainThread(() => board.CloseTradePopUp());
         }
         private void OnTradeRecived(object? sender, EventArgs e)
         {

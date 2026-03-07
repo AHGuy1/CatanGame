@@ -126,7 +126,7 @@ namespace CatanGame.ModelsLogic
                 if (TradeMessage != updatedGame.TradeMessage)
                 {
                     TradeMessage = updatedGame.TradeMessage;
-                    if (TradeMessage != Strings.TradeDeclined && TradeMessage != Strings.TradeAccepted && TradeMessage != Strings.PlayerCounterOffer)
+                    if (TradeMessage != Strings.TradeDeclined && TradeMessage != Strings.TradeAccepted && TradeMessage != Strings.PlayerCounterOffer && TradeMessage != Strings.TradeCanceled)
                     {
                         if (TradeMessage != string.Empty)
                         {
@@ -136,6 +136,15 @@ namespace CatanGame.ModelsLogic
                     }
                     else if (TradeInProgress && updatedGame.PlayersInTrade[0] == PlayerNames[PlayerIndicator])
                         CheckTradeResponce();
+                }
+                else if (TradeMessage.Contains(PlayerNames[PlayerIndicator]))
+                {
+                    TradeMessage = string.Empty;
+                    Dictionary<string, object> dict = new()
+                    {
+                        {nameof(TradeMessage),TradeMessage }
+                    };
+                    UpdateFields(dict);
                 }
                 WoodGetAmount = updatedGame.WoodGetAmount;
                 BrickGetAmount = updatedGame.BrickGetAmount;
@@ -148,7 +157,10 @@ namespace CatanGame.ModelsLogic
                 WheatGiveAmount = updatedGame.WheatGiveAmount;
                 OreGiveAmount = updatedGame.OreGiveAmount;
                 if(TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                {
+                    PlayersInTrade = updatedGame.PlayersInTrade;
                     ReciveCounterOffer();
+                }
                 if (TradeInProgress != updatedGame.TradeInProgress)
                 {
                     TradeInProgress = updatedGame.TradeInProgress;
@@ -225,7 +237,7 @@ namespace CatanGame.ModelsLogic
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Toast.Make(TradeMessage, ToastDuration.Long, 18).Show();
+                Toast.Make(TradeMessage, ToastDuration.Long, 15).Show();
             });
         }
         protected override void OnCompleteDeleted(Task task)
@@ -308,7 +320,7 @@ namespace CatanGame.ModelsLogic
         }
         protected override void RecivedTrade()
         {
-            TradeRecived?.Invoke(this, EventArgs.Empty);
+            TradeRecived?.Invoke(this, EventArgs.Empty);  
         }
         protected override void CheckTradeResponce()
         {
@@ -321,7 +333,7 @@ namespace CatanGame.ModelsLogic
                 AllocateTradeResources();
                 ResourceCountersUpdated?.Invoke(this, EventArgs.Empty);
                 TradeMessage = PlayersInTrade[0] + Strings.EmptySpace + Strings.TradedWith + Strings.EmptySpace + PlayersInTrade[1];
-                TradeMessage += Strings.Reciveing;
+                TradeMessage += Strings.EmptySpace + Strings.Reciveing;
                 if (Convert.ToInt32(WoodGetAmount) > 0)
                     TradeMessage += WoodGetAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
                 if (Convert.ToInt32(BrickGetAmount) > 0)
@@ -332,7 +344,7 @@ namespace CatanGame.ModelsLogic
                     TradeMessage += WheatGetAmount + Strings.EmptySpace + Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
                 if (Convert.ToInt32(OreGetAmount) > 0)
                     TradeMessage += OreGetAmount + Strings.EmptySpace + Strings.OreImage[..Strings.OreImage.IndexOf('.')];
-                TradeMessage += Strings.Giving;
+                TradeMessage += Strings.EmptySpace + Strings.Giving;
                 if (Convert.ToInt32(WoodGiveAmount) > 0)
                     TradeMessage += WoodGiveAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
                 if (Convert.ToInt32(BrickGiveAmount) > 0)
@@ -346,14 +358,16 @@ namespace CatanGame.ModelsLogic
                 ResetTradeParameters();
                 UpdateTradeParamaters();
             }
-            else if(TradeMessage == Strings.TradeDeclined)
+            else if(TradeMessage == Strings.TradeDeclined || TradeMessage == Strings.TradeCanceled)
             {
                 TradeMessage = string.Empty;
                 ResetTradeParameters();
                 UpdateTradeParamaters();
             }
+            if(TradeMessage == Strings.TradeCanceled)
+                CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
-        protected override void CloseTrade()
+        public override void CloseTrade()
         {
             CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
@@ -649,6 +663,7 @@ namespace CatanGame.ModelsLogic
         public override void CancelTradeRequest()
         {
             ResetTradeParameters();
+            TradeMessage = Strings.TradeCanceled;
             UpdateTradeParamaters();
         }
         public override void CounterOffer()
@@ -664,7 +679,7 @@ namespace CatanGame.ModelsLogic
         }
         public override void AcceptTrade()
         {
-            AllocateResources();
+            AllocateTradeResources();
             ResourceCountersUpdated?.Invoke(this, EventArgs.Empty);
             TradeMessage = Strings.TradeAccepted;
             UpdateTradeParamaters();

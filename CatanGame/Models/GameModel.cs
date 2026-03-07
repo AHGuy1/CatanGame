@@ -139,7 +139,7 @@ namespace CatanGame.Models
         protected abstract void UpdateTradeParamaters();
         protected abstract void AllocateTradeResources();
         protected abstract void RecivedTrade();
-        protected abstract void CloseTrade();
+        protected abstract bool CenTrade();
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
@@ -147,6 +147,7 @@ namespace CatanGame.Models
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void TradeWithBank(object parameter);
         public abstract void PickCardToGet(object paramater);
+        public abstract void CloseTrade();
         public abstract void AcceptTrade();
         public abstract void DeclineTrade();
         public abstract void ConfirmTradeWithPlayer();

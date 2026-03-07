@@ -62,6 +62,8 @@ namespace CatanGame.ViewModels
                 else
                     game.WoodGiveAmount = value;
                 OnPropertyChanged(nameof(WoodGiveAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -75,6 +77,8 @@ namespace CatanGame.ViewModels
                 else
                     game.BrickGiveAmount = value;
                 OnPropertyChanged(nameof(BrickGiveAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -88,6 +92,8 @@ namespace CatanGame.ViewModels
                 else
                     game.SheepGiveAmount = value;
                 OnPropertyChanged(nameof(SheepGiveAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -101,6 +107,8 @@ namespace CatanGame.ViewModels
                 else
                     game.WheatGiveAmount = value;
                 OnPropertyChanged(nameof(WheatGiveAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -114,6 +122,8 @@ namespace CatanGame.ViewModels
                 else
                     game.OreGiveAmount = value;
                 OnPropertyChanged(nameof(OreGiveAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -127,21 +137,25 @@ namespace CatanGame.ViewModels
                 else
                     game.WoodGetAmount = value;
                 OnPropertyChanged(nameof(WoodGetAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
         public string BrickGetAmount
         {
-                get => game.BrickGetAmount;
-                set
-                {
-                    if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                        game.BrickGetAmount = 25.ToString();
-                    else
-                        game.BrickGetAmount = value;
-                    OnPropertyChanged(nameof(BrickGetAmount));
-                    (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
-                }
+            get => game.BrickGetAmount;
+            set
+            {
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                    game.BrickGetAmount = 25.ToString();
+                else
+                    game.BrickGetAmount = value;
+                OnPropertyChanged(nameof(BrickGetAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
+                (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
+            }
         }
         public string SheepGetAmount
         {
@@ -153,6 +167,8 @@ namespace CatanGame.ViewModels
                 else
                     game.SheepGetAmount = value;
                 OnPropertyChanged(nameof(SheepGetAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -166,6 +182,8 @@ namespace CatanGame.ViewModels
                 else
                     game.WheatGetAmount = value;
                 OnPropertyChanged(nameof(WheatGetAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -179,6 +197,8 @@ namespace CatanGame.ViewModels
                 else
                     game.OreGetAmount = value;
                 OnPropertyChanged(nameof(OreGetAmount));
+                OnPropertyChanged(nameof(ReciverGets));
+                OnPropertyChanged(nameof(ReciverGives));
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
@@ -188,9 +208,11 @@ namespace CatanGame.ViewModels
             this.game = game;
             IsVisibleReciveTradeWithPlayer = game.TradeInProgress && PlayersInTrade[1] == game.PlayerNames[game.PlayerIndicator];
             IsVisibleTradeHub = !IsVisibleReciveTradeWithPlayer;
+            OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
+            OnPropertyChanged(nameof(IsVisibleTradeHub));
             ClosePopupCommand = new Command(ClosePopup);
-            GoToTradeWithPlayerCommand = new Command(GoToTradeWithPlayer);
-            GoToTradeWithBankCommand = new Command(GoToTradeWithBank);
+            GoToTradeWithPlayerCommand = new Command(GoToTradeWithPlayer,CenTrade);
+            GoToTradeWithBankCommand = new Command(GoToTradeWithBank,CenTrade);
             BackToTradeHubCommand = new Command(ReturnToTradeHub);
             TradeWithBankCommand = new Command(TradeWithBank);
             PickCardToGetCommand = new Command(PickCardToGet);
@@ -201,7 +223,6 @@ namespace CatanGame.ViewModels
             CaneclTradeCommand = new Command(CancelTradeRequest, CenCancelTradeRequest);
             ConfirmTradeWithPlayerCommand = new Command(ConfirmTradeWithPlayer, CenTradeWithPlayer);
             PlayerNames = game.GetPlayersToTradeWith();
-
         }
 
         private void RefreshTradeParameters()
@@ -234,10 +255,10 @@ namespace CatanGame.ViewModels
             RefreshTradeParameters();
             (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
         }
-        private void AcceptTrade(object parameter)
+        private void AcceptTrade()
         {
             game.AcceptTrade();
-            ClosePopup(parameter);
+            ClosePopup();
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.TradeAccepted, ToastDuration.Long, 20).Show();
@@ -245,10 +266,10 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
         }
-        private void DeclineTrade(object parameter)
+        private void DeclineTrade()
         {
             game.DeclineTrade();
-            ClosePopup(parameter);
+            ClosePopup();
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.TradeDeclined, ToastDuration.Long, 20).Show();
@@ -288,19 +309,18 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisiblePickACard));
             UpdateCenTradeLists();
         }
-        private void ConfirmTradeWithPlayer(object parameter)
+        private void ConfirmTradeWithPlayer()
         {
             game.ConfirmTradeWithPlayer();
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.TradeSent, ToastDuration.Long, 18).Show();
             });
-            ClosePopup(parameter);
+            ClosePopup();
         }
-        private void ClosePopup(object parameter)
+        private void ClosePopup()
         {
-            if (parameter is Popup popup)
-                popup.Close();
+            game.CloseTrade();
         }
         private void GoToTradeWithPlayer()
         {
@@ -340,13 +360,17 @@ namespace CatanGame.ViewModels
         {
             return game.TradeInProgress && PlayersInTrade[0] == game.PlayerNames[game.PlayerIndicator];
         }
-        private bool CenAcceptTrade(object parameter)
+        private bool CenAcceptTrade()
         {
             return game.CenAcceptTrade();
         }
-        private bool CenTradeWithPlayer(object parameter)
+        private bool CenTradeWithPlayer()
         {
             return game.CenTradeWithPlayer();
+        }
+        private bool CenTrade()
+        {
+            return !game.TradeInProgress;
         }
     }
 }

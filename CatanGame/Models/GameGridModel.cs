@@ -40,7 +40,7 @@ namespace CatanGame.Models
         protected abstract void BuildRoad(int row, int column);
         protected abstract void CheckIfOnHarbor(int row, int column);
         protected abstract void OnDiceUpdated(Task task);
-        protected abstract void OnTradeClicked();
+        protected abstract void Trade();
         protected abstract void RollDice();
         protected abstract void StartAnimations();
         protected abstract void StopAnimations();
