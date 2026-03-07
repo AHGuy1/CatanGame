@@ -29,11 +29,6 @@ namespace CatanGame.ModelsLogic
         {
             IntArrayBoardPieces();
             InitAvatar();
-            PlayerBrickCount = 2;
-            PlayerWoodCount = 2;
-            PlayerWheatCount = 3;
-            PlayerSheepCount = 1;
-            PlayerOreCount = 4;
         }
 
         private static Color GetStatusColor(int playerTurn)
@@ -63,7 +58,7 @@ namespace CatanGame.ModelsLogic
         protected override void IntArrayBoardPieces()
         {
             for (int i = 0; i < 276; i++)
-                BoardPieces[i] = string.Empty;       
+                BoardPieces[i] = string.Empty;
         }
         protected override void RegisterTimer()
         {
@@ -128,7 +123,7 @@ namespace CatanGame.ModelsLogic
                 TurnTime = updatedGame.TurnTime;
                 Roll1 = updatedGame.Roll1;
                 Roll2 = updatedGame.Roll2;
-                if(TradeMessage != updatedGame.TradeMessage)
+                if (TradeMessage != updatedGame.TradeMessage)
                 {
                     TradeMessage = updatedGame.TradeMessage;
                     if (TradeMessage != string.Empty)
@@ -150,12 +145,12 @@ namespace CatanGame.ModelsLogic
                     StartTimer();
                 }
                 for (int i = 0; i < BoardPieces.Length; i++)
-                    if(BoardPieces[i] != updatedGame.BoardPieces[i])
+                    if (BoardPieces[i] != updatedGame.BoardPieces[i])
                     {
                         gridChanged = true;
                         BoardPieces[i] = updatedGame.BoardPieces[i];
                     }
-                if(LongestRoadLength != updatedGame.LongestRoadLength || LargestArmySize != updatedGame.LargestArmySize)
+                if (LongestRoadLength != updatedGame.LongestRoadLength || LargestArmySize != updatedGame.LargestArmySize)
                 {
                     LongestRoadLength = updatedGame.LongestRoadLength;
                     LargestArmySize = updatedGame.LargestArmySize;
@@ -186,8 +181,8 @@ namespace CatanGame.ModelsLogic
             }
             else
             {
-                if(!GameStarted)
-                    GameDeleted?.Invoke(this,Strings.HostLeft);
+                if (!GameStarted)
+                    GameDeleted?.Invoke(this, Strings.HostLeft);
                 else
                     GameDeleted?.Invoke(this, string.Empty);
             }
@@ -216,11 +211,65 @@ namespace CatanGame.ModelsLogic
         }
         protected override void UpdateStatus()
         {
-           Array status = Enum.GetValues(typeof(GameStatus.Status));
+            Array status = Enum.GetValues(typeof(GameStatus.Status));
             _status.CurrentStatus = !GameStarted ? GameStatus.Status.PleseWait :
                 PlayerTurn == PlayerIndicator + 1 ? GameStatus.Status.YourTurn :
                 (GameStatus.Status)status.GetValue(PlayerTurn - 1)!;
             StatusColor = GetStatusColor(PlayerTurn);
+        }
+        protected override void ResetSelctedCardBorder()
+        {
+            if (PreviselySelctedCard != null)
+                PreviselySelctedCard.BorderWidth = 0;
+        }
+        protected override void UpdateTradeParamaters()
+        {
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(TradeInProgress), TradeInProgress },
+                { nameof(PlayersInTrade), PlayersInTrade },
+                { nameof(SelectedPlayerName), SelectedPlayerName },
+                { nameof(WoodGiveAmount), WoodGiveAmount },
+                { nameof(BrickGiveAmount), BrickGiveAmount },
+                { nameof(SheepGiveAmount), SheepGiveAmount },
+                { nameof(WheatGiveAmount), WheatGiveAmount },
+                { nameof(OreGiveAmount), OreGiveAmount },
+                { nameof(WoodGetAmount), WoodGetAmount },
+                { nameof(BrickGetAmount), BrickGetAmount },
+                { nameof(SheepGetAmount), SheepGetAmount },
+                { nameof(WheatGetAmount), WheatGetAmount },
+                { nameof(OreGetAmount), OreGetAmount },
+            };
+            UpdateFields(dict);
+        }
+        protected override void AllocateTradeResources()
+        {
+            if (PlayersInTrade[0] == PlayerNames[PlayerIndicator])
+            {
+                PlayerWoodCount -= Convert.ToInt32(WoodGiveAmount);
+                PlayerBrickCount -= Convert.ToInt32(BrickGiveAmount);
+                PlayerSheepCount -= Convert.ToInt32(SheepGiveAmount);
+                PlayerWheatCount -= Convert.ToInt32(WheatGiveAmount);
+                PlayerOreCount -= Convert.ToInt32(OreGiveAmount);
+                PlayerWoodCount += Convert.ToInt32(WoodGetAmount);
+                PlayerBrickCount += Convert.ToInt32(BrickGetAmount);
+                PlayerSheepCount += Convert.ToInt32(SheepGetAmount);
+                PlayerWheatCount += Convert.ToInt32(WheatGetAmount);
+                PlayerOreCount += Convert.ToInt32(OreGetAmount);
+            }
+            else if (PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+            {
+                PlayerWoodCount += Convert.ToInt32(WoodGiveAmount);
+                PlayerBrickCount += Convert.ToInt32(BrickGiveAmount);
+                PlayerSheepCount += Convert.ToInt32(SheepGiveAmount);
+                PlayerWheatCount += Convert.ToInt32(WheatGiveAmount);
+                PlayerOreCount += Convert.ToInt32(OreGiveAmount);
+                PlayerWoodCount -= Convert.ToInt32(WoodGetAmount);
+                PlayerBrickCount -= Convert.ToInt32(BrickGetAmount);
+                PlayerSheepCount -= Convert.ToInt32(SheepGetAmount);
+                PlayerWheatCount -= Convert.ToInt32(WheatGetAmount);
+                PlayerOreCount -= Convert.ToInt32(OreGetAmount);
+            }
         }
 
         public override void SetDocument(Action<Task> OnComplete)
@@ -239,7 +288,7 @@ namespace CatanGame.ModelsLogic
         {
             fbd.GetDocument(Keys.GamesCollection, Id, OnComplete);
         }
-        
+
         public override void AddSnapshotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
@@ -247,7 +296,7 @@ namespace CatanGame.ModelsLogic
         public override void RemoveSnapshotListener()
         {
             StopTimer();
-            ilr?.Remove();                           
+            ilr?.Remove();
             PlayerNames[PlayerIndicator] = string.Empty;
             if (PlayerIndicator == 0 || GameStarted)
                 DeleteDocument(OnCompleteDeleted);
@@ -305,7 +354,7 @@ namespace CatanGame.ModelsLogic
                     { nameof(GameStarted), GameStarted },
                 };
                 UpdateFields(OnTurnChanged, dict);
-            }       
+            }
         }
         public override void AddPlayerName()
         {
@@ -331,9 +380,9 @@ namespace CatanGame.ModelsLogic
         public override void AllocateResources()
         {
             HexTile[] hexTiles = GameBoard.Hexes;
-            for(int i = 0; i < hexTiles.Length;i++)
+            for (int i = 0; i < hexTiles.Length; i++)
             {
-                if(hexTiles[i].NumberToken == RollTotal && !hexTiles[i].HasRobber)
+                if (hexTiles[i].NumberToken == RollTotal && !hexTiles[i].HasRobber)
                 {
                     VertexNode[] corners = hexTiles[i].Corners;
                     for (int k = 0; k < corners.Length; k++)
@@ -355,7 +404,7 @@ namespace CatanGame.ModelsLogic
             }
         }
         public override void TradeWithBank(object parameter)
-       {
+        {
             if (parameter is object[] data && data.Length == 2)
             {
                 if (data[0] is String tradeType)
@@ -446,10 +495,89 @@ namespace CatanGame.ModelsLogic
             UpdateFields(dict);
             ShowTradeAlert();
         }
-        protected override void ResetSelctedCardBorder()
+        public override bool CenTradeWithPlayer()
         {
-            if (PreviselySelctedCard != null)
-                PreviselySelctedCard.BorderWidth = 0;
+            bool givesACard =
+                (!string.IsNullOrWhiteSpace(WoodGiveAmount) && Convert.ToInt32(WoodGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(BrickGiveAmount) && Convert.ToInt32(BrickGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(SheepGiveAmount) && Convert.ToInt32(SheepGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(WheatGiveAmount) && Convert.ToInt32(WheatGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(OreGiveAmount) && Convert.ToInt32(OreGiveAmount) > 0);
+
+            bool getsACard =
+                (!string.IsNullOrWhiteSpace(WoodGetAmount) && Convert.ToInt32(WoodGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(BrickGetAmount) && Convert.ToInt32(BrickGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(SheepGetAmount) && Convert.ToInt32(SheepGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(WheatGetAmount) && Convert.ToInt32(WheatGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(OreGetAmount) && Convert.ToInt32(OreGetAmount) > 0);
+
+            return givesACard && getsACard && !string.IsNullOrWhiteSpace(SelectedPlayerName);
+        }
+        public override void ConfirmTradeWithPlayer()
+        {
+            TradeInProgress = true;
+            PlayersInTrade[0] = PlayerNames[PlayerIndicator];
+            PlayersInTrade[1] = SelectedPlayerName;
+            if(String.IsNullOrWhiteSpace(WoodGiveAmount))
+                WoodGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(BrickGiveAmount))
+                BrickGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(SheepGiveAmount))
+                SheepGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WheatGiveAmount))
+                WheatGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(OreGiveAmount))
+                OreGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WoodGetAmount))
+                WoodGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(BrickGetAmount))
+                BrickGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(SheepGetAmount))
+                SheepGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WheatGetAmount))
+                WheatGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(OreGetAmount))
+                OreGetAmount = Strings.Zero;
+            UpdateTradeParamaters();
+        }
+        public override void CancelTradeRequest()
+        {
+            TradeInProgress = false;
+            PlayersInTrade[0] = string.Empty;
+            PlayersInTrade[1] = string.Empty;
+            SelectedPlayerName = string.Empty;
+            WoodGiveAmount = Strings.Zero;
+            BrickGiveAmount = Strings.Zero;
+            SheepGiveAmount = Strings.Zero;
+            WheatGiveAmount = Strings.Zero;
+            OreGiveAmount = Strings.Zero;
+            WoodGetAmount = Strings.Zero;
+            BrickGetAmount = Strings.Zero;
+            SheepGetAmount = Strings.Zero;
+            WheatGetAmount = Strings.Zero;
+            OreGetAmount = Strings.Zero;
+            UpdateTradeParamaters();
+        }
+        public override void CounterOffer()
+        {
+            (PlayersInTrade[1], PlayersInTrade[0]) = (PlayersInTrade[0], PlayersInTrade[1]);
+            (WoodGiveAmount, WoodGetAmount) = (WoodGetAmount, WoodGiveAmount);
+            (BrickGiveAmount, BrickGetAmount) = (BrickGetAmount, BrickGiveAmount);
+            (SheepGiveAmount, SheepGetAmount) = (SheepGetAmount, SheepGiveAmount);
+            (WheatGiveAmount, WheatGetAmount) = (WheatGetAmount, WheatGiveAmount);
+            (OreGiveAmount, OreGetAmount) = (OreGetAmount, OreGiveAmount);
+            UpdateTradeParamaters();
+        }
+        public override void AcceptTrade()
+        {
+            AllocateResources();
+            TradeMessage = Strings.TradeAccepted;
+            UpdateTradeParamaters();
+        }
+        public override void DeclineTrade()
+        {
+            TradeMessage = Strings.TradeDeclined;
+            UpdateTradeParamaters();
         }
     }
 }

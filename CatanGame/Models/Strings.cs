@@ -202,5 +202,19 @@ namespace CatanGame.Models
         public const string SelectCardsToGive = "Select cards to give";
         public const string SelectCardsToGet = "Select cards to get";
         public const string Zero = "0";
+        public const string CancelTrade = "Cancel trade";
+        public const string DeclineTrade = "Decline trade";
+        public const string AcceptTrade = "Accept trade";
+        public const string TradeCanceled = "Trade canceled";
+        public const string TradeDeclined = "Trade declined";
+        public const string TradeSent = "Trade sent";
+        public const string TradeAccepted = "Trade accepted";
+        public const string TradeRecived = "Trade received";
+        public const string TradeSender = "Trade sender: ";
+        public const string Reciveing = "Reciveing: ";
+        public const string Giving = "Giving: ";
+        public const string Accept = "Accept";
+        public const string Decline = "Decline";
+        public const string CounterOffer = "Counter Offer";
     }
 }

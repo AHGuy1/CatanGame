@@ -57,15 +57,15 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0;
         [Ignored]
-        public int PlayerOreCount { get; set; }
+        public int PlayerOreCount { get; set; } = 3;
         [Ignored]
-        public int PlayerBrickCount { get; set; }
+        public int PlayerBrickCount { get; set; } = 1;
         [Ignored]
-        public int PlayerWoodCount { get; set; }
+        public int PlayerWoodCount { get; set; } = 5;
         [Ignored]
-        public int PlayerWheatCount { get; set; }
+        public int PlayerWheatCount { get; set; } = 2;
         [Ignored]
-        public int PlayerSheepCount { get; set; }
+        public int PlayerSheepCount { get; set; } = 0;
         [Ignored]
         public bool IsRandomBoard { get; set; } 
         [Ignored]
@@ -88,8 +88,11 @@ namespace CatanGame.Models
         public int Turn { get; set; } = 1;
         public int AmountOfPointsNeeded { get; set; }
         public int PlayerTurn { get; set; } = 1;
-        public int[] RobberPlacment { get; set; } = new int[2];
+        public int PlayerCount { get; set; }
+        public bool IsFull { get; set; }
+        public bool IsRolling { get; set; }
         public bool GameStarted { get; set; }
+        public bool TradeInProgress { get; set; } = false;
         public string TradeMessage { get; set; } = string.Empty;
         public string GameCode { get; set; } = string.Empty;
         public string WoodGiveAmount { get; set; } = Strings.Zero;
@@ -102,14 +105,14 @@ namespace CatanGame.Models
         public string SheepGetAmount { get; set; } = Strings.Zero;
         public string WheatGetAmount { get; set; } = Strings.Zero;
         public string OreGetAmount { get; set; } = Strings.Zero;
+        public string SelectedPlayerName = string.Empty;
+        public int[] RobberPlacment { get; set; } = new int[2];
+        public string[] PlayersInTrade { get; set; } = new string[2];
         public string[] TileNumbers { get; set; } = new string[19];
         public string[] TileTypes { get; set; } = new string[19];
         public string[] BoardPieces { get; set; } = new string[276];
         public string[] PlayerNames { get; set; } = [string.Empty];
         public DateTime Created { get; set; }
-        public int PlayerCount { get; set; }
-        public bool IsFull { get; set; }
-        public bool IsRolling { get; set; }
         protected abstract void InitAvatar();
         protected abstract void UpdateStatus();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
@@ -124,19 +127,27 @@ namespace CatanGame.Models
         protected abstract void IntArrayBoardPieces();
         protected abstract void ResetSelctedCardBorder();
         protected abstract void ShowTradeAlert();
+        protected abstract void UpdateTradeParamaters();
+        protected abstract void AllocateTradeResources();
+        public abstract void SetDocument(Action<Task> OnComplete);
+        public abstract void DeleteDocument(Action<Task> OnComplete);
+        public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
+        public abstract void UpdateFields(Dictionary<string, object> dict);
+        public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void TradeWithBank(object parameter);
         public abstract void PickCardToGet(object paramater);
+        public abstract void AcceptTrade();
+        public abstract void DeclineTrade();
+        public abstract void ConfirmTradeWithPlayer();
         public abstract void ConfirmTradeWithBank();
+        public abstract void CancelTradeRequest();
+        public abstract void CounterOffer();
         public abstract void AllocateResources();
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
-        public abstract void SetDocument(Action<Task> OnComplete);
-        public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
         public abstract void RemoveSnapshotListener();
         public abstract void AddSnapshotListener();
-        public abstract void DeleteDocument(Action<Task> OnComplete);
-        public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
-        public abstract void UpdateFields(Dictionary<string, object> dict);
+        public abstract bool CenTradeWithPlayer();
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls;
 
 namespace CatanGame.Converters
 {
-	public class MyMultiConverter : IMultiValueConverter
+	public class MultiObjectConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{

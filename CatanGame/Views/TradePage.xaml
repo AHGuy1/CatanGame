@@ -27,15 +27,6 @@
                        HorizontalOptions="Center"
                        VerticalOptions="Start"
                        Grid.ColumnSpan="2" />
-                <Button Text="{x:Static m:Strings.Back}"
-                        FontAttributes="Bold"
-                        FontSize="23"
-                        Grid.Row="2"
-                        Grid.ColumnSpan="2"
-                        HorizontalOptions="Center"
-                        VerticalOptions="End"
-                        Command="{Binding ClosePopupCommand}"
-                        CommandParameter="{x:Reference TradePopup}" />
                 <Button Text="{x:Static m:Strings.TradeWithPlayer}"
                         FontAttributes="Bold"
                         FontSize="23"
@@ -51,6 +42,21 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         Command="{Binding GoToTradeWithBankCommand}" />
+                <Button Text="{x:Static m:Strings.Back}"
+                        FontAttributes="Bold"
+                        FontSize="23"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        Command="{Binding ClosePopupCommand}"
+                        CommandParameter="{x:Reference TradePopup}" />
+                <Button Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="{x:Static m:Strings.CancelTrade}"
+                        Command="{Binding CaneclTradeCommand}" />
             </Grid>
             <Grid IsVisible="{Binding IsVisibleTradeWithBank}"
                   RowDefinitions="auto,auto,auto,auto,auto,auto"
@@ -83,7 +89,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.WoodImage}" />
                             </MultiBinding>
@@ -98,7 +104,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.BrickImage}" />
                             </MultiBinding>
@@ -113,7 +119,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.SheepImage}" />
                             </MultiBinding>
@@ -128,7 +134,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.WheatImage}" />
                             </MultiBinding>
@@ -143,7 +149,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.FourToOne}" />
                                 <Binding Source="{x:Static m:Strings.OreImage}" />
                             </MultiBinding>
@@ -187,13 +193,13 @@
                                  HeightRequest="53"
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
-                            <ImageButton.CommandParameter>
-                                <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                   <Binding Source="{x:Static m:Strings.ThreeToOne}" />
-                                    <Binding Source="{x:Static m:Strings.WoodImage}" />
-                                </MultiBinding>
-                            </ImageButton.CommandParameter>
-                        </ImageButton>
+                        <ImageButton.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
+                                <Binding Source="{x:Static m:Strings.ThreeToOne}" />
+                                <Binding Source="{x:Static m:Strings.WoodImage}" />
+                            </MultiBinding>
+                        </ImageButton.CommandParameter>
+                    </ImageButton>
                     <ImageButton Source="{x:Static m:Strings.BrickImage}"
                                  Grid.Column="1"
                                  HorizontalOptions="Center"
@@ -205,7 +211,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.ThreeToOne}" />
                                 <Binding Source="{x:Static m:Strings.BrickImage}" />
                             </MultiBinding>
@@ -222,7 +228,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.ThreeToOne}" />
                                 <Binding Source="{x:Static m:Strings.SheepImage}" />
                             </MultiBinding>
@@ -239,7 +245,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.ThreeToOne}" />
                                 <Binding Source="{x:Static m:Strings.WheatImage}" />
                             </MultiBinding>
@@ -256,7 +262,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.ThreeToOne}" />
                                 <Binding Source="{x:Static m:Strings.OreImage}" />
                             </MultiBinding>
@@ -286,7 +292,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.TwoToOne}" />
                                 <Binding Source="{x:Static m:Strings.WoodImage}" />
                             </MultiBinding>
@@ -303,7 +309,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.TwoToOne}" />
                                 <Binding Source="{x:Static m:Strings.BrickImage}" />
                             </MultiBinding>
@@ -320,7 +326,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.TwoToOne}" />
                                 <Binding Source="{x:Static m:Strings.SheepImage}" />
                             </MultiBinding>
@@ -337,7 +343,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.TwoToOne}" />
                                 <Binding Source="{x:Static m:Strings.WheatImage}" />
                             </MultiBinding>
@@ -354,7 +360,7 @@
                                  WidthRequest="53"
                                  Command="{Binding TradeWithBankCommand}">
                         <ImageButton.CommandParameter>
-                            <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                            <MultiBinding Converter="{StaticResource MultiObjectConverter}">
                                 <Binding Source="{x:Static m:Strings.TwoToOne}" />
                                 <Binding Source="{x:Static m:Strings.OreImage}" />
                             </MultiBinding>
@@ -440,7 +446,7 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         Text="{x:Static m:Strings.ConfirmTrade}"
-                        Command="{Binding ConfirmTradeWithBankCommand}"/>
+                        Command="{Binding ConfirmTradeWithBankCommand}" />
             </Grid>
             <Grid IsVisible="{Binding IsVisibleTradeWithPlayer}"
                   RowDefinitions="auto,auto,auto,auto,auto,auto">
@@ -466,33 +472,36 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center" />
                 <Border Grid.Row="2"
-                        StrokeShape="RoundRectangle 20,20,20,20">
+                        StrokeShape="RoundRectangle 20,20,20,20"
+                        BackgroundColor="#E6FFFFFF">
                     <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
                           HorizontalOptions="Center"
                           VerticalOptions="Center">
-                        <ImageButton Source="{x:Static m:Strings.WoodImage}"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     IsEnabled="{Binding OwnsCards[0]}"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.WoodImage}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsEnabled="{Binding OwnsCards[0]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                FontSize="18"
+                               TextColor="White"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding WoodGiveAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.BrickImage}"
-                                     Grid.Column="1"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     IsEnabled="{Binding OwnsCards[1]}"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.BrickImage}"
+                               Grid.Column="1"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsEnabled="{Binding OwnsCards[1]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="1"
+                               TextColor="White"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
@@ -500,15 +509,16 @@
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding BrickGiveAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.SheepImage}"
-                                     Grid.Column="2"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     IsEnabled="{Binding OwnsCards[2]}"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.SheepImage}"
+                               Grid.Column="2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsEnabled="{Binding OwnsCards[2]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="2"
+                               TextColor="White"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
@@ -516,15 +526,16 @@
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding SheepGiveAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.WheatImage}"
-                                     Grid.Column="3"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     IsEnabled="{Binding OwnsCards[3]}"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.WheatImage}"
+                               Grid.Column="3"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsEnabled="{Binding OwnsCards[3]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="3"
+                               TextColor="White"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
@@ -532,15 +543,16 @@
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding WheatGiveAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.OreImage}"
-                                     Grid.Column="4"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     IsEnabled="{Binding OwnsCards[4]}"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.OreImage}"
+                               Grid.Column="4"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsEnabled="{Binding OwnsCards[4]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="4"
+                               TextColor="White"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
@@ -558,77 +570,83 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center" />
                 <Border Grid.Row="4"
-                        StrokeShape="RoundRectangle 20,20,20,20">
+                        StrokeShape="RoundRectangle 20,20,20,20"
+                        BackgroundColor="#E6FFFFFF">
                     <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
                           HorizontalOptions="Center"
                           VerticalOptions="Center">
-                        <ImageButton Source="{x:Static m:Strings.WoodImage}"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.WoodImage}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                FontSize="18"
+                               TextColor="White"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding WoodGetAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.BrickImage}"
-                                     Grid.Column="1"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.BrickImage}"
+                               Grid.Column="1"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="1"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
+                               TextColor="White"
                                VerticalOptions="Center"
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding BrickGetAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.SheepImage}"
-                                     Grid.Column="2"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.SheepImage}"
+                               Grid.Column="2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="2"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
+                               TextColor="White"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding SheepGetAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.WheatImage}"
-                                     Grid.Column="3"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.WheatImage}"
+                               Grid.Column="3"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="3"
                                FontSize="18"
                                HorizontalTextAlignment="Center"
+                               TextColor="White"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
                                Keyboard="Numeric"
                                Placeholder="{x:Static m:Strings.Zero}"
                                Text="{Binding WheatGetAmount}" />
-                        <ImageButton Source="{x:Static m:Strings.OreImage}"
-                                     Grid.Column="4"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     HeightRequest="53"
-                                     WidthRequest="53" />
+                        <Image Source="{x:Static m:Strings.OreImage}"
+                               Grid.Column="4"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HeightRequest="53"
+                               WidthRequest="53" />
                         <Entry FontAttributes="Bold"
                                Grid.Column="4"
                                FontSize="18"
+                               TextColor="White"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
@@ -641,7 +659,234 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         Text="{x:Static m:Strings.ConfirmTrade}"
-                        Command="{Binding ConfirmTradeWithPlayerCommand}" />
+                        Command="{Binding ConfirmTradeWithPlayerCommand}"
+                        CommandParameter="{x:Reference TradePopup}" />
+            </Grid>
+            <Grid IsVisible="{Binding IsVisibleReciveTradeWithPlayer}"
+                  RowDefinitions="auto,auto,auto,auto,auto,auto"
+                  ColumnDefinitions="auto,auto">
+                <Label Text="{x:Static m:Strings.TradeSender}"
+                       TextColor="DarkOrange"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+                <Label Text="{Binding PlayersInTrade[0]}"
+                       Grid.Column="1"
+                       TextColor="DodgerBlue"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+                <Label  Text="{x:Static m:Strings.Reciveing}"
+                        Grid.Row="1"
+                        FontAttributes="Bold"
+                        Grid.ColumnSpan="2"
+                        FontSize="20"
+                        TextColor="DarkOrange"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                <Border Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        StrokeShape="RoundRectangle 20,20,20,20"
+                        BackgroundColor="#E6FFFFFF">
+                    <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center">
+                        <Image Source="{x:Static m:Strings.WoodImage}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[0]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="White"
+                               IsVisible="{Binding ReciverGets[0]}"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{Binding WoodGiveAmount}" />
+                        <Image Source="{x:Static m:Strings.BrickImage}"
+                               Grid.Column="1"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[1]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="1"
+                               TextColor="White"
+                               IsVisible="{Binding ReciverGets[1]}"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{Binding BrickGiveAmount}" />
+                        <Image Source="{x:Static m:Strings.SheepImage}"
+                               Grid.Column="2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[2]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="2"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[2]}"
+                               Text="{Binding SheepGiveAmount}" />
+                        <Image Source="{x:Static m:Strings.WheatImage}"
+                               Grid.Column="3"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[3]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="3"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[3]}"
+                               Text="{Binding WheatGiveAmount}" />
+                        <Image Source="{x:Static m:Strings.OreImage}"
+                               Grid.Column="4"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[4]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="4"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGets[4]}"
+                               Text="{Binding OreGiveAmount}" />
+                    </Grid>
+                </Border>
+                <Label  Text="{x:Static m:Strings.Giving}"
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="3"
+                        TextColor="DarkOrange"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                <Border Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        StrokeShape="RoundRectangle 20,20,20,20"
+                        BackgroundColor="#E6FFFFFF">
+                    <Grid ColumnDefinitions="auto,auto,auto,auto,auto"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center">
+                        <Image Source="{x:Static m:Strings.WoodImage}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[0]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="White"
+                               IsVisible="{Binding ReciverGives[0]}"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{Binding WoodGetAmount}" />
+                        <Image Source="{x:Static m:Strings.BrickImage}"
+                               Grid.Column="1"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[1]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="1"
+                               TextColor="White"
+                               IsVisible="{Binding ReciverGives[1]}"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{Binding BrickGetAmount}" />
+                        <Image Source="{x:Static m:Strings.SheepImage}"
+                               Grid.Column="2"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[2]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="2"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[2]}"
+                               Text="{Binding SheepGetAmount}" />
+                        <Image Source="{x:Static m:Strings.WheatImage}"
+                               Grid.Column="3"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[3]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="3"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[3]}"
+                               Text="{Binding WheatGetAmount}" />
+                        <Image Source="{x:Static m:Strings.OreImage}"
+                               Grid.Column="4"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[4]}"
+                               HeightRequest="53"
+                               WidthRequest="53" />
+                        <Label FontAttributes="Bold"
+                               Grid.Column="4"
+                               TextColor="White"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ReciverGives[4]}"
+                               Text="{Binding OreGetAmount}" />
+                    </Grid>
+                </Border>
+                <Button Grid.Row="5"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="{x:Static m:Strings.Decline}"
+                        Command="{Binding DeclineTradeCommand}"
+                        CommandParameter="{x:Reference TradePopup}" />
+                <Button Grid.Row="5"
+                        Grid.Column="1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="{x:Static m:Strings.Accept}"
+                        Command="{Binding AcceptTradeCommand}"
+                        CommandParameter="{x:Reference TradePopup}" />
+                <Button Grid.Row="5"
+                        Grid.ColumnSpan="2"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Text="{x:Static m:Strings.CounterOffer}"
+                        Command="{Binding CounterOfferCommand}" />
             </Grid>
         </VerticalStackLayout>
     </Border>
