@@ -23,14 +23,13 @@ namespace CatanGame.ViewModels
         public bool IsBusy { get; set; } = false;
         public Color? TimeColor => animations.TimeColor;
         public double TimeOpacity => animations.TimeOpacity;
-
         public GamePageVM(Game game, Grid grdBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage)
         {
             animations = new Animations();
             this.game = game;
             board = new(game);
             board.Init(grdBoard, grdPieces, otherPieces, frame, gamePage);
-            board.EndTurnOnClicked += EndTurn;
+            board.EndTurnOnClicked += OnEndTurn;
             this.game.EndTurnOutOfTime += OutOfTimeEndTurn;
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;
@@ -39,12 +38,27 @@ namespace CatanGame.ViewModels
             this.game.TimeLeftChanged += UpdateTimeLeft;
             this.game.GridChanged += OnGridChanged;
             this.game.AnimationStatusChanged += OnAnimationStatusChanged;
+            this.game.ResourceCountersUpdated += OnResourceCountersUpdated;
+            this.game.TradeRecived += OnTradeRecived;
+            this.game.CloseTradePopUp += OnCloseTradePopUp;
             animations.OpacityChanged += OnOpacityChanged;
             OnPropertyChanged(nameof(game.TimeLeft));
             OnPropertyChanged(nameof(board));
             game.StartGame();
         }
 
+        private void OnCloseTradePopUp(object? sender, EventArgs e)
+        {
+            board.CloseTradePopUp();
+        }
+        private void OnTradeRecived(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>{ board.TradeButton.Command.Execute(null);});
+        }
+        private void OnResourceCountersUpdated(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() => board.UpdateResourceCounters());
+        }
         private void OnAnimationStatusChanged(object? sender, EventArgs e)
         {
             board.OnAnimationStatusChanged();
@@ -53,7 +67,6 @@ namespace CatanGame.ViewModels
         {
             MainThread.InvokeOnMainThreadAsync(() => board.OnChange());
         }
-
         private void OnOpacityChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(TimeColor));
@@ -82,7 +95,7 @@ namespace CatanGame.ViewModels
             });
             EndTurn();
         }
-        private void EndTurn(object? sender, EventArgs e)
+        private void OnEndTurn(object? sender, EventArgs e)
         {
             EndTurn();
         }

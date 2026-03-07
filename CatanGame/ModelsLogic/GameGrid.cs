@@ -640,12 +640,24 @@ namespace CatanGame.ModelsLogic
         protected override void UpdateBoardPices()
         {
             Dictionary<string, object> dict = new()
-                    {
-                        { nameof(game.BoardPieces), game.BoardPieces }
-                    };
+            {
+                { nameof(game.BoardPieces), game.BoardPieces }
+            };
             game.UpdateFields(dict);
         }
-        protected override void UpdateResourceCounters()
+        protected override void OnTradeClicked()
+        {
+            if(CurrentTradePopUp != null)
+                CloseTradePopUp();
+            CurrentTradePopUp = new(game);
+            CurrentGamePage?.ShowPopup(CurrentTradePopUp);
+        }
+        public override void CloseTradePopUp()
+        {
+            CurrentTradePopUp?.Close();
+            CurrentTradePopUp = null;
+        }
+        public override void UpdateResourceCounters()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
@@ -662,7 +674,6 @@ namespace CatanGame.ModelsLogic
             });
 
         }
-
         public override void OnAnimationStatusChanged()
         {
             if (game.IsRolling)
@@ -1060,7 +1071,7 @@ namespace CatanGame.ModelsLogic
             OreCountLabel.Text = game.PlayerOreCount.ToString();
             Row.Add(OreCountLabel, 4);
             otherPieces.Add(Row, 1, 5);
-            Button button = new()
+            TradeButton = new()
             {
                 Text = Strings.Trade,
                 HorizontalOptions = LayoutOptions.Center,
@@ -1069,15 +1080,9 @@ namespace CatanGame.ModelsLogic
                 HeightRequest = sizeProportion * 0.12,
                 WidthRequest = sizeProportion * 0.37,
                 FontAttributes = FontAttributes.Bold,
-                Command = new Command(OnCounterClicked)
+                Command = new Command(OnTradeClicked)
             };
-            otherPieces.Add(button, 1, 4);
-        }
-
-        protected void OnCounterClicked()
-        {
-            TradePage popup = new(game);
-            CurrentGamePage?.ShowPopup(popup);
+            otherPieces.Add(TradeButton, 1, 4);
         }
         public override void ShowBuildOptions(string pieceType)
         {

@@ -10,6 +10,7 @@ namespace CatanGame.Models
     public abstract class GameGridModel : Grid
     {
         protected GamePage? CurrentGamePage;
+        protected TradePage? CurrentTradePopUp;
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected Image[][] BoardPieceImages = new Image[24][];
         protected ImageButton[][] RobberImages = new ImageButton[5][];
@@ -25,6 +26,7 @@ namespace CatanGame.Models
         public Image LongestRoad { get; set; } = new();
         public Image LargestArmy { get; set; } = new();
         public Button RollButton { get; set; } = new();
+        public Button TradeButton { get; set; } = new();
         public Label RollLabel { get; set; } = new();
         public Label WoodCountLabel { get; set; } = new();
         public Label BrickCountLabel { get; set; } = new();
@@ -36,7 +38,9 @@ namespace CatanGame.Models
         protected abstract void OnRobberPlacementClicked(object? sender, EventArgs e);
         protected abstract void BuildTown(int row, int column);
         protected abstract void BuildRoad(int row, int column);
+        protected abstract void CheckIfOnHarbor(int row, int column);
         protected abstract void OnDiceUpdated(Task task);
+        protected abstract void OnTradeClicked();
         protected abstract void RollDice();
         protected abstract void StartAnimations();
         protected abstract void StopAnimations();
@@ -47,16 +51,16 @@ namespace CatanGame.Models
         protected abstract void BuildTownAtFirstPosition();
         protected abstract void BuildRoadAtFirstPosition();
         protected abstract void ShowRobberPlacmentOptions();
-        protected abstract void CheckIfOnHarbor(int row, int column);
         protected abstract void EndTurn();
         protected abstract void UpdateBoardPices();
-        protected abstract void UpdateResourceCounters();
         protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);
         protected abstract int GetPieceIndexFromColor(int row, int column);
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
         protected abstract Grid CreateRobberImage(int row, int column);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
+        public abstract void CloseTradePopUp();
+        public abstract void UpdateResourceCounters();
         public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();

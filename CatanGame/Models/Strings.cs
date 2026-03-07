@@ -215,6 +215,8 @@ namespace CatanGame.Models
         public const string Giving = "Giving: ";
         public const string Accept = "Accept";
         public const string Decline = "Decline";
-        public const string CounterOffer = "Counter Offer";
+        public const string CounterOffer = "Counter offer";
+        public const string TradedWith = "Traded with: ";
+        public const string PlayerCounterOffer = "Counter offer recived";
     }
 }

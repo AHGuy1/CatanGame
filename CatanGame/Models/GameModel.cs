@@ -37,6 +37,12 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler? AnimationStatusChanged;
         [Ignored]
+        public EventHandler? ResourceCountersUpdated;
+        [Ignored]
+        public EventHandler? TradeRecived;
+        [Ignored]
+        public EventHandler? CloseTradePopUp;
+        [Ignored]
         public EventHandler<string>? GameDeleted;
         [Ignored]
         public EventHandler<int>? PlayerLeft;
@@ -95,16 +101,16 @@ namespace CatanGame.Models
         public bool TradeInProgress { get; set; } = false;
         public string TradeMessage { get; set; } = string.Empty;
         public string GameCode { get; set; } = string.Empty;
-        public string WoodGiveAmount { get; set; } = Strings.Zero;
-        public string BrickGiveAmount { get; set; } = Strings.Zero;
-        public string SheepGiveAmount { get; set; } = Strings.Zero;
-        public string WheatGiveAmount { get; set; } = Strings.Zero;
-        public string OreGiveAmount { get; set; } = Strings.Zero;
-        public string WoodGetAmount { get; set; } = Strings.Zero;
-        public string BrickGetAmount { get; set; } = Strings.Zero;
-        public string SheepGetAmount { get; set; } = Strings.Zero;
-        public string WheatGetAmount { get; set; } = Strings.Zero;
-        public string OreGetAmount { get; set; } = Strings.Zero;
+        public string WoodGiveAmount { get; set; } = string.Empty;
+        public string BrickGiveAmount { get; set; } = string.Empty;
+        public string SheepGiveAmount { get; set; } = string.Empty;
+        public string WheatGiveAmount { get; set; } = string.Empty;
+        public string OreGiveAmount { get; set; } = string.Empty;
+        public string WoodGetAmount { get; set; } = string.Empty;
+        public string BrickGetAmount { get; set; } = string.Empty;
+        public string SheepGetAmount { get; set; } = string.Empty;
+        public string WheatGetAmount { get; set; } = string.Empty;
+        public string OreGetAmount { get; set; } = string.Empty;
         public string SelectedPlayerName = string.Empty;
         public int[] RobberPlacment { get; set; } = new int[2];
         public string[] PlayersInTrade { get; set; } = new string[2];
@@ -121,6 +127,9 @@ namespace CatanGame.Models
         protected abstract void OnCompleteAddPlayerName(Task task);
         protected abstract void OnTurnChanged(Task task);
         protected abstract void OnMessageReceived(long timeleft);
+        protected abstract void CheckTradeResponce();
+        protected abstract void ResetTradeParameters();
+        protected abstract void ReciveCounterOffer();
         protected abstract void StartTimer();
         protected abstract void RegisterTimer();
         protected abstract void StopTimer();
@@ -129,6 +138,8 @@ namespace CatanGame.Models
         protected abstract void ShowTradeAlert();
         protected abstract void UpdateTradeParamaters();
         protected abstract void AllocateTradeResources();
+        protected abstract void RecivedTrade();
+        protected abstract void CloseTrade();
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
@@ -149,5 +160,7 @@ namespace CatanGame.Models
         public abstract void RemoveSnapshotListener();
         public abstract void AddSnapshotListener();
         public abstract bool CenTradeWithPlayer();
+        public abstract bool CenAcceptTrade();
+        public abstract string[] GetPlayersToTradeWith();
     }
 }
