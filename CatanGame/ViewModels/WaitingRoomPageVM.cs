@@ -88,7 +88,7 @@ namespace CatanGame.ViewModels
 
         private bool CanStartGame()
         {
-            return true; /*!String.IsNullOrWhiteSpace(game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;*/
+            return true; /*!String.IsNullOrWhiteSpace(Game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;*/
         }
 
         private void StartGame()

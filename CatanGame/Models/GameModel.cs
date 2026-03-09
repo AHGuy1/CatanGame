@@ -139,7 +139,6 @@ namespace CatanGame.Models
         protected abstract void UpdateTradeParamaters();
         protected abstract void AllocateTradeResources();
         protected abstract void RecivedTrade();
-        protected abstract bool CenTrade();
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);

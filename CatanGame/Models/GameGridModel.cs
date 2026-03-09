@@ -14,10 +14,10 @@ namespace CatanGame.Models
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected Image[][] BoardPieceImages = new Image[24][];
         protected ImageButton[][] RobberImages = new ImageButton[5][];
-        protected Game game = new();
         protected ICommand? ShowBuildOptionsCommand { get; set; }
         protected ICommand? EndTurnCommand { get; set; }
 
+        public Game Game = new();
         public EventHandler? EndTurnOnClicked;
         public SKLottieView Dice1Roll { get; set; } = new();
         public SKLottieView Dice2Roll { get; set; } = new();
@@ -57,6 +57,7 @@ namespace CatanGame.Models
         protected abstract int GetPieceIndexFromColor(int row, int column);
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
+        protected abstract bool CenTrade();
         protected abstract Grid CreateRobberImage(int row, int column);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
         public abstract void CloseTradePopUp();
@@ -64,6 +65,7 @@ namespace CatanGame.Models
         public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();
+        public abstract void SetVisibleRobberImages(int row, int column);
         public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage);
         public abstract void ShowBuildOptions(string pieceType);
     }

@@ -54,7 +54,7 @@ namespace CatanGame.ModelsLogic
         protected override void InitHex(string[] tileTypes, string[] tileNumbers)
         {
             Hexes = new HexTile[19];
-            // Initialize the hex tiles on the game board
+            // Initialize the hex tiles on the Game board
             for (int i = 1; i < 6; i++)
             {
                 for (int k = 1; k < 1 + GameGrid.GetAmountOfColumnsTiles(i); k++)
