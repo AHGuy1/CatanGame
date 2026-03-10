@@ -54,13 +54,13 @@ namespace CatanGame.ViewModels
         }
         public string WoodGiveAmount
         {
-            get => game.WoodGiveAmount;
+            get => game.WoodTradeGiveAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWoodCount)
-                    game.WoodGiveAmount = game.PlayerWoodCount.ToString();
+                    game.WoodTradeGiveAmount = game.PlayerWoodCount.ToString();
                 else
-                    game.WoodGiveAmount = value;
+                    game.WoodTradeGiveAmount = value;
                 OnPropertyChanged(nameof(WoodGiveAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -69,13 +69,13 @@ namespace CatanGame.ViewModels
         }
         public string BrickGiveAmount
         {
-            get => game.BrickGiveAmount;
+            get => game.BrickTradeGiveAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerBrickCount)
-                    game.BrickGiveAmount = game.PlayerBrickCount.ToString();
+                    game.BrickTradeGiveAmount = game.PlayerBrickCount.ToString();
                 else
-                    game.BrickGiveAmount = value;
+                    game.BrickTradeGiveAmount = value;
                 OnPropertyChanged(nameof(BrickGiveAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -84,13 +84,13 @@ namespace CatanGame.ViewModels
         }
         public string SheepGiveAmount
         {
-            get => game.SheepGiveAmount;
+            get => game.SheepTradeGiveAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerSheepCount)
-                    game.SheepGiveAmount = game.PlayerSheepCount.ToString();
+                    game.SheepTradeGiveAmount = game.PlayerSheepCount.ToString();
                 else
-                    game.SheepGiveAmount = value;
+                    game.SheepTradeGiveAmount = value;
                 OnPropertyChanged(nameof(SheepGiveAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -99,13 +99,13 @@ namespace CatanGame.ViewModels
         }
         public string WheatGiveAmount
         {
-            get => game.WheatGiveAmount;
+            get => game.WheatTradeGiveAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWheatCount)
-                    game.WheatGiveAmount = game.PlayerWheatCount.ToString();
+                    game.WheatTradeGiveAmount = game.PlayerWheatCount.ToString();
                 else
-                    game.WheatGiveAmount = value;
+                    game.WheatTradeGiveAmount = value;
                 OnPropertyChanged(nameof(WheatGiveAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -114,13 +114,13 @@ namespace CatanGame.ViewModels
         }
         public string OreGiveAmount
         {
-            get => game.OreGiveAmount;
+            get => game.OreTradeGiveAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerOreCount)
-                    game.OreGiveAmount = game.PlayerOreCount.ToString();
+                    game.OreTradeGiveAmount = game.PlayerOreCount.ToString();
                 else
-                    game.OreGiveAmount = value;
+                    game.OreTradeGiveAmount = value;
                 OnPropertyChanged(nameof(OreGiveAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -129,13 +129,13 @@ namespace CatanGame.ViewModels
         }
         public string WoodGetAmount
         {
-            get => game.WoodGetAmount;
+            get => game.WoodTradeGetAmount;
             set
             {
                 if(!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                    game.WoodGetAmount = 25.ToString();
+                    game.WoodTradeGetAmount = 25.ToString();
                 else
-                    game.WoodGetAmount = value;
+                    game.WoodTradeGetAmount = value;
                 OnPropertyChanged(nameof(WoodGetAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -144,13 +144,13 @@ namespace CatanGame.ViewModels
         }
         public string BrickGetAmount
         {
-            get => game.BrickGetAmount;
+            get => game.BrickTradeGetAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                    game.BrickGetAmount = 25.ToString();
+                    game.BrickTradeGetAmount = 25.ToString();
                 else
-                    game.BrickGetAmount = value;
+                    game.BrickTradeGetAmount = value;
                 OnPropertyChanged(nameof(BrickGetAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -159,13 +159,13 @@ namespace CatanGame.ViewModels
         }
         public string SheepGetAmount
         {
-            get => game.SheepGetAmount;
+            get => game.SheepTradeGetAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                    game.SheepGetAmount = 25.ToString();
+                    game.SheepTradeGetAmount = 25.ToString();
                 else
-                    game.SheepGetAmount = value;
+                    game.SheepTradeGetAmount = value;
                 OnPropertyChanged(nameof(SheepGetAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -174,13 +174,13 @@ namespace CatanGame.ViewModels
         }
         public string WheatGetAmount
         {
-            get => game.WheatGetAmount;
+            get => game.WheatTradeGetAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                    game.WheatGetAmount = 25.ToString();
+                    game.WheatTradeGetAmount = 25.ToString();
                 else
-                    game.WheatGetAmount = value;
+                    game.WheatTradeGetAmount = value;
                 OnPropertyChanged(nameof(WheatGetAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));
@@ -189,13 +189,13 @@ namespace CatanGame.ViewModels
         }
         public string OreGetAmount
         {
-            get => game.OreGetAmount;
+            get => game.OreTradeGetAmount;
             set
             {
                 if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
-                    game.OreGetAmount = 25.ToString();
+                    game.OreTradeGetAmount = 25.ToString();
                 else
-                    game.OreGetAmount = value;
+                    game.OreTradeGetAmount = value;
                 OnPropertyChanged(nameof(OreGetAmount));
                 OnPropertyChanged(nameof(ReciverGets));
                 OnPropertyChanged(nameof(ReciverGives));

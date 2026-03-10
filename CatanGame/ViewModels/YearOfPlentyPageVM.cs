@@ -1,0 +1,40 @@
+﻿using CatanGame.Models;
+using CatanGame.ModelsLogic;
+using System.Windows.Input;
+
+namespace CatanGame.ViewModels
+{
+    public class YearOfPlentyPageVM : ObservableObject
+    {
+        private readonly SpecialCards SpecialCards;
+
+        public ICommand PickCardToGetCommand { get; }
+        public ICommand ConfirmCommand { get; }
+        public string SelectedWoodCount => SpecialCards.SelectedWoodCount.ToString();
+        public string SelectedBrickCount => SpecialCards.SelectedBrickCount.ToString();
+        public string SelectedSheepCount => SpecialCards.SelectedSheepCount.ToString();
+        public string SelectedWheatCount => SpecialCards.SelectedWheatCount.ToString();
+        public string SelectedOreCount => SpecialCards.SelectedOreCount.ToString();
+
+        public YearOfPlentyPageVM(SpecialCards specialCards)
+        {
+            SpecialCards = specialCards;
+            PickCardToGetCommand = new Command(PickCardToGet);
+            ConfirmCommand = new Command(ConfirmSelectedCards);
+        }
+
+        private void PickCardToGet(object parameter)
+        {
+            SpecialCards.PickCardsToGet(parameter);
+            OnPropertyChanged(nameof(SelectedWoodCount));
+            OnPropertyChanged(nameof(SelectedBrickCount));
+            OnPropertyChanged(nameof(SelectedSheepCount));
+            OnPropertyChanged(nameof(SelectedWheatCount));
+            OnPropertyChanged(nameof(SelectedOreCount));
+        }
+        private void ConfirmSelectedCards(object Paramter)
+        {
+            SpecialCards.ConfirmSelectedCards(Paramter);
+        }
+    }
+}

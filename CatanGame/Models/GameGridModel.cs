@@ -7,9 +7,11 @@ using System.Windows.Input;
 
 namespace CatanGame.Models
 {
-    public abstract class GameGridModel : Grid
+    public abstract class GameGridModel
     {
-        protected GamePage? CurrentGamePage;
+        protected Game Game = new();
+        protected SpecialCards SpecialCards = new();
+        protected Board BoardData = new();
         protected TradePage? CurrentTradePopUp;
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected Image[][] BoardPieceImages = new Image[24][];
@@ -17,7 +19,7 @@ namespace CatanGame.Models
         protected ICommand? ShowBuildOptionsCommand { get; set; }
         protected ICommand? EndTurnCommand { get; set; }
 
-        public Game Game = new();
+        public GamePage? CurrentGamePage;
         public EventHandler? EndTurnOnClicked;
         public SKLottieView Dice1Roll { get; set; } = new();
         public SKLottieView Dice2Roll { get; set; } = new();

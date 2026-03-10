@@ -11,6 +11,8 @@ namespace CatanGame.ModelsLogic
         public GameGrid(Game game)
         {
             this.Game = game;
+            BoardData = game.GameBoard;
+            SpecialCards = new(this, Game, BoardData);
             for (int i = 1; i < 24; i++)
             {
                 BoardPieceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
@@ -287,10 +289,10 @@ namespace CatanGame.ModelsLogic
                 {
                     RobberImages[Game.RobberPlacment[0]][Game.RobberPlacment[1]].Source = null;
                     imageButton.Source = Strings.RobberImage;
-                    Game.GameBoard.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = false;
+                    BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = false;
                     Game.RobberPlacment[0] = imageButton.RowIndex;
                     Game.RobberPlacment[1] = imageButton.ColumnIndex;
-                    Game.GameBoard.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
+                    BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
                     Dictionary<string, object> dict = new()
                     {
                         { nameof(Game.RobberPlacment), Game.RobberPlacment }
@@ -325,7 +327,7 @@ namespace CatanGame.ModelsLogic
             {
                 for (int i = 0; i < 5; i++)
                     for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
-                        if (!Game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && RobberImages[i][k] != null)
+                        if (!BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && RobberImages[i][k] != null)
                             SetVisibleRobberImages(i, k);
             });
         }
@@ -351,7 +353,14 @@ namespace CatanGame.ModelsLogic
                 if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                 {
                     BuildRoad(button.RowIndex, button.ColumnIndex - 1);
-                    if (Game.Turn > Game.PlayerCount * 2)
+                    if(SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.First)
+                    {
+                        SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Second;
+                        ShowBuildOptions(Strings.Road);
+                    }
+                    else if(SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.Second)
+                        SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Disabled;
+                    else if (Game.Turn > Game.PlayerCount * 2)
                     {
                         Game.PlayerBrickCount--;
                         Game.PlayerWoodCount--;
@@ -376,8 +385,8 @@ namespace CatanGame.ModelsLogic
                         Game.BoardPieces[((button.RowIndex - 1) * 12) + (button.ColumnIndex - 1)] = BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()![6..];
                         Game.PlayerTownCount--;
                         Game.PlayerCityCount++;
-                        Game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = Game.PlayerIndicator;
-                        Game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = BoardModel.PieceType.City;
+                        BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex = Game.PlayerIndicator;
+                        BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType = BoardModel.PieceType.City;
                         Game.PlayerOreCount -= 3;
                         Game.PlayerWheatCount -= 2;
                     }
@@ -386,13 +395,13 @@ namespace CatanGame.ModelsLogic
                 }
                 HideButtuns();
                 //if just built a town and is one of the first 2 turns show road building options
-                if (Game.Turn <= Game.PlayerCount * 2 && button.RowIndex % 2 == 1 && Game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == Game.PlayerIndicator && Game.GameBoard.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
+                if (Game.Turn <= Game.PlayerCount * 2 && button.RowIndex % 2 == 1 && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == Game.PlayerIndicator && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);
             }
         }
         protected override void CheckLongestRoad()
         {
-            EdgeLink[] edges = Game.GameBoard.Edges;
+            EdgeLink[] edges = BoardData.Edges;
             int playerLongestRoad = 0;
             for (int i = 0; i < edges.Length; i++)
             {
@@ -576,7 +585,7 @@ namespace CatanGame.ModelsLogic
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                     {
-                        if (Game.GameBoard.Vertices[GetPieceLocationInArray(i, k)].PieceType == BoardModel.PieceType.None)
+                        if (BoardData.Vertices[GetPieceLocationInArray(i, k)].PieceType == BoardModel.PieceType.None)
                         {
                             BuildTown(i, k);
                             UpdateBoardPices();
@@ -593,8 +602,8 @@ namespace CatanGame.ModelsLogic
                 BoardPieceImages[row][column].Source = (GetPiecesColor(Game.PlayerIndicator + 1) + Strings.Town).ToLower();
                 Game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
                 Game.PlayerTownCount++;
-                Game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = Game.PlayerIndicator;
-                Game.GameBoard.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
+                BoardData.Vertices[GetPieceLocationInArray(row, column)].PlayerIndex = Game.PlayerIndicator;
+                BoardData.Vertices[GetPieceLocationInArray(row, column)].PieceType = BoardModel.PieceType.Town;
                 CheckIfOnHarbor(row, column);
             });
         }
@@ -622,7 +631,7 @@ namespace CatanGame.ModelsLogic
                 for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                     {
-                        if (Game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex == -1)
+                        if (BoardData.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex == -1)
                         {
                             BuildRoad(i,k);
                             UpdateBoardPices();
@@ -635,7 +644,7 @@ namespace CatanGame.ModelsLogic
         {
             BoardPieceImages[row][column].Source = (GetPiecesColor(Game.PlayerIndicator + 1) + Strings.Road).ToLower();
             Game.BoardPieces[((row - 1) * 12) + column] = BoardPieceImages[row][column].Source.ToString()![6..];
-            Game.GameBoard.Edges[GetPieceLocationInArray(row, column)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(row, column);
+            BoardData.Edges[GetPieceLocationInArray(row, column)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(row, column);
             Game.PlayerRoadCount++;
             CheckLongestRoad();
         }
@@ -709,10 +718,10 @@ namespace CatanGame.ModelsLogic
                         {
                             BoardPieceImages[i][k].Source = Game.BoardPieces[((i - 1) * 12) + k];
                             if (i % 2 == 0)
-                                Game.GameBoard.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(i, k);
+                                BoardData.Edges[GetPieceLocationInArray(i, k)].RoadOwnerPlayerIndex = GetPieceIndexFromColor(i, k);
                             else
                             {
-                                VertexNode vertex = Game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                                VertexNode vertex = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                                 vertex.PlayerIndex = GetPieceIndexFromColor(i, k);
                                 vertex.PieceType = GetPieceType(i, k);
                                 if(vertex.PieceType == BoardModel.PieceType.Town)
@@ -721,15 +730,15 @@ namespace CatanGame.ModelsLogic
                         }
             for (int i = 0; i < 5; i++)
                 for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
-                    if (Game.GameBoard.Hexes[GetTileLocationInArray(i + 1,k + 1)].HasRobber &&( i != Game.RobberPlacment[0] || k != Game.RobberPlacment[1]))
+                    if (BoardData.Hexes[GetTileLocationInArray(i + 1,k + 1)].HasRobber &&( i != Game.RobberPlacment[0] || k != Game.RobberPlacment[1]))
                     {
                         RobberImages[i][k].Source = null;
-                        Game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = false;
+                        BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = false;
                     }
                     else if (i == Game.RobberPlacment[0] && k == Game.RobberPlacment[1])
                     {
                         RobberImages[i][k].Source = Strings.RobberImage;
-                        Game.GameBoard.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = true;
+                        BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = true;
                     }
             if (Game.PlayerLongestRoadLength > Game.LongestRoadLength)
             {
@@ -747,6 +756,7 @@ namespace CatanGame.ModelsLogic
                 LargestArmy.Opacity = Keys.DoesNotOwn;
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
             (EndTurnCommand as Command)?.ChangeCanExecute();
+            UpdateResourceCounters();
         }
         public override async void EnsurePlayerPlayed()
         {
@@ -903,8 +913,8 @@ namespace CatanGame.ModelsLogic
                 Game.UpdateFields(dict);
             }
             //Connect the Game logic board with the UI/UX board
-            Game.GameBoard.InitBoard(BoardPieceButtons, Game.TileTypes, Game.TileNumbers);
-            Game.GameBoard.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
+            BoardData.InitBoard(BoardPieceButtons, Game.TileTypes, Game.TileNumbers);
+            BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
             // Define the Rows In grdPieces (for UI/UX layout purposes)
             grdPieces.RowDefinitions.Add(new RowDefinition { Height = new(5, GridUnitType.Star) });
             for (int i = 0; i < 11; i++)
@@ -1111,7 +1121,7 @@ namespace CatanGame.ModelsLogic
                     {
                         if (i % 2 == 1)
                         {
-                            VertexNode vertexNode = Game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            VertexNode vertexNode = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                             if ((vertexNode.PieceType == BoardModel.PieceType.Town || vertexNode.PieceType == BoardModel.PieceType.City) && vertexNode.PlayerIndex == Game.PlayerIndicator)
                             {
                                 EdgeLink[] edges = vertexNode.Edges;
@@ -1122,7 +1132,7 @@ namespace CatanGame.ModelsLogic
                         }
                         else
                         {
-                            EdgeLink edge = Game.GameBoard.Edges[GetPieceLocationInArray(i, k)];
+                            EdgeLink edge = BoardData.Edges[GetPieceLocationInArray(i, k)];
                             if (edge.RoadOwnerPlayerIndex == Game.PlayerIndicator)
                             {
                                 //if vertex not owned by another player
@@ -1150,7 +1160,7 @@ namespace CatanGame.ModelsLogic
                 for (int i = 2; i < 24; i += 2)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
-                        EdgeLink edge = Game.GameBoard.Edges[GetPieceLocationInArray(i, k)];
+                        EdgeLink edge = BoardData.Edges[GetPieceLocationInArray(i, k)];
                         if (i % 2 == 0 && edge.RoadOwnerPlayerIndex == Game.PlayerIndicator)
                         {
                             if (edge.VertexNodeOne.PlayerIndex == -1)
@@ -1183,7 +1193,7 @@ namespace CatanGame.ModelsLogic
                     {
                         if (i % 2 == 1)
                         {
-                            VertexNode vertexNode = Game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            VertexNode vertexNode = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                             if (vertexNode.PlayerIndex == -1)
                             {
                                 bool cenBuild = true;
@@ -1203,7 +1213,7 @@ namespace CatanGame.ModelsLogic
                     {
                         if(i % 2 == 1)
                         {
-                            VertexNode vertexNode = Game.GameBoard.Vertices[GetPieceLocationInArray(i, k)];
+                            VertexNode vertexNode = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                             if (vertexNode.PieceType == BoardModel.PieceType.Town && vertexNode.PlayerIndex == Game.PlayerIndicator)
                                 BoardPieceButtons[i][k].BorderWidth = Keys.ButtonVisible;
                         }

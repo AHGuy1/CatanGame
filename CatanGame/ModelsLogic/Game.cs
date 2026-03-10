@@ -146,16 +146,16 @@ namespace CatanGame.ModelsLogic
                     };
                     UpdateFields(dict);
                 }
-                WoodGetAmount = updatedGame.WoodGetAmount;
-                BrickGetAmount = updatedGame.BrickGetAmount;
-                SheepGetAmount = updatedGame.SheepGetAmount;
-                WheatGetAmount = updatedGame.WheatGetAmount;
-                OreGetAmount = updatedGame.OreGetAmount;
-                WoodGiveAmount = updatedGame.WoodGiveAmount;
-                BrickGiveAmount = updatedGame.BrickGiveAmount;
-                SheepGiveAmount = updatedGame.SheepGiveAmount;
-                WheatGiveAmount = updatedGame.WheatGiveAmount;
-                OreGiveAmount = updatedGame.OreGiveAmount;
+                WoodTradeGetAmount = updatedGame.WoodTradeGetAmount;
+                BrickTradeGetAmount = updatedGame.BrickTradeGetAmount;
+                SheepTradeGetAmount = updatedGame.SheepTradeGetAmount;
+                WheatTradeGetAmount = updatedGame.WheatTradeGetAmount;
+                OreTradeGetAmount = updatedGame.OreTradeGetAmount;
+                WoodTradeGiveAmount = updatedGame.WoodTradeGiveAmount;
+                BrickTradeGiveAmount = updatedGame.BrickTradeGiveAmount;
+                SheepTradeGiveAmount = updatedGame.SheepTradeGiveAmount;
+                WheatTradeGiveAmount = updatedGame.WheatTradeGiveAmount;
+                OreTradeGiveAmount = updatedGame.OreTradeGiveAmount;
                 if(TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
                 {
                     PlayersInTrade = updatedGame.PlayersInTrade;
@@ -182,6 +182,70 @@ namespace CatanGame.ModelsLogic
                     TileTypes = updatedGame.TileTypes;
                 }
                 bool gridChanged = false;
+                if (MonoplizingPlayer != updatedGame.MonoplizingPlayer && updatedGame.MonoplizingPlayer != string.Empty)
+                {
+                    MonoplizingPlayer = updatedGame.MonoplizingPlayer;
+                    MonopolizedCard = updatedGame.MonopolizedCard;
+                    PlayersPassed++;
+                    if (MonopolizedCard == Strings.WoodImage)
+                    {
+                        MonoplizedCardsCount += PlayerWoodCount;
+                        PlayerWoodCount = 0;
+                    }
+                    else if (MonopolizedCard == Strings.BrickImage)
+                    {
+                        MonoplizedCardsCount += PlayerBrickCount;
+                        PlayerBrickCount = 0;
+                    }
+                    else if (MonopolizedCard == Strings.SheepImage)
+                    {
+                        MonoplizedCardsCount += PlayerSheepCount;
+                        PlayerSheepCount = 0;
+                    }
+                    else if (MonopolizedCard == Strings.WheatImage)
+                    {
+                        MonoplizedCardsCount += PlayerWheatCount;
+                        PlayerWheatCount = 0;
+                    }
+                    else if (MonopolizedCard == Strings.OreImage)
+                    {
+                        MonoplizedCardsCount += PlayerOreCount;
+                        PlayerOreCount = 0;
+                    }
+                    Dictionary<string, object> dict = new()
+                    {
+                        {nameof(PlayersPassed), PlayersPassed },
+                        {nameof(MonoplizedCardsCount), MonoplizedCardsCount }
+                    };
+                    UpdateFields(dict);
+                    gridChanged = true;
+                }
+                if (PlayersPassed == PlayerCount && MonoplizingPlayer == PlayerNames[PlayerIndicator])
+                {
+                    if (MonopolizedCard == Strings.WoodImage)
+                        PlayerWoodCount += MonoplizedCardsCount;
+                    else if (MonopolizedCard == Strings.BrickImage)
+                        PlayerBrickCount = MonoplizedCardsCount;
+                    else if (MonopolizedCard == Strings.SheepImage)
+                        PlayerSheepCount = MonoplizedCardsCount;
+                    else if (MonopolizedCard == Strings.WheatImage)
+                        PlayerWheatCount = MonoplizedCardsCount;
+                    else if (MonopolizedCard == Strings.OreImage)
+                        PlayerOreCount = MonoplizedCardsCount;
+                    MonoplizingPlayer = string.Empty;
+                    MonopolizedCard = string.Empty;
+                    MonoplizedCardsCount = 0;
+                    PlayersPassed = 0;
+                    Dictionary<string, object> dict = new()
+                    {
+                        {nameof(PlayersPassed), PlayersPassed },
+                        {nameof(PlayersPassed),PlayersPassed },
+                        {nameof(MonopolizedCard), MonopolizedCard },
+                        {nameof(MonoplizingPlayer),MonoplizingPlayer }
+                    };
+                    UpdateFields(dict);
+                    gridChanged = true;
+                }
                 if (Turn != updatedGame.Turn)
                 {
                     PlayerTurn = updatedGame.PlayerTurn;
@@ -275,16 +339,16 @@ namespace CatanGame.ModelsLogic
                 { nameof(TradeInProgress), TradeInProgress },
                 { nameof(PlayersInTrade), PlayersInTrade },
                 { nameof(SelectedPlayerName), SelectedPlayerName },
-                { nameof(WoodGiveAmount), WoodGiveAmount },
-                { nameof(BrickGiveAmount), BrickGiveAmount },
-                { nameof(SheepGiveAmount), SheepGiveAmount },
-                { nameof(WheatGiveAmount), WheatGiveAmount },
-                { nameof(OreGiveAmount), OreGiveAmount },
-                { nameof(WoodGetAmount), WoodGetAmount },
-                { nameof(BrickGetAmount), BrickGetAmount },
-                { nameof(SheepGetAmount), SheepGetAmount },
-                { nameof(WheatGetAmount), WheatGetAmount },
-                { nameof(OreGetAmount), OreGetAmount },
+                { nameof(WoodTradeGiveAmount), WoodTradeGiveAmount },
+                { nameof(BrickTradeGiveAmount), BrickTradeGiveAmount },
+                { nameof(SheepTradeGiveAmount), SheepTradeGiveAmount },
+                { nameof(WheatTradeGiveAmount), WheatTradeGiveAmount },
+                { nameof(OreTradeGiveAmount), OreTradeGiveAmount },
+                { nameof(WoodTradeGetAmount), WoodTradeGetAmount },
+                { nameof(BrickTradeGetAmount), BrickTradeGetAmount },
+                { nameof(SheepTradeGetAmount), SheepTradeGetAmount },
+                { nameof(WheatTradeGetAmount), WheatTradeGetAmount },
+                { nameof(OreTradeGetAmount), OreTradeGetAmount },
                 { nameof(TradeMessage), TradeMessage }
             };
             UpdateFields(dict);
@@ -293,29 +357,29 @@ namespace CatanGame.ModelsLogic
         {
             if (PlayersInTrade[0] == PlayerNames[PlayerIndicator])
             {
-                PlayerWoodCount -= Convert.ToInt32(WoodGiveAmount);
-                PlayerBrickCount -= Convert.ToInt32(BrickGiveAmount);
-                PlayerSheepCount -= Convert.ToInt32(SheepGiveAmount);
-                PlayerWheatCount -= Convert.ToInt32(WheatGiveAmount);
-                PlayerOreCount -= Convert.ToInt32(OreGiveAmount);
-                PlayerWoodCount += Convert.ToInt32(WoodGetAmount);
-                PlayerBrickCount += Convert.ToInt32(BrickGetAmount);
-                PlayerSheepCount += Convert.ToInt32(SheepGetAmount);
-                PlayerWheatCount += Convert.ToInt32(WheatGetAmount);
-                PlayerOreCount += Convert.ToInt32(OreGetAmount);
+                PlayerWoodCount -= Convert.ToInt32(WoodTradeGiveAmount);
+                PlayerBrickCount -= Convert.ToInt32(BrickTradeGiveAmount);
+                PlayerSheepCount -= Convert.ToInt32(SheepTradeGiveAmount);
+                PlayerWheatCount -= Convert.ToInt32(WheatTradeGiveAmount);
+                PlayerOreCount -= Convert.ToInt32(OreTradeGiveAmount);
+                PlayerWoodCount += Convert.ToInt32(WoodTradeGetAmount);
+                PlayerBrickCount += Convert.ToInt32(BrickTradeGetAmount);
+                PlayerSheepCount += Convert.ToInt32(SheepTradeGetAmount);
+                PlayerWheatCount += Convert.ToInt32(WheatTradeGetAmount);
+                PlayerOreCount += Convert.ToInt32(OreTradeGetAmount);
             }
             else if (PlayersInTrade[1] == PlayerNames[PlayerIndicator])
             {
-                PlayerWoodCount += Convert.ToInt32(WoodGiveAmount);
-                PlayerBrickCount += Convert.ToInt32(BrickGiveAmount);
-                PlayerSheepCount += Convert.ToInt32(SheepGiveAmount);
-                PlayerWheatCount += Convert.ToInt32(WheatGiveAmount);
-                PlayerOreCount += Convert.ToInt32(OreGiveAmount);
-                PlayerWoodCount -= Convert.ToInt32(WoodGetAmount);
-                PlayerBrickCount -= Convert.ToInt32(BrickGetAmount);
-                PlayerSheepCount -= Convert.ToInt32(SheepGetAmount);
-                PlayerWheatCount -= Convert.ToInt32(WheatGetAmount);
-                PlayerOreCount -= Convert.ToInt32(OreGetAmount);
+                PlayerWoodCount += Convert.ToInt32(WoodTradeGiveAmount);
+                PlayerBrickCount += Convert.ToInt32(BrickTradeGiveAmount);
+                PlayerSheepCount += Convert.ToInt32(SheepTradeGiveAmount);
+                PlayerWheatCount += Convert.ToInt32(WheatTradeGiveAmount);
+                PlayerOreCount += Convert.ToInt32(OreTradeGiveAmount);
+                PlayerWoodCount -= Convert.ToInt32(WoodTradeGetAmount);
+                PlayerBrickCount -= Convert.ToInt32(BrickTradeGetAmount);
+                PlayerSheepCount -= Convert.ToInt32(SheepTradeGetAmount);
+                PlayerWheatCount -= Convert.ToInt32(WheatTradeGetAmount);
+                PlayerOreCount -= Convert.ToInt32(OreTradeGetAmount);
             }
         }
         protected override void RecivedTrade()
@@ -334,27 +398,27 @@ namespace CatanGame.ModelsLogic
                 ResourceCountersUpdated?.Invoke(this, EventArgs.Empty);
                 TradeMessage = PlayersInTrade[0] + Strings.EmptySpace + Strings.TradedWith + Strings.EmptySpace + PlayersInTrade[1];
                 TradeMessage += Strings.EmptySpace + Strings.Reciveing;
-                if (Convert.ToInt32(WoodGetAmount) > 0)
-                    TradeMessage += WoodGetAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
-                if (Convert.ToInt32(BrickGetAmount) > 0)
-                    TradeMessage += BrickGetAmount + Strings.EmptySpace + Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
-                if (Convert.ToInt32(SheepGetAmount) > 0)
-                    TradeMessage += SheepGetAmount + Strings.EmptySpace + Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
-                if (Convert.ToInt32(WheatGetAmount) > 0)
-                    TradeMessage += WheatGetAmount + Strings.EmptySpace + Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
-                if (Convert.ToInt32(OreGetAmount) > 0)
-                    TradeMessage += OreGetAmount + Strings.EmptySpace + Strings.OreImage[..Strings.OreImage.IndexOf('.')];
+                if (Convert.ToInt32(WoodTradeGetAmount) > 0)
+                    TradeMessage += WoodTradeGetAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
+                if (Convert.ToInt32(BrickTradeGetAmount) > 0)
+                    TradeMessage += BrickTradeGetAmount + Strings.EmptySpace + Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
+                if (Convert.ToInt32(SheepTradeGetAmount) > 0)
+                    TradeMessage += SheepTradeGetAmount + Strings.EmptySpace + Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
+                if (Convert.ToInt32(WheatTradeGetAmount) > 0)
+                    TradeMessage += WheatTradeGetAmount + Strings.EmptySpace + Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
+                if (Convert.ToInt32(OreTradeGetAmount) > 0)
+                    TradeMessage += OreTradeGetAmount + Strings.EmptySpace + Strings.OreImage[..Strings.OreImage.IndexOf('.')];
                 TradeMessage += Strings.EmptySpace + Strings.Giving;
-                if (Convert.ToInt32(WoodGiveAmount) > 0)
-                    TradeMessage += WoodGiveAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
-                if (Convert.ToInt32(BrickGiveAmount) > 0)
-                    TradeMessage += BrickGiveAmount + Strings.EmptySpace + Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
-                if (Convert.ToInt32(SheepGiveAmount) > 0)
-                    TradeMessage += SheepGiveAmount + Strings.EmptySpace + Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
-                if (Convert.ToInt32(WheatGiveAmount) > 0)
-                    TradeMessage += WheatGiveAmount + Strings.EmptySpace + Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
-                if (Convert.ToInt32(OreGiveAmount) > 0)
-                    TradeMessage += OreGiveAmount + Strings.EmptySpace + Strings.OreImage[..Strings.OreImage.IndexOf('.')];
+                if (Convert.ToInt32(WoodTradeGiveAmount) > 0)
+                    TradeMessage += WoodTradeGiveAmount + Strings.EmptySpace + Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
+                if (Convert.ToInt32(BrickTradeGiveAmount) > 0)
+                    TradeMessage += BrickTradeGiveAmount + Strings.EmptySpace + Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
+                if (Convert.ToInt32(SheepTradeGiveAmount) > 0)
+                    TradeMessage += SheepTradeGiveAmount + Strings.EmptySpace + Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
+                if (Convert.ToInt32(WheatTradeGiveAmount) > 0)
+                    TradeMessage += WheatTradeGiveAmount + Strings.EmptySpace + Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
+                if (Convert.ToInt32(OreTradeGiveAmount) > 0)
+                    TradeMessage += OreTradeGiveAmount + Strings.EmptySpace + Strings.OreImage[..Strings.OreImage.IndexOf('.')];
                 ResetTradeParameters();
                 UpdateTradeParamaters();
             }
@@ -377,16 +441,16 @@ namespace CatanGame.ModelsLogic
             PlayersInTrade[0] = string.Empty;
             PlayersInTrade[1] = string.Empty;
             SelectedPlayerName = string.Empty;
-            WoodGiveAmount = Strings.Zero;
-            BrickGiveAmount = Strings.Zero;
-            SheepGiveAmount = Strings.Zero;
-            WheatGiveAmount = Strings.Zero;
-            OreGiveAmount = Strings.Zero;
-            WoodGetAmount = Strings.Zero;
-            BrickGetAmount = Strings.Zero;
-            SheepGetAmount = Strings.Zero;
-            WheatGetAmount = Strings.Zero;
-            OreGetAmount = Strings.Zero;
+            WoodTradeGiveAmount = Strings.Zero;
+            BrickTradeGiveAmount = Strings.Zero;
+            SheepTradeGiveAmount = Strings.Zero;
+            WheatTradeGiveAmount = Strings.Zero;
+            OreTradeGiveAmount = Strings.Zero;
+            WoodTradeGetAmount = Strings.Zero;
+            BrickTradeGetAmount = Strings.Zero;
+            SheepTradeGetAmount = Strings.Zero;
+            WheatTradeGetAmount = Strings.Zero;
+            OreTradeGetAmount = Strings.Zero;
         }
         protected override void ReciveCounterOffer()
         {
@@ -638,26 +702,26 @@ namespace CatanGame.ModelsLogic
             TradeInProgress = true;
             PlayersInTrade[0] = PlayerNames[PlayerIndicator];
             PlayersInTrade[1] = SelectedPlayerName;
-            if(String.IsNullOrWhiteSpace(WoodGiveAmount))
-                WoodGiveAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(BrickGiveAmount))
-                BrickGiveAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(SheepGiveAmount))
-                SheepGiveAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(WheatGiveAmount))
-                WheatGiveAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(OreGiveAmount))
-                OreGiveAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(WoodGetAmount))
-                WoodGetAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(BrickGetAmount))
-                BrickGetAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(SheepGetAmount))
-                SheepGetAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(WheatGetAmount))
-                WheatGetAmount = Strings.Zero;
-            if (String.IsNullOrWhiteSpace(OreGetAmount))
-                OreGetAmount = Strings.Zero;
+            if(String.IsNullOrWhiteSpace(WoodTradeGiveAmount))
+                WoodTradeGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(BrickTradeGiveAmount))
+                BrickTradeGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(SheepTradeGiveAmount))
+                SheepTradeGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WheatTradeGiveAmount))
+                WheatTradeGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(OreTradeGiveAmount))
+                OreTradeGiveAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WoodTradeGetAmount))
+                WoodTradeGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(BrickTradeGetAmount))
+                BrickTradeGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(SheepTradeGetAmount))
+                SheepTradeGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(WheatTradeGetAmount))
+                WheatTradeGetAmount = Strings.Zero;
+            if (String.IsNullOrWhiteSpace(OreTradeGetAmount))
+                OreTradeGetAmount = Strings.Zero;
             UpdateTradeParamaters();
         }
         public override void CancelTradeRequest()
@@ -669,11 +733,11 @@ namespace CatanGame.ModelsLogic
         public override void CounterOffer()
         {
             (PlayersInTrade[1], PlayersInTrade[0]) = (PlayersInTrade[0], PlayersInTrade[1]);
-            (WoodGiveAmount, WoodGetAmount) = (WoodGetAmount, WoodGiveAmount);
-            (BrickGiveAmount, BrickGetAmount) = (BrickGetAmount, BrickGiveAmount);
-            (SheepGiveAmount, SheepGetAmount) = (SheepGetAmount, SheepGiveAmount);
-            (WheatGiveAmount, WheatGetAmount) = (WheatGetAmount, WheatGiveAmount);
-            (OreGiveAmount, OreGetAmount) = (OreGetAmount, OreGiveAmount);
+            (WoodTradeGiveAmount, WoodTradeGetAmount) = (WoodTradeGetAmount, WoodTradeGiveAmount);
+            (BrickTradeGiveAmount, BrickTradeGetAmount) = (BrickTradeGetAmount, BrickTradeGiveAmount);
+            (SheepTradeGiveAmount, SheepTradeGetAmount) = (SheepTradeGetAmount, SheepTradeGiveAmount);
+            (WheatTradeGiveAmount, WheatTradeGetAmount) = (WheatTradeGetAmount, WheatTradeGiveAmount);
+            (OreTradeGiveAmount, OreTradeGetAmount) = (OreTradeGetAmount, OreTradeGiveAmount);
             SelectedPlayerName = PlayersInTrade[1];
             TradeMessage = Strings.PlayerCounterOffer;
         }
@@ -692,28 +756,28 @@ namespace CatanGame.ModelsLogic
         public override bool CenTradeWithPlayer()
         {
             bool givesACard =
-                (!string.IsNullOrWhiteSpace(WoodGiveAmount) && Convert.ToInt32(WoodGiveAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(BrickGiveAmount) && Convert.ToInt32(BrickGiveAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(SheepGiveAmount) && Convert.ToInt32(SheepGiveAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(WheatGiveAmount) && Convert.ToInt32(WheatGiveAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(OreGiveAmount) && Convert.ToInt32(OreGiveAmount) > 0);
+                (!string.IsNullOrWhiteSpace(WoodTradeGiveAmount) && Convert.ToInt32(WoodTradeGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(BrickTradeGiveAmount) && Convert.ToInt32(BrickTradeGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(SheepTradeGiveAmount) && Convert.ToInt32(SheepTradeGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(WheatTradeGiveAmount) && Convert.ToInt32(WheatTradeGiveAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(OreTradeGiveAmount) && Convert.ToInt32(OreTradeGiveAmount) > 0);
 
             bool getsACard =
-                (!string.IsNullOrWhiteSpace(WoodGetAmount) && Convert.ToInt32(WoodGetAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(BrickGetAmount) && Convert.ToInt32(BrickGetAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(SheepGetAmount) && Convert.ToInt32(SheepGetAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(WheatGetAmount) && Convert.ToInt32(WheatGetAmount) > 0) ||
-                (!string.IsNullOrWhiteSpace(OreGetAmount) && Convert.ToInt32(OreGetAmount) > 0);
+                (!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(BrickTradeGetAmount) && Convert.ToInt32(BrickTradeGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(SheepTradeGetAmount) && Convert.ToInt32(SheepTradeGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(WheatTradeGetAmount) && Convert.ToInt32(WheatTradeGetAmount) > 0) ||
+                (!string.IsNullOrWhiteSpace(OreTradeGetAmount) && Convert.ToInt32(OreTradeGetAmount) > 0);
 
             return givesACard && getsACard && !string.IsNullOrWhiteSpace(SelectedPlayerName);
         }
         public override bool CenAcceptTrade()
         {  
-            return(!string.IsNullOrWhiteSpace(WoodGetAmount) && Convert.ToInt32(WoodGetAmount) <= PlayerWoodCount) &&
-                (!string.IsNullOrWhiteSpace(BrickGetAmount) && Convert.ToInt32(BrickGetAmount) <= PlayerBrickCount) && 
-                (!string.IsNullOrWhiteSpace(SheepGetAmount) && Convert.ToInt32(SheepGetAmount) <= PlayerSheepCount) && 
-                (!string.IsNullOrWhiteSpace(WheatGetAmount) && Convert.ToInt32(WheatGetAmount) <= PlayerWheatCount) && 
-                (!string.IsNullOrWhiteSpace(OreGetAmount) && Convert.ToInt32(OreGetAmount) <= PlayerOreCount);
+            return(!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) <= PlayerWoodCount) &&
+                (!string.IsNullOrWhiteSpace(BrickTradeGetAmount) && Convert.ToInt32(BrickTradeGetAmount) <= PlayerBrickCount) && 
+                (!string.IsNullOrWhiteSpace(SheepTradeGetAmount) && Convert.ToInt32(SheepTradeGetAmount) <= PlayerSheepCount) && 
+                (!string.IsNullOrWhiteSpace(WheatTradeGetAmount) && Convert.ToInt32(WheatTradeGetAmount) <= PlayerWheatCount) && 
+                (!string.IsNullOrWhiteSpace(OreTradeGetAmount) && Convert.ToInt32(OreTradeGetAmount) <= PlayerOreCount);
         }
     }
 }

@@ -95,23 +95,27 @@ namespace CatanGame.Models
         public int AmountOfPointsNeeded { get; set; }
         public int PlayerTurn { get; set; } = 1;
         public int PlayerCount { get; set; }
+        public int MonoplizedCardsCount { get; set; }
+        public int PlayersPassed { get; set; }
         public bool IsFull { get; set; }
         public bool IsRolling { get; set; }
         public bool GameStarted { get; set; }
         public bool TradeInProgress { get; set; } = false;
         public string TradeMessage { get; set; } = string.Empty;
         public string GameCode { get; set; } = string.Empty;
-        public string WoodGiveAmount { get; set; } = string.Empty;
-        public string BrickGiveAmount { get; set; } = string.Empty;
-        public string SheepGiveAmount { get; set; } = string.Empty;
-        public string WheatGiveAmount { get; set; } = string.Empty;
-        public string OreGiveAmount { get; set; } = string.Empty;
-        public string WoodGetAmount { get; set; } = string.Empty;
-        public string BrickGetAmount { get; set; } = string.Empty;
-        public string SheepGetAmount { get; set; } = string.Empty;
-        public string WheatGetAmount { get; set; } = string.Empty;
-        public string OreGetAmount { get; set; } = string.Empty;
+        public string WoodTradeGiveAmount { get; set; } = string.Empty;
+        public string BrickTradeGiveAmount { get; set; } = string.Empty;
+        public string SheepTradeGiveAmount { get; set; } = string.Empty;
+        public string WheatTradeGiveAmount { get; set; } = string.Empty;
+        public string OreTradeGiveAmount { get; set; } = string.Empty;
+        public string WoodTradeGetAmount { get; set; } = string.Empty;
+        public string BrickTradeGetAmount { get; set; } = string.Empty;
+        public string SheepTradeGetAmount { get; set; } = string.Empty;
+        public string WheatTradeGetAmount { get; set; } = string.Empty;
+        public string OreTradeGetAmount { get; set; } = string.Empty;
         public string SelectedPlayerName = string.Empty;
+        public string MonopolizedCard {  get; set; } = string.Empty;
+        public string MonoplizingPlayer {  get; set; } = string.Empty;
         public int[] RobberPlacment { get; set; } = new int[2];
         public string[] PlayersInTrade { get; set; } = new string[2];
         public string[] TileNumbers { get; set; } = new string[19];
