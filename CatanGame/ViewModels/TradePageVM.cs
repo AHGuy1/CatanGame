@@ -65,7 +65,7 @@ namespace CatanGame.ViewModels
             get => game.WoodTradeGiveAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWoodCount)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWoodCount && IsVisibleTradeWithPlayer)
                     game.WoodTradeGiveAmount = game.PlayerWoodCount.ToString();
                 else
                     game.WoodTradeGiveAmount = value;
@@ -80,7 +80,7 @@ namespace CatanGame.ViewModels
             get => game.BrickTradeGiveAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerBrickCount)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerBrickCount && IsVisibleTradeWithPlayer)
                     game.BrickTradeGiveAmount = game.PlayerBrickCount.ToString();
                 else
                     game.BrickTradeGiveAmount = value;
@@ -95,7 +95,7 @@ namespace CatanGame.ViewModels
             get => game.SheepTradeGiveAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerSheepCount)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerSheepCount && IsVisibleTradeWithPlayer)
                     game.SheepTradeGiveAmount = game.PlayerSheepCount.ToString();
                 else
                     game.SheepTradeGiveAmount = value;
@@ -110,7 +110,7 @@ namespace CatanGame.ViewModels
             get => game.WheatTradeGiveAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWheatCount)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerWheatCount && IsVisibleTradeWithPlayer)
                     game.WheatTradeGiveAmount = game.PlayerWheatCount.ToString();
                 else
                     game.WheatTradeGiveAmount = value;
@@ -125,7 +125,7 @@ namespace CatanGame.ViewModels
             get => game.OreTradeGiveAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerOreCount)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > game.PlayerOreCount && IsVisibleTradeWithPlayer)
                     game.OreTradeGiveAmount = game.PlayerOreCount.ToString();
                 else
                     game.OreTradeGiveAmount = value;
@@ -140,7 +140,7 @@ namespace CatanGame.ViewModels
             get => game.WoodTradeGetAmount;
             set
             {
-                if(!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                if(!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.WoodTradeGetAmount = 25.ToString();
                 else
                     game.WoodTradeGetAmount = value;
@@ -155,7 +155,7 @@ namespace CatanGame.ViewModels
             get => game.BrickTradeGetAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.BrickTradeGetAmount = 25.ToString();
                 else
                     game.BrickTradeGetAmount = value;
@@ -170,7 +170,7 @@ namespace CatanGame.ViewModels
             get => game.SheepTradeGetAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.SheepTradeGetAmount = 25.ToString();
                 else
                     game.SheepTradeGetAmount = value;
@@ -185,7 +185,7 @@ namespace CatanGame.ViewModels
             get => game.WheatTradeGetAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.WheatTradeGetAmount = 25.ToString();
                 else
                     game.WheatTradeGetAmount = value;
@@ -200,7 +200,7 @@ namespace CatanGame.ViewModels
             get => game.OreTradeGetAmount;
             set
             {
-                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.OreTradeGetAmount = 25.ToString();
                 else
                     game.OreTradeGetAmount = value;

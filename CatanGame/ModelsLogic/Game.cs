@@ -762,7 +762,6 @@ namespace CatanGame.ModelsLogic
                 (!string.IsNullOrWhiteSpace(SheepTradeGiveAmount) && Convert.ToInt32(SheepTradeGiveAmount) > 0) ||
                 (!string.IsNullOrWhiteSpace(WheatTradeGiveAmount) && Convert.ToInt32(WheatTradeGiveAmount) > 0) ||
                 (!string.IsNullOrWhiteSpace(OreTradeGiveAmount) && Convert.ToInt32(OreTradeGiveAmount) > 0);
-
             bool getsACard =
                 (!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) > 0) ||
                 (!string.IsNullOrWhiteSpace(BrickTradeGetAmount) && Convert.ToInt32(BrickTradeGetAmount) > 0) ||

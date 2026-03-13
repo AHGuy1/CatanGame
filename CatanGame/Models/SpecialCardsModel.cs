@@ -29,10 +29,12 @@ namespace CatanGame.Models
             First = 1,
             Second = 2,
         }
+
         protected abstract void UpdateCardPack();
         protected abstract void ShowKnightRobberPlacmentOptions();
         protected abstract void ClosePopUp(object parameter);
         protected abstract void ReturnCardToPackege(string card);
+
         public abstract void ConfirmSelectedCards(object parameter);
         public abstract void PickCardsToGet(object parameter);
         public abstract void ConfirmSelectedCard(object parameter);

@@ -324,14 +324,19 @@ namespace CatanGame.ModelsLogic
                     if(SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.First)
                     {
                         SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Second;
+                        HideButtuns();
                         ShowBuildOptions(Strings.Road);
                     }
-                    else if(SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.Second)
-                        SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Disabled;
-                    else if (Game.Turn > Game.PlayerCount * 2)
+                    else
                     {
-                        Game.PlayerBrickCount--;
-                        Game.PlayerWoodCount--;
+                        if (SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.Second)
+                            SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Disabled;
+                        else if (Game.Turn > Game.PlayerCount * 2)
+                        {
+                            Game.PlayerBrickCount--;
+                            Game.PlayerWoodCount--;
+                        }
+                        HideButtuns();
                     }
                 }
                 else
@@ -360,8 +365,8 @@ namespace CatanGame.ModelsLogic
                     }
                     UpdateBoardPices();
                     UpdateResourceCounters();
+                    HideButtuns();
                 }
-                HideButtuns();
                 //if just built a town and is one of the first 2 turns show road building options
                 if (Game.Turn <= Game.PlayerCount * 2 && button.RowIndex % 2 == 1 && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == Game.PlayerIndicator && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);

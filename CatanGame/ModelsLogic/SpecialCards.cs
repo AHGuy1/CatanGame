@@ -15,7 +15,6 @@ namespace CatanGame.ModelsLogic
             if(Game.PlayerIndicator == 0)
             {
                 if (Game.PlayerCount < 5)
-                {
                     CardPack =
                     [
                         Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
@@ -27,9 +26,7 @@ namespace CatanGame.ModelsLogic
                         Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
                         Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
                     ];
-                }
                 else
-                {
                     CardPack =
                     [
                         Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
@@ -43,7 +40,6 @@ namespace CatanGame.ModelsLogic
                         Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
                         Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
                     ];
-                }
                 for (int i = CardPack.Length - 1; i > 0; i--)
                 {
                     int location = random.Next(i + 1);
