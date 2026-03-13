@@ -1,6 +1,6 @@
 ﻿using CatanGame.Models;
-using CommunityToolkit.Maui.Views;
 using CatanGame.Views;
+using CommunityToolkit.Maui.Views;
 
 namespace CatanGame.ModelsLogic
 {
@@ -8,12 +8,64 @@ namespace CatanGame.ModelsLogic
     {
         public SpecialCards(GameGrid gameGrid, Game game, Board board)
         {
-            GameGrid =gameGrid;
+            GameGrid = gameGrid;
             Game = game;
             Board = board;
+            Random random = new();
+            if(Game.PlayerIndicator == 0)
+            {
+                if (Game.PlayerCount < 5)
+                {
+                    CardPack =
+                    [
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage,
+                        Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
+                        Strings.UniversityImage, Strings.UniversityImage,
+                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
+                    ];
+                }
+                else
+                {
+                    CardPack =
+                    [
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                        Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
+                        Strings.UniversityImage, Strings.UniversityImage,
+                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
+                    ];
+                }
+                for (int i = CardPack.Length - 1; i > 0; i--)
+                {
+                    int location = random.Next(i + 1);
+                    (CardPack[i], CardPack[location]) = (CardPack[location], CardPack[i]);
+                }
+                UpdateCardPack();
+            }
         }
         public SpecialCards() { }
 
+        protected override void UpdateCardPack()
+        {
+            if(Game != null)
+            {
+                Game.SpecialCards = CardPack;
+                Dictionary<string, object> dict = new()
+                {
+                    {nameof(Game.SpecialCards), Game.SpecialCards}
+                };
+                Game.UpdateFields(dict);
+            }
+        }
         protected override void ShowKnightRobberPlacmentOptions()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -68,6 +120,19 @@ namespace CatanGame.ModelsLogic
             if (parameter is Popup popup)
                 popup.Close();
         }
+        protected override void ReturnCardToPackege(string card)
+        {
+            bool found = false;
+            for (int i = 0; i < CardPack.Length && !found; i++)
+            {
+                if (String.IsNullOrWhiteSpace(CardPack[i + 1]))
+                {
+                    CardPack[i] = card;
+                    found = true;
+                }
+            }
+            UpdateCardPack();
+        }
 
         public override void PickCardsToGet(object parameter)
         {
@@ -106,11 +171,15 @@ namespace CatanGame.ModelsLogic
         }
         public override void ConfirmSelectedCards(object parameter)
         {
-            Game!.PlayerWoodCount += SelectedWoodCount;
-            Game!.PlayerBrickCount += SelectedBrickCount;
-            Game!.PlayerSheepCount += SelectedSheepCount;
-            Game!.PlayerWheatCount += SelectedWheatCount;
-            Game!.PlayerOreCount += SelectedOreCount;
+            if(Game != null && GameGrid != null)
+            {
+                Game.PlayerWoodCount += SelectedWoodCount;
+                Game.PlayerBrickCount += SelectedBrickCount;
+                Game.PlayerSheepCount += SelectedSheepCount;
+                Game.PlayerWheatCount += SelectedWheatCount;
+                Game.PlayerOreCount += SelectedOreCount;
+                GameGrid.UpdateResourceCounters();
+            }
             ClosePopUp(parameter);
         }
         public override void PickCardToGet(object parameter)
@@ -152,16 +221,21 @@ namespace CatanGame.ModelsLogic
         public override void UseKnight()
         {
             ShowKnightRobberPlacmentOptions();
+            PlayerKnightCount--;
         }
         public override void UseRoadBuilding()
         {
             RoadBuildingStuatus = RoadBuilding.First;
             GameGrid!.ShowBuildOptions(Strings.Road);
+            ReturnCardToPackege(Strings.RoadBuildingImage);
+            PlayerRoadBuildingCount--;
         }
         public override void UseYearOfPlenty()
         {
             YearOfPlentyPage yearOfPlentyPage = new(this);
             GameGrid?.CurrentGamePage?.ShowPopup(yearOfPlentyPage);
+            ReturnCardToPackege(Strings.YearOfPlentyImage);
+            PlayerYearOfPlentyCount--;
         }
         public override void UseMonopoly()
         {
@@ -170,14 +244,31 @@ namespace CatanGame.ModelsLogic
             SelectedSheepCount = 0;
             SelectedOreCount = 0;
             SelectedOreCount = 0;
+            MonopolyPage monopolyPage = new(this);
+            GameGrid?.CurrentGamePage?.ShowPopup(monopolyPage);
+            ReturnCardToPackege(Strings.MonopolyImage);
+            PlayerMonopolyCount--;
         }
         public override void GetCardFromPackege()
         {
-            
-        }
-        public override void ReturnCardToPackege()
-        {
-            
+            if (CardPack[0] == Strings.KnightImage)
+                PlayerKnightCount++;
+            else if (CardPack[0] == Strings.UniversityImage)
+            {
+                PlayerUniversityCount++;
+                Game!.PlayerVictoryPointCardsCount++;
+            }
+            else if (CardPack[0] == Strings.MonopolyImage)
+                PlayerMonopolyCount++;
+            else if (CardPack[0] == Strings.RoadBuildingImage)
+                PlayerRoadBuildingCount++;
+            else if (CardPack[0] == Strings.YearOfPlentyImage)
+                PlayerYearOfPlentyCount++;
+            CardPack[0] = string.Empty;
+            for (int i = 0; i < CardPack.Length - 1 && !String.IsNullOrWhiteSpace(CardPack[i + 1]); i++)
+                (CardPack[i], CardPack[i + 1]) = (CardPack[i + 1], CardPack[i]);
+            UpdateCardPack();
         }
     }
 }
+  

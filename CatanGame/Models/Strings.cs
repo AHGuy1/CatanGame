@@ -120,15 +120,12 @@ namespace CatanGame.Models
         public const string LargestArmyImage = "largestarmy.png";
         public const string RobberImage = "robber.png";
         public const string KnightImage = "knight.png";
-        public const string LibraryImage = "library.png";
-        public const string MarketImage = "market.png";
         public const string UniversityImage = "university.png";
-        public const string ChapelImage = "chapel.png";
         public const string MonopolyImage = "monopoly.png";
         public const string RoadBuildingImage = "roadbuilding.png";
         public const string YearOfPlentyImage = "yearofplenty.png";
-        public const string GovernorsHouseImage = "governorshouse.png";
         public const string BuildingCostImage = "buildingcost.png";
+        public const string CardBackGround = "backgroundtwo.png";
         public const string BrickImage = "brick.png";
         public const string WoodImage = "wood.png";
         public const string SheepImage = "sheep.png";

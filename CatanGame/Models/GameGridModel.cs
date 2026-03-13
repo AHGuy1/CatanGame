@@ -16,33 +16,36 @@ namespace CatanGame.Models
         protected IndexedButton[][] BoardPieceButtons = new IndexedButton[24][];
         protected Image[][] BoardPieceImages = new Image[24][];
         protected ImageButton[][] RobberImages = new ImageButton[5][];
+        //Index 0 = Wood, Index 1 = Brick, Index 2 = Sheep, Index 3 = Wheat, Index 4 = Ore
+        //Index 5 = Knight, Index 6 = University, Index 7 = Road Building, Index 8 = Monopoley, Index 9 = YearOfPlenty
+        protected Label[] Counters { get; set; } = new Label[10];
+        //Index 0 = Knight, Index 1 = University, Index 2 = Road Building, Index 3 = Monopoley, Index 4 = YearOfPlenty, Index 5 = CardBackGroud
+        protected ImageButton[] SpecialCardImages = new ImageButton[6];
+        protected SKLottieView Dice1Roll { get; set; } = new();
+        protected SKLottieView Dice2Roll { get; set; } = new();
+        protected Image Dice1Image { get; set; } = new();
+        protected Image Dice2Image { get; set; } = new();
+        protected Image LongestRoad { get; set; } = new();
+        protected Image LargestArmy { get; set; } = new();
+        protected Label RollLabel { get; set; } = new();
         protected ICommand? ShowBuildOptionsCommand { get; set; }
         protected ICommand? EndTurnCommand { get; set; }
 
         public GamePage? CurrentGamePage;
         public EventHandler? EndTurnOnClicked;
-        public SKLottieView Dice1Roll { get; set; } = new();
-        public SKLottieView Dice2Roll { get; set; } = new();
-        public Image Dice1Image { get; set; } = new();
-        public Image Dice2Image { get; set; } = new();
-        public Image LongestRoad { get; set; } = new();
-        public Image LargestArmy { get; set; } = new();
-        public Button RollButton { get; set; } = new();
         public Button TradeButton { get; set; } = new();
-        public Label RollLabel { get; set; } = new();
-        public Label WoodCountLabel { get; set; } = new();
-        public Label BrickCountLabel { get; set; } = new();
-        public Label SheepCountLabel { get; set; } = new();
-        public Label WheatCountLabel { get; set; } = new();
-        public Label OreCountLabel { get; set; } = new();
+        public Button RollButton { get; set; } = new();
+
         protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRobberPlacementClicked(object? sender, EventArgs e);
+        protected abstract void UseCard(object paramter);
         protected abstract void BuildTown(int row, int column);
         protected abstract void BuildRoad(int row, int column);
         protected abstract void CheckIfOnHarbor(int row, int column);
         protected abstract void OnDiceUpdated(Task task);
         protected abstract void Trade();
+        protected abstract void GetCardFromPackege();
         protected abstract void RollDice();
         protected abstract void StartAnimations();
         protected abstract void StopAnimations();
@@ -55,13 +58,18 @@ namespace CatanGame.Models
         protected abstract void ShowRobberPlacmentOptions();
         protected abstract void EndTurn();
         protected abstract void UpdateBoardPices();
+        protected abstract void UpdateSpecialCards();
         protected abstract int CheckLongestRoad(EdgeLink edge, bool[] visited);
         protected abstract int GetPieceIndexFromColor(int row, int column);
+        protected abstract bool CenUseCard(object paramter);
         protected abstract bool CanShowBuildOptions();
         protected abstract bool CanEndTurn();
         protected abstract bool CenTrade();
+        protected abstract bool CenGetCardFromPackege();
         protected abstract Grid CreateRobberImage(int row, int column);
+        protected abstract ImageButton CreateCardImageButton(string source);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
+
         public abstract void CloseTradePopUp();
         public abstract void UpdateResourceCounters();
         public abstract void EnsurePlayerPlayed();

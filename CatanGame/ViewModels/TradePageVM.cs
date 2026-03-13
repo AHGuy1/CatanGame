@@ -28,12 +28,20 @@ namespace CatanGame.ViewModels
         public bool[] CenTradeTwoToOne => [game.PlayerWoodCount >= 2, game.PlayerBrickCount >= 2, game.PlayerSheepCount >= 2, game.PlayerWheatCount >= 2, game.PlayerOreCount >= 2];
         public bool[] OwnsHarbors => game.PlayerOwnedHarbors;
         public bool[] OwnsCards => [game.PlayerWoodCount >= 1, game.PlayerBrickCount >= 1, game.PlayerSheepCount >= 1, game.PlayerWheatCount >= 1, game.PlayerOreCount >= 1];
-        public bool[] ReciverGets => [!String.IsNullOrWhiteSpace(WoodGiveAmount) && Convert.ToInt32(WoodGiveAmount) > 0, !String.IsNullOrWhiteSpace(BrickGiveAmount) &&
-            Convert.ToInt32(BrickGiveAmount) > 0, !String.IsNullOrWhiteSpace(SheepGiveAmount) && Convert.ToInt32(SheepGiveAmount) > 0, !String.IsNullOrWhiteSpace(WheatGiveAmount)
-            && Convert.ToInt32(WheatGiveAmount) > 0, !String.IsNullOrWhiteSpace(OreGiveAmount) && Convert.ToInt32(OreGiveAmount) > 0];
-        public bool[] ReciverGives => [!String.IsNullOrWhiteSpace(WoodGetAmount) && Convert.ToInt32(WoodGetAmount) > 0, !String.IsNullOrWhiteSpace(BrickGetAmount) &&
-            Convert.ToInt32(BrickGetAmount) > 0, !String.IsNullOrWhiteSpace(SheepGetAmount) && Convert.ToInt32(SheepGetAmount) > 0, !String.IsNullOrWhiteSpace(WheatGetAmount)
-            && Convert.ToInt32(WheatGetAmount) > 0, !String.IsNullOrWhiteSpace(OreGetAmount) && Convert.ToInt32(OreGetAmount) > 0];
+        public bool[] ReciverGets => [
+            !string.IsNullOrWhiteSpace(WoodGiveAmount) && Convert.ToInt32(WoodGiveAmount) > 0,
+                !string.IsNullOrWhiteSpace(BrickGiveAmount) && Convert.ToInt32(BrickGiveAmount) > 0,
+                !string.IsNullOrWhiteSpace(SheepGiveAmount) && Convert.ToInt32(SheepGiveAmount) > 0,
+                !string.IsNullOrWhiteSpace(WheatGiveAmount) && Convert.ToInt32(WheatGiveAmount) > 0,
+                !string.IsNullOrWhiteSpace(OreGiveAmount) && Convert.ToInt32(OreGiveAmount) > 0
+        ];
+        public bool[] ReciverGives => [
+            !string.IsNullOrWhiteSpace(WoodGetAmount) && Convert.ToInt32(WoodGetAmount) > 0,
+                !string.IsNullOrWhiteSpace(BrickGetAmount) && Convert.ToInt32(BrickGetAmount) > 0,
+                !string.IsNullOrWhiteSpace(SheepGetAmount) && Convert.ToInt32(SheepGetAmount) > 0,
+                !string.IsNullOrWhiteSpace(WheatGetAmount) && Convert.ToInt32(WheatGetAmount) > 0,
+                !string.IsNullOrWhiteSpace(OreGetAmount) && Convert.ToInt32(OreGetAmount) > 0
+        ];
         public string[] PlayerNames { get; set; }
         public string[] PlayersInTrade => game.PlayersInTrade;
         public bool IsVisiblePickACard { get; set; } = false;
@@ -224,7 +232,6 @@ namespace CatanGame.ViewModels
             ConfirmTradeWithPlayerCommand = new Command(ConfirmTradeWithPlayer, CenTradeWithPlayer);
             PlayerNames = game.GetPlayersToTradeWith();
         }
-
         private void RefreshTradeParameters()
         {
             OnPropertyChanged(nameof(SelectedPlayerName));

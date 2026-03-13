@@ -123,6 +123,7 @@ namespace CatanGame.ModelsLogic
                 TurnTime = updatedGame.TurnTime;
                 Roll1 = updatedGame.Roll1;
                 Roll2 = updatedGame.Roll2;
+                SpecialCards = updatedGame.SpecialCards;
                 if (TradeMessage != updatedGame.TradeMessage)
                 {
                     TradeMessage = updatedGame.TradeMessage;
@@ -665,27 +666,27 @@ namespace CatanGame.ModelsLogic
             TradeMessage += Strings.EmptySpace + Strings.For + 1 + Strings.EmptySpace;
             if (SelectedTradeCard.Contains(Strings.WoodImage))
             {
-                PlayerWoodCount += 1;
+                PlayerWoodCount++;
                 TradeMessage += Strings.WoodImage[..Strings.WoodImage.IndexOf('.')];
             }
             else if (SelectedTradeCard.Contains(Strings.BrickImage))
             {
-                PlayerBrickCount += 1;
+                PlayerBrickCount++;
                 TradeMessage += Strings.BrickImage[..Strings.BrickImage.IndexOf('.')];
             }
             else if (SelectedTradeCard.Contains(Strings.SheepImage))
             {
-                PlayerSheepCount += 1;
+                PlayerSheepCount++;
                 TradeMessage += Strings.SheepImage[..Strings.SheepImage.IndexOf('.')];
             }
             else if (SelectedTradeCard.Contains(Strings.WheatImage))
             {
-                PlayerWheatCount += 1;
+                PlayerWheatCount++;
                 TradeMessage += Strings.WheatImage[..Strings.WheatImage.IndexOf('.')];
             }
             else if (SelectedTradeCard.Contains(Strings.OreImage))
             {
-                PlayerOreCount += 1;
+                PlayerOreCount++;
                 TradeMessage += Strings.OreImage[..Strings.OreImage.IndexOf('.')];
             }
             ResetSelctedCardBorder();

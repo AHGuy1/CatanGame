@@ -61,17 +61,19 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerRoadCount { get; set; }
         [Ignored]
-        public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0;
+        public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + PlayerVictoryPointCardsCount + LongestRoadOwnerIndex == PlayerIndicator ? LargestArmySize == PlayerLargestArmySize ? 4 : 2 : 0;
         [Ignored]
-        public int PlayerOreCount { get; set; } = 3;
+        public int PlayerOreCount { get; set; } = 5;
         [Ignored]
-        public int PlayerBrickCount { get; set; } = 1;
+        public int PlayerBrickCount { get; set; } = 5;
         [Ignored]
         public int PlayerWoodCount { get; set; } = 5;
         [Ignored]
-        public int PlayerWheatCount { get; set; } = 2;
+        public int PlayerWheatCount { get; set; } = 5;
         [Ignored]
-        public int PlayerSheepCount { get; set; } = 0;
+        public int PlayerSheepCount { get; set; } = 5;
+        [Ignored]
+        public int PlayerVictoryPointCardsCount { get; set; }
         [Ignored]
         public bool IsRandomBoard { get; set; } 
         [Ignored]
@@ -117,6 +119,7 @@ namespace CatanGame.Models
         public string MonopolizedCard {  get; set; } = string.Empty;
         public string MonoplizingPlayer {  get; set; } = string.Empty;
         public int[] RobberPlacment { get; set; } = new int[2];
+        public string[] SpecialCards { get; set; } = [];
         public string[] PlayersInTrade { get; set; } = new string[2];
         public string[] TileNumbers { get; set; } = new string[19];
         public string[] TileTypes { get; set; } = new string[19];
