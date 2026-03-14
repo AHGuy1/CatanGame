@@ -10,9 +10,12 @@ namespace CatanGame.ViewModels
         private readonly SpecialCards SpecialCards;
         #endregion
 
-        #region Properties
+        #region Commands
         public ICommand PickCardToGetCommand { get; }
         public ICommand ConfirmCommand { get; }
+        #endregion
+
+        #region Properties
         public string SelectedWoodCount => SpecialCards.SelectedWoodCount.ToString();
         public string SelectedBrickCount => SpecialCards.SelectedBrickCount.ToString();
         public string SelectedSheepCount => SpecialCards.SelectedSheepCount.ToString();

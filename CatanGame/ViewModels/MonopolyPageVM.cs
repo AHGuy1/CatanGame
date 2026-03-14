@@ -9,7 +9,7 @@ namespace CatanGame.ViewModels
         private readonly SpecialCards SpecialCards;
         #endregion
 
-        #region Properties
+        #region Commands
         public ICommand PickCardToGetCommand { get; }
         public ICommand ConfirmCommand { get; }
         #endregion

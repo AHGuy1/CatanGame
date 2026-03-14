@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CatanGame.Views.EndGamePage"
+             xmlns:m="clr-namespace:CatanGame.Models"
+             xmlns:vm="clr-namespace:CatanGame.ViewModels"
+             x:DataType="vm:EndGamePageVM">
+    <VerticalStackLayout>
+        <Label Text="{Binding GameResult}"
+               FontSize="22"
+               TextColor="DarkOrange"
+               FontAttributes="Bold"/>
+        <Label Text="{Binding PointsEarnd}"
+               IsVisible="{Binding PlayerLost}"
+               FontSize="18"
+               TextColor="DarkOrange"
+               FontAttributes="Bold" />
+        <Label Text="{Binding GoalReachedMessage}"
+               FontSize="20"
+               TextColor="DodgerBlue"
+               FontAttributes="Bold" />
+        <Button Text="{x:Static m:Strings.ReturnToHome}"
+                Command="{Binding ReturnToHomeCommand}"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -14,13 +14,16 @@ namespace CatanGame.ViewModels
         private readonly User user = new();
         #endregion
 
-        #region Properties
+        #region Commands
         public ICommand LoginCommand { get; }
         public ICommand LoginWithVerificationCodeCommand { get; }
         public ICommand SendVerificationCodeToPhoneCommand { get; }
         public ICommand CreateAcoountPageCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand PasswordReset { get; }
+        #endregion
+
+        #region Properties
         public bool IsBusy { get; set; } = false;
         public bool IsVisibileBeforeVerificationCodeSent { get; set; } = true;
         public bool IsVisibileAfterVerificationCodeSent { get; set; } = false;

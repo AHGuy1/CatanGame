@@ -13,6 +13,10 @@ namespace CatanGame.ViewModels
         private readonly Game game;
         #endregion
 
+        #region Commands
+        public ICommand StartGameCommand { get; }
+        #endregion
+
         #region Properties
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
@@ -37,7 +41,6 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer4Visible => PlayerCount > 3;
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
-        public ICommand StartGameCommand { get; }
         #endregion
 
         #region Constructor

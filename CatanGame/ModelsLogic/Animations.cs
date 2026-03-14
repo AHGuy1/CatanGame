@@ -38,6 +38,12 @@ namespace CatanGame.ModelsLogic
 
                 OpacityChanged?.Invoke(this, EventArgs.Empty);
             }
+            else if(TimeOpacity != 1 || TimeColor != Colors.Black)
+            {
+                TimeOpacity = 1.0;
+                TimeColor = Colors.Black;
+                OpacityChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
         #endregion
     }

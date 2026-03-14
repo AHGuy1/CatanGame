@@ -14,6 +14,11 @@ namespace CatanGame.ViewModels
         private string SelectedBoardTypePrivate = string.Empty;
         #endregion
 
+        #region Commands
+        public ICommand JoinGameWithCodeCommand { get; }
+        public ICommand AddGameCommand { get; }
+        #endregion
+
         #region Properties
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
@@ -22,8 +27,6 @@ namespace CatanGame.ViewModels
         public static ObservableCollection<string> BoardTypes => Games.BoardTypes;
         public static string DisplayName => string.Empty;
         public int SlectedAmountOfPointsNeeded { get; set; }
-        public ICommand JoinGameWithCodeCommand { get; }
-        public ICommand AddGameCommand { get; }
         public ObservableCollection<GameSize>? AmountOfPlayers { get => games.AmountOfPlayers; set => games.AmountOfPlayers = value; }
         public ObservableCollection<TurnTime> TurnTimes { get => games.TurnTimes; set => games.TurnTimes = value; }
         public ObservableCollection<Game>? GamesList => games.GamesList;

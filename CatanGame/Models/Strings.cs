@@ -219,6 +219,13 @@ namespace CatanGame.Models
         public const string SelectTwoCards = "Select 2 resource cards";
         public const string ConfirmSelection = "Confirm Selection";
         public const string SelectCardToMonopolize = "Select card to monopolize";
+        public const string YouLostLabel = "YOU LOST!";
+        public const string YouWonLabel = "YOU WON!";
+        public const string HasReachedTheGoal = "has reached the goal of: ";
+        public const string YouReachedTheGoal = "You have reached the goal of: ";
+        public const string VictoryPoints = "victory points";
+        public const string FinishedWith = "You finished with: ";
+        public const string ReturnToHome = "Return to home";
         #endregion
     }
 }

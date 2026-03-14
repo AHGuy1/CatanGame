@@ -11,10 +11,13 @@ namespace CatanGame.ViewModels
         private readonly User user = new();
         #endregion
 
-        #region Properties
+        #region Commands
         public ICommand ResetPassWordCommand { get; }
         public ICommand SwitchPageBackCommand { get; }
         public ICommand SwitchToLogInPageCommand { get; }
+        #endregion
+
+        #region Properties
         public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisibleBeforePassWordReset { get; set; } = true;
         public bool IsBusy { get; set; } = false;

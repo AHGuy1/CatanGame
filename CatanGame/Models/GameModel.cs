@@ -67,7 +67,12 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerRoadCount { get; set; }
         [Ignored]
-        public int PlayerPoints => PlayerTownCount + PlayerCityCount * 2 + PlayerVictoryPointCardsCount + LongestRoadOwnerIndex == PlayerIndicator ? LargestArmySize == PlayerLargestArmySize ? 4 : 2 : 0;
+        public int PlayerPoints =>
+            PlayerTownCount
+            + (PlayerCityCount * 2)
+            + PlayerVictoryPointCardsCount
+            + (LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0)
+            + (LargestArmySize == PlayerLargestArmySize ? 2 : 0);
         [Ignored]
         public int PlayerOreCount { get; set; } = 5;
         [Ignored]
@@ -93,6 +98,7 @@ namespace CatanGame.Models
         public string SelectedTradeCard { get; set; } = string.Empty;
         [Ignored]
         public ImageButton? PreviselySelctedCard { get; set; }
+        public int WinnerIndecator { get; set; } = -1;
         public int Roll1 { get; set; }
         public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
@@ -100,11 +106,12 @@ namespace CatanGame.Models
         public int LargestArmySize { get; set; } = 2;
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
-        public int AmountOfPointsNeeded { get; set; }
+        public int PointsGoal { get; set; }
         public int PlayerTurn { get; set; } = 1;
         public int PlayerCount { get; set; }
         public int MonoplizedCardsCount { get; set; }
         public int PlayersPassed { get; set; }
+        public bool Rold { get; set; }
         public bool IsFull { get; set; }
         public bool IsRolling { get; set; }
         public bool GameStarted { get; set; }

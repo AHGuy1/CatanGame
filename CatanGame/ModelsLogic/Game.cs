@@ -19,7 +19,7 @@ namespace CatanGame.ModelsLogic
             TurnTime = turnTime;
             IsRandomBoard = isRandomBoard;
             PlayerCount = slectedAmountOfPlayers.Size;
-            AmountOfPointsNeeded = selectedAmountOfPoints;
+            PointsGoal = selectedAmountOfPoints;
             PlayerNames = new string[PlayerCount];
             Created = DateTime.Now;
             for (int i = 0; i < 2; i++)
@@ -154,6 +154,14 @@ namespace CatanGame.ModelsLogic
                 Roll1 = updatedGame.Roll1;
                 Roll2 = updatedGame.Roll2;
                 SpecialCards = updatedGame.SpecialCards;
+                if(WinnerIndecator != updatedGame.WinnerIndecator)
+                {
+                    WinnerIndecator = updatedGame.WinnerIndecator;
+                    MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        Shell.Current.Navigation.PushAsync(new EndGamePage(this), true);
+                    });
+                }
                 if (TradeMessage != updatedGame.TradeMessage)
                 {
                     TradeMessage = updatedGame.TradeMessage;
@@ -279,6 +287,7 @@ namespace CatanGame.ModelsLogic
                 }
                 if (Turn != updatedGame.Turn)
                 {
+                    Rold = false;
                     PlayerTurn = updatedGame.PlayerTurn;
                     Turn = updatedGame.Turn;
                     TurnChanged?.Invoke(this, EventArgs.Empty);
@@ -302,7 +311,7 @@ namespace CatanGame.ModelsLogic
                     RobberPlacment = updatedGame.RobberPlacment;
                     gridChanged = true;
                 }
-                if (IsRolling != updatedGame.IsRolling)
+                if (IsRolling != updatedGame.IsRolling && !Rold)
                 {
                     IsRolling = updatedGame.IsRolling;
                     AnimationStatusChanged?.Invoke(this, EventArgs.Empty);
@@ -576,12 +585,19 @@ namespace CatanGame.ModelsLogic
             else
                 PlayerTurn++;
             Turn++;
+            Rold = false;
             Dictionary<string, object> dict = new()
-                {
-                    { nameof(PlayerTurn), PlayerTurn },
-                    { nameof(Turn), Turn }
-                };
+            {
+                { nameof(PlayerTurn), PlayerTurn },
+                { nameof(Turn), Turn }
+            };
+            if (PlayerPoints >= PointsGoal)
+            {
+                WinnerIndecator = PlayerIndicator;
+                dict.Add(nameof(WinnerIndecator), WinnerIndecator);
+            }
             UpdateFields(OnTurnChanged, dict);
+            GridChanged?.Invoke(this, EventArgs.Empty);
             StartTimer();
         }
 

@@ -317,6 +317,7 @@ namespace CatanGame.ModelsLogic
                 //if just built a town and is one of the first 2 turns show road building options
                 if (Game.Turn <= Game.PlayerCount * 2 && button.RowIndex % 2 == 1 && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == Game.PlayerIndicator && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);
+                (EndTurnCommand as Command)?.ChangeCanExecute();
             }
         }
 
@@ -362,6 +363,7 @@ namespace CatanGame.ModelsLogic
 
         protected override void RollDice()
         {
+            Game.Rold = true;
             RollButton.IsEnabled = false;
             Random random = new();
             Game.Roll1 = random.Next(1, 7);
@@ -369,11 +371,11 @@ namespace CatanGame.ModelsLogic
             Game.IsRolling = true;
             StartAnimations();
             Dictionary<string, object> dict = new()
-                {
-                    { nameof(Game.Roll1), Game.Roll1 },
-                    { nameof(Game.Roll2), Game.Roll2 },
-                    { nameof(Game.IsRolling), Game.IsRolling }
-                };
+            {
+                { nameof(Game.Roll1), Game.Roll1 },
+                { nameof(Game.Roll2), Game.Roll2 },
+                { nameof(Game.IsRolling), Game.IsRolling }
+            };
             Game.UpdateFields(OnDiceUpdated, dict);
         }
 
@@ -394,6 +396,7 @@ namespace CatanGame.ModelsLogic
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
+                Game.Rold = true;
                 Dice1Roll.IsVisible = false;
                 Dice1Roll.IsAnimationEnabled = false;
                 Dice1Image.Source = GetDiceImage(Game.Roll1);
@@ -561,20 +564,55 @@ namespace CatanGame.ModelsLogic
             await Task.Delay(2000);
             if (task.IsCompletedSuccessfully)
             {
-                StopAnimations();
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Game.Rold = true;
+                    Dice1Roll.IsVisible = false;
+                    Dice1Roll.IsAnimationEnabled = false;
+                    Dice1Image.Source = GetDiceImage(Game.Roll1);
+                    Dice1Image.IsVisible = true;
+                    Dice2Roll.IsAnimationEnabled = false;
+                    Dice2Image.Source = GetDiceImage(Game.Roll2);
+                    Dice2Image.IsVisible = true;
+                    Dice2Roll.IsVisible = false;
+                    RollLabel.Text = Strings.Rolled + Game.RollTotal;
+                });
+
                 if (Game.RollTotal == 7)
-                    ShowRobberPlacmentOptions();
+                {
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        for (int i = 0; i < 5; i++)
+                            for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
+                                if (!BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && RobberImages[i][k] != null)
+                                    SetVisibleRobberImages(i, k);
+                    });
+                }
                 else
                 {
                     Game.AllocateResources();
-                    UpdateResourceCounters();
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        (SpecialCardImages[5].Command as Command)?.ChangeCanExecute();
+                        if (Counters[0] != null && Counters[0].Text != Game.PlayerWoodCount.ToString())
+                            Counters[0].Text = Game.PlayerWoodCount.ToString();
+                        if (Counters[1] != null && Counters[1].Text != Game.PlayerBrickCount.ToString())
+                            Counters[1].Text = Game.PlayerBrickCount.ToString();
+                        if (Counters[2] != null && Counters[2].Text != Game.PlayerSheepCount.ToString())
+                            Counters[2].Text = Game.PlayerSheepCount.ToString();
+                        if (Counters[3] != null && Counters[3].Text != Game.PlayerWheatCount.ToString())
+                            Counters[3].Text = Game.PlayerWheatCount.ToString();
+                        if (Counters[4] != null && Counters[4].Text != Game.PlayerOreCount.ToString())
+                            Counters[4].Text = Game.PlayerOreCount.ToString();
+                    });
                 }
                 Game.IsRolling = false;
                 Dictionary<string, object> dict = new()
-                    {
-                        { nameof(Game.IsRolling), Game.IsRolling }
-                    };
+                {
+                    { nameof(Game.IsRolling), Game.IsRolling }
+                };
                 Game.UpdateFields(dict);
+                (EndTurnCommand as Command)?.ChangeCanExecute();
             }
         }
 
@@ -588,16 +626,18 @@ namespace CatanGame.ModelsLogic
         protected override ImageButton CreateCardImageButton(string source)
         {
             double sizeProportion = GetSizeProportion();
-            return new()
+            ImageButton imageButton = new()
             {
                 Source = source,
                 HeightRequest = sizeProportion * 0.15,
                 WidthRequest = sizeProportion * 0.1,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start,
-                Command = new Command(UseCard, CenUseCard),
                 CommandParameter = source
             };
+            if (source != Strings.UniversityImage)
+                imageButton.Command = new Command(UseCard, CenUseCard);
+            return imageButton;
         }
 
         protected override Grid CreateRobberImage(int row, int column)
@@ -696,24 +736,24 @@ namespace CatanGame.ModelsLogic
 
         protected override bool CanShowBuildOptions()
         {
-            return Game.StatusMessage == Strings.YourTurn;
+            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
         }
 
         protected override bool CanEndTurn()
         {
             return Game.PlayerIndicator + 1 == Game.PlayerTurn && Game.IsFull &&
                 ((Game.Turn <= Game.PlayerCount * 2 && Game.PlayerRoadCount >= (double)(Game.Turn / Game.PlayerCount)) ||
-                (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && !RollButton.IsEnabled));
+                (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && Game.Rold));
         }
 
         protected override bool CenTrade()
         {
-            return Game.PlayerTurn == Game.PlayerIndicator + 1;
+            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
         }
 
         protected override bool CenGetCardFromPackege()
         {
-            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]);
+            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
         }
 
         protected override bool CenUseCard(object paramter)
@@ -721,13 +761,13 @@ namespace CatanGame.ModelsLogic
             if (paramter is string source)
             {
                 if (source == Strings.KnightImage)
-                    return SpecialCards.PlayerKnightCount > 0;
+                    return SpecialCards.PlayerKnightCount > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.RoadBuildingImage)
-                    return SpecialCards.PlayerRoadBuildingCount > 0;
+                    return SpecialCards.PlayerRoadBuildingCount > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.MonopolyImage)
-                    return SpecialCards.PlayerMonopolyCount > 0;
+                    return SpecialCards.PlayerMonopolyCount > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.YearOfPlentyImage)
-                    return SpecialCards.PlayerYearOfPlentyCount > 0;
+                    return SpecialCards.PlayerYearOfPlentyCount > 0 && Game.StatusMessage == Strings.YourTurn;
             }
             //wont happan
             return false;
@@ -909,6 +949,10 @@ namespace CatanGame.ModelsLogic
                 LargestArmy.Opacity = Keys.DoesNotOwn;
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
             (EndTurnCommand as Command)?.ChangeCanExecute();
+            (TradeButton.Command as Command)?.ChangeCanExecute();
+            for(int i = 0; i < SpecialCardImages.Length; i++)
+                if (i != 1)
+                    (SpecialCardImages[i].Command as Command)?.ChangeCanExecute();
             UpdateResourceCounters();
         }
 
@@ -1271,7 +1315,7 @@ namespace CatanGame.ModelsLogic
                 WidthRequest = sizeProportion * 0.1,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start,
-                Command = new Command(GetCardFromPackege, CenGetCardFromPackege),
+                Command = new Command(GetCardFromPackege, CenGetCardFromPackege)
             };
             Row.Add(SpecialCardImages[5]);
             SpecialCardImages[0] = CreateCardImageButton(Strings.KnightImage);

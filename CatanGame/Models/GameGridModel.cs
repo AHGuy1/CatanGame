@@ -31,13 +31,13 @@ namespace CatanGame.Models
         protected Label RollLabel { get; set; } = new();
         #endregion
 
+        #region Events
+        public EventHandler? EndTurnOnClicked;
+        #endregion
+
         #region Commands
         protected ICommand? ShowBuildOptionsCommand { get; set; }
         protected ICommand? EndTurnCommand { get; set; }
-        #endregion
-
-        #region Events
-        public EventHandler? EndTurnOnClicked;
         #endregion
 
         #region Properties

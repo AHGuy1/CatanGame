@@ -11,10 +11,13 @@ namespace CatanGame.ViewModels
         private readonly User user = new();
         #endregion
 
-        #region Properties
+        #region Commands
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
+        #endregion
+
+        #region Properties
         public bool IsPasswordConfirmPassword { get; set; } = true;
         public bool IsPassword { get; set; } = true;
         public bool IsVisibleUserNameMessege { get; set; } = true;
