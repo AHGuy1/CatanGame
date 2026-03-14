@@ -4,10 +4,13 @@ namespace CatanGame.ModelsLogic
 {
     public class Avatar : AvatarModel
     {
+        #region Constructor
         public Avatar()
         {
         }
+        #endregion
 
+        #region Public Methods
         public static string LowercaseFirstChar(string value)
         {
             return char.ToLower(value[0]) + value[1..];
@@ -95,5 +98,6 @@ namespace CatanGame.ModelsLogic
                 url += parameter + Strings.Ampersand;
             return url += Strings.SeedLabel + Strings.EqualSign + seed;
         }
+        #endregion
     }
 }

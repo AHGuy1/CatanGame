@@ -8,6 +8,7 @@ namespace CatanGame.ModelsLogic
 {
     public class GameGrid : GameGridModel
     {
+        #region Constructor
         public GameGrid(Game game)
         {
             this.Game = game;
@@ -18,11 +19,16 @@ namespace CatanGame.ModelsLogic
                 BoardPieceButtons[i] = new IndexedButton[GetAmountOfColumns(i) - 1];
                 BoardPieceImages[i] = new Image[GetAmountOfColumns(i) - 1];
             }
-            for (int i = 1;i < 6; i++)
-                RobberImages[i-1] = new ImageButton[GetAmountOfColumnsTiles(i)];
+            for (int i = 1; i < 6; i++)
+                RobberImages[i - 1] = new ImageButton[GetAmountOfColumnsTiles(i)];
         }
-        public GameGrid() { }
 
+        public GameGrid()
+        {
+        }
+        #endregion
+
+        #region Private Methods
         private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
             // Determine the tile type and number based on fixed board layout
@@ -55,6 +61,7 @@ namespace CatanGame.ModelsLogic
                 _ => (string.Empty, string.Empty),
             };
         }
+
         private static string GetPiecesColor(int i)
         {
             return i switch
@@ -69,6 +76,7 @@ namespace CatanGame.ModelsLogic
                 _ => string.Empty,
             };
         }
+
         private static double GetSizeProportion()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
@@ -76,6 +84,7 @@ namespace CatanGame.ModelsLogic
                 return mainDisplay.Height / mainDisplay.Density;
             return mainDisplay.Width / mainDisplay.Density;
         }
+
         private static Grid CreateEmptyCenteredGrid()
         {
             return new()
@@ -84,6 +93,7 @@ namespace CatanGame.ModelsLogic
                 HorizontalOptions = LayoutOptions.Center,
             };
         }
+
         private static Grid CreateEmptyCardRowGrid()
         {
             double sizeProportion = GetSizeProportion();
@@ -94,6 +104,7 @@ namespace CatanGame.ModelsLogic
                 ColumnSpacing = sizeProportion * 0.007
             };
         }
+
         private static SKLottieView CreateDiceAnimation()
         {
             double sizeProportion = GetSizeProportion();
@@ -108,9 +119,9 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End
             };
         }
+
         private static Image CreateTileImage(string imageSource)
         {
-
             return new()
             {
                 Source = imageSource,
@@ -119,17 +130,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.Center,
             };
         }
-        public static Image CreateCardImage(string source)
-        {
-            double sizeProportion = GetSizeProportion();
-            return new()
-            {
-                Source = source,
-                HeightRequest = sizeProportion * 0.158,
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.End,
-            };
-        }
+
         private static Image CreateDiceImage()
         {
             double sizeProportion = GetSizeProportion();
@@ -143,6 +144,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.End
             };
         }
+
         private static Image CreateNumberImage(string imageSource)
         {
             return new()
@@ -153,6 +155,7 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.Center
             };
         }
+
         private static Image CreateRoadImage(int rotation)
         {
             return new()
@@ -163,6 +166,7 @@ namespace CatanGame.ModelsLogic
                 Rotation = rotation,
             };
         }
+
         private static Image CreateApexImage()
         {
             return new()
@@ -171,6 +175,7 @@ namespace CatanGame.ModelsLogic
                 WidthRequest = GetSizeProportion() * 0.03525,
             };
         }
+
         private static Label CreateCardLabel()
         {
             return new()
@@ -182,14 +187,17 @@ namespace CatanGame.ModelsLogic
                 VerticalOptions = LayoutOptions.Center
             };
         }
+
         private static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
             return new(rowIndex, colmnIndex, GetSizeProportion() * 0.0165, GetSizeProportion() * 0.0495, rotation);
         }
+
         private static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
             return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
         }
+
         private static string GetDiceImage(int dice)
         {
             return dice == 1 ? Strings.DiceOneImage :
@@ -199,96 +207,32 @@ namespace CatanGame.ModelsLogic
                 dice == 5 ? Strings.DiceFiveImage :
                 Strings.DiceSixImage;
         }
-        public static int GetTileLocationInArray(int row, int column)
-        {
-            int location = 0;
-            for (int i = 1; i < row; i++)
-            {
-                location += GetAmountOfColumnsTiles(i);
-            }
-            for (int i = 1; i < column; i++)
-            {
-                location++;
-            }
-            return location;
-        }
-        public static int GetAmountOfColumnsTiles(int i)
-        {
-            return i switch
-            {
-                1 or 5 => 3,
-                2 or 4 => 4,
-                3 => 5,
-                //Should not happen
-                _ => 0,
-            };
-        }
-        public static int GetAmountOfColumns(int i)
-        {
-            return i switch
-            {
-                1 or 23 => 4,
-                3 or 4 or 5 or 19 or 20 or 21 => 5,
-                7 or 8 or 9 or 15 or 16 or 17 => 6,
-                2 or 11 or 12 or 13 or 22 => 7,
-                6 or 18 => 9,
-                10 or 14 => 11,
-                //Should not happen
-                _ => 0,
-            };
-        }
-        public static int GetPieceLocationInArray(int row, int column)
-        {
-            int location = 0;
-            if (row % 2 == 0)
-            {
-                for (int i = 2; i < row; i += 2)
-                {
-                    location += GetAmountOfColumns(i) - 1;
-                }
-                for (int i = 0; i < column; i++)
-                {
-                    location++;
-                }
-                return location;
-            }
-            else
-            {
-                for (int i = 1; i < row; i += 2)
-                {
-                    location += GetAmountOfColumns(i) - 1;
-                }
-                for (int i = 0; i < column; i++)
-                {
-                    location++;
-                }
-                return location;
-            }
-        }
-         
+
         protected override void OnRobberPlacementClicked(object? sender, EventArgs e)
-        { 
-                IndexedImageButton? imageButton = (IndexedImageButton)sender!;
-                if (imageButton != null && imageButton.BorderWidth == Keys.ButtonVisible)
-                {
-                    RobberImages[Game.RobberPlacment[0]][Game.RobberPlacment[1]].Source = null;
-                    imageButton.Source = Strings.RobberImage;
-                    BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = false;
-                    Game.RobberPlacment[0] = imageButton.RowIndex;
-                    Game.RobberPlacment[1] = imageButton.ColumnIndex;
-                    BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
-                    Dictionary<string, object> dict = new()
+        {
+            IndexedImageButton? imageButton = (IndexedImageButton)sender!;
+            if (imageButton != null && imageButton.BorderWidth == Keys.ButtonVisible)
+            {
+                RobberImages[Game.RobberPlacment[0]][Game.RobberPlacment[1]].Source = null;
+                imageButton.Source = Strings.RobberImage;
+                BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = false;
+                Game.RobberPlacment[0] = imageButton.RowIndex;
+                Game.RobberPlacment[1] = imageButton.ColumnIndex;
+                BoardData.Hexes[GetTileLocationInArray(Game.RobberPlacment[0] + 1, Game.RobberPlacment[1] + 1)].HasRobber = true;
+                Dictionary<string, object> dict = new()
                     {
                         { nameof(Game.RobberPlacment), Game.RobberPlacment }
                     };
-                    Game.UpdateFields(dict);
-                    HideRobberButtuns();
-                }
+                Game.UpdateFields(dict);
+                HideRobberButtuns();
+            }
         }
+
         protected override void ShowBuildOptions()
         {
             ShowBuildOptions(Strings.All);
         }
+
         protected override void ShowRobberPlacmentOptions()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -299,6 +243,7 @@ namespace CatanGame.ModelsLogic
                             SetVisibleRobberImages(i, k);
             });
         }
+
         protected override void HideRobberButtuns()
         {
             for (int i = 0; i < 5; i++)
@@ -306,6 +251,7 @@ namespace CatanGame.ModelsLogic
                     if (RobberImages[i][k].BorderWidth == Keys.ButtonVisible)
                         RobberImages[i][k].BorderWidth = 0;
         }
+
         protected override void HideButtuns()
         {
             for (int i = 1; i < 24; i++)
@@ -313,6 +259,7 @@ namespace CatanGame.ModelsLogic
                     if (BoardPieceButtons[i][k].BorderWidth == Keys.ButtonVisible)
                         BoardPieceButtons[i][k].BorderWidth = 0;
         }
+
         protected override void OnBuildButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
@@ -321,7 +268,7 @@ namespace CatanGame.ModelsLogic
                 if (button.RowIndex % 2 == 0 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                 {
                     BuildRoad(button.RowIndex, button.ColumnIndex - 1);
-                    if(SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.First)
+                    if (SpecialCards.RoadBuildingStuatus == SpecialCardsModel.RoadBuilding.First)
                     {
                         SpecialCards.RoadBuildingStuatus = SpecialCardsModel.RoadBuilding.Second;
                         HideButtuns();
@@ -344,7 +291,7 @@ namespace CatanGame.ModelsLogic
                     if (button.RowIndex % 2 == 1 && ImageSource.IsNullOrEmpty(BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source))
                     {
                         BuildTown(button.RowIndex, button.ColumnIndex - 1);
-                        if(Game.Turn > Game.PlayerCount * 2)
+                        if (Game.Turn > Game.PlayerCount * 2)
                         {
                             Game.PlayerBrickCount--;
                             Game.PlayerWheatCount--;
@@ -372,6 +319,7 @@ namespace CatanGame.ModelsLogic
                     ShowBuildOptions(Strings.Road);
             }
         }
+
         protected override void CheckLongestRoad()
         {
             EdgeLink[] edges = BoardData.Edges;
@@ -393,23 +341,25 @@ namespace CatanGame.ModelsLogic
                 Game.LongestRoadLength = Game.PlayerLongestRoadLength;
                 Game.LongestRoadOwnerIndex = Game.PlayerIndicator;
             }
-            else if(LongestRoad.Opacity == 1)
+            else if (LongestRoad.Opacity == 1)
             {
                 Game.LongestRoadLength = Game.PlayerLongestRoadLength;
-                if(Game.LongestRoadLength < 5)
+                if (Game.LongestRoadLength < 5)
                     LongestRoad.Opacity = Keys.DoesNotOwn;
             }
             Dictionary<string, object> dict = new()
-            {
-                { nameof(Game.BoardPieces), Game.BoardPieces },
-                { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
-            };
+                {
+                    { nameof(Game.BoardPieces), Game.BoardPieces },
+                    { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
+                };
             Game.UpdateFields(dict);
         }
+
         protected override void OnRollButtonClicked(object? sender, EventArgs e)
         {
             RollDice();
         }
+
         protected override void RollDice()
         {
             RollButton.IsEnabled = false;
@@ -419,13 +369,14 @@ namespace CatanGame.ModelsLogic
             Game.IsRolling = true;
             StartAnimations();
             Dictionary<string, object> dict = new()
-            {
-                { nameof(Game.Roll1), Game.Roll1 },
-                { nameof(Game.Roll2), Game.Roll2 },
-                { nameof(Game.IsRolling), Game.IsRolling }
-            };
+                {
+                    { nameof(Game.Roll1), Game.Roll1 },
+                    { nameof(Game.Roll2), Game.Roll2 },
+                    { nameof(Game.IsRolling), Game.IsRolling }
+                };
             Game.UpdateFields(OnDiceUpdated, dict);
         }
+
         protected override void StartAnimations()
         {
             Dice1Image.IsVisible = false;
@@ -438,6 +389,7 @@ namespace CatanGame.ModelsLogic
             Dice2Roll.IsAnimationEnabled = true;
             RollLabel.Text = Strings.Rolling;
         }
+
         protected override void StopAnimations()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -453,10 +405,12 @@ namespace CatanGame.ModelsLogic
                 RollLabel.Text = Strings.Rolled + Game.RollTotal;
             });
         }
+
         protected override void EndTurn()
         {
             EndTurnOnClicked?.Invoke(this, EventArgs.Empty);
         }
+
         protected override void BuildTownAtFirstPosition()
         {
             bool foundPlaceToBuild = false;
@@ -474,6 +428,7 @@ namespace CatanGame.ModelsLogic
                         }
                     }
         }
+
         protected override void BuildTown(int row, int column)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -486,6 +441,7 @@ namespace CatanGame.ModelsLogic
                 CheckIfOnHarbor(row, column);
             });
         }
+
         protected override void CheckIfOnHarbor(int row, int column)
         {
             int harborType;
@@ -503,6 +459,7 @@ namespace CatanGame.ModelsLogic
             if (harborType != -1)
                 Game.PlayerOwnedHarbors[harborType] = true;
         }
+
         protected override void BuildRoadAtFirstPosition()
         {
             bool foundPlaceToBuild = false;
@@ -519,6 +476,7 @@ namespace CatanGame.ModelsLogic
                         }
                     }
         }
+
         protected override void BuildRoad(int row, int column)
         {
             BoardPieceImages[row][column].Source = (GetPiecesColor(Game.PlayerIndicator + 1) + Strings.Road).ToLower();
@@ -527,14 +485,16 @@ namespace CatanGame.ModelsLogic
             Game.PlayerRoadCount++;
             CheckLongestRoad();
         }
+
         protected override void UpdateBoardPices()
         {
             Dictionary<string, object> dict = new()
-            {
-                { nameof(Game.BoardPieces), Game.BoardPieces }
-            };
+                {
+                    { nameof(Game.BoardPieces), Game.BoardPieces }
+                };
             Game.UpdateFields(dict);
         }
+
         protected override void Trade()
         {
             if (CurrentTradePopUp != null)
@@ -542,34 +502,36 @@ namespace CatanGame.ModelsLogic
             CurrentTradePopUp = new(Game);
             CurrentGamePage?.ShowPopup(CurrentTradePopUp);
         }
+
         protected override void UseCard(object paramter)
         {
-            if(paramter is string source)
+            if (paramter is string source)
             {
                 if (source == Strings.KnightImage)
                 {
                     SpecialCards.UseKnight();
                     Game.PlayerLargestArmySize++;
-                    if(Game.PlayerLargestArmySize > Game.LargestArmySize)
+                    if (Game.PlayerLargestArmySize > Game.LargestArmySize)
                     {
                         LargestArmy.Opacity = 1;
                         Game.LargestArmySize = Game.PlayerLargestArmySize;
                         Dictionary<string, object> dict = new()
-                        {
-                            {nameof(Game.LargestArmySize),Game.LargestArmySize }
-                        };
+                            {
+                                { nameof(Game.LargestArmySize), Game.LargestArmySize }
+                            };
                         Game.UpdateFields(dict);
                     }
                 }
-                else if(source == Strings.RoadBuildingImage)
+                else if (source == Strings.RoadBuildingImage)
                     SpecialCards.UseRoadBuilding();
                 else if (source == Strings.MonopolyImage)
                     SpecialCards.UseMonopoly();
-                else if(source == Strings.YearOfPlentyImage)
+                else if (source == Strings.YearOfPlentyImage)
                     SpecialCards.UseYearOfPlenty();
             }
             UpdateSpecialCards();
         }
+
         protected override void UpdateSpecialCards()
         {
             Counters[5].Text = SpecialCards.PlayerKnightCount.ToString();
@@ -583,6 +545,7 @@ namespace CatanGame.ModelsLogic
             Counters[9].Text = SpecialCards.PlayerYearOfPlentyCount.ToString();
             (SpecialCardImages[4].Command as Command)?.ChangeCanExecute();
         }
+
         protected override void GetCardFromPackege()
         {
             Game.PlayerSheepCount--;
@@ -592,6 +555,7 @@ namespace CatanGame.ModelsLogic
             SpecialCards.GetCardFromPackege();
             UpdateSpecialCards();
         }
+
         protected override async void OnDiceUpdated(Task task)
         {
             await Task.Delay(2000);
@@ -607,18 +571,20 @@ namespace CatanGame.ModelsLogic
                 }
                 Game.IsRolling = false;
                 Dictionary<string, object> dict = new()
-                {
-                    { nameof(Game.IsRolling), Game.IsRolling }
-                };
+                    {
+                        { nameof(Game.IsRolling), Game.IsRolling }
+                    };
                 Game.UpdateFields(dict);
             }
         }
+
         protected override BoardModel.PieceType GetPieceType(int row, int column)
         {
             return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.City, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.City :
-                   BoardModel.PieceType.None;
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.City, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.City :
+                BoardModel.PieceType.None;
         }
+
         protected override ImageButton CreateCardImageButton(string source)
         {
             double sizeProportion = GetSizeProportion();
@@ -633,6 +599,7 @@ namespace CatanGame.ModelsLogic
                 CommandParameter = source
             };
         }
+
         protected override Grid CreateRobberImage(int row, int column)
         {
             Grid grid = CreateEmptyCenteredGrid();
@@ -649,16 +616,18 @@ namespace CatanGame.ModelsLogic
             grid.Add(imageButton, 0, 1);
             return grid;
         }
+
         protected override int GetPieceIndexFromColor(int row, int column)
         {
             return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Oreange, StringComparison.CurrentCultureIgnoreCase) ? 0 :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Blue, StringComparison.CurrentCultureIgnoreCase) ? 1 :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Yellow, StringComparison.CurrentCultureIgnoreCase) ? 2 :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Red, StringComparison.CurrentCultureIgnoreCase) ? 3 :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
-                   BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
-                   -1;
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Blue, StringComparison.CurrentCultureIgnoreCase) ? 1 :
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Yellow, StringComparison.CurrentCultureIgnoreCase) ? 2 :
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Red, StringComparison.CurrentCultureIgnoreCase) ? 3 :
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Green, StringComparison.CurrentCultureIgnoreCase) ? 4 :
+                BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Cyan, StringComparison.CurrentCultureIgnoreCase) ? 5 :
+                -1;
         }
+
         protected override int CheckLongestRoad(EdgeLink edge, bool[] visited)
         {
             if (visited[GetPieceLocationInArray(edge.Row, edge.Column)])
@@ -723,28 +692,35 @@ namespace CatanGame.ModelsLogic
             }
             visited[GetPieceLocationInArray(edge.Row, edge.Column)] = false;
             return longestBranch;
-        }   
+        }
+
         protected override bool CanShowBuildOptions()
         {
             return Game.StatusMessage == Strings.YourTurn;
         }
+
         protected override bool CanEndTurn()
         {
-            return Game.PlayerIndicator + 1 == Game.PlayerTurn && Game.IsFull && ((Game.Turn <= Game.PlayerCount * 2 && Game.PlayerRoadCount >= (double)(Game.Turn / Game.PlayerCount)) || (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && !RollButton.IsEnabled));
+            return Game.PlayerIndicator + 1 == Game.PlayerTurn && Game.IsFull &&
+                ((Game.Turn <= Game.PlayerCount * 2 && Game.PlayerRoadCount >= (double)(Game.Turn / Game.PlayerCount)) ||
+                (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && !RollButton.IsEnabled));
         }
+
         protected override bool CenTrade()
         {
             return Game.PlayerTurn == Game.PlayerIndicator + 1;
         }
+
         protected override bool CenGetCardFromPackege()
         {
             return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]);
         }
+
         protected override bool CenUseCard(object paramter)
         {
-            if(paramter is string source)
+            if (paramter is string source)
             {
-                if(source == Strings.KnightImage)
+                if (source == Strings.KnightImage)
                     return SpecialCards.PlayerKnightCount > 0;
                 else if (source == Strings.RoadBuildingImage)
                     return SpecialCards.PlayerRoadBuildingCount > 0;
@@ -756,16 +732,103 @@ namespace CatanGame.ModelsLogic
             //wont happan
             return false;
         }
+        #endregion
+
+        #region Public Methods
+        public static Image CreateCardImage(string source)
+        {
+            double sizeProportion = GetSizeProportion();
+            return new()
+            {
+                Source = source,
+                HeightRequest = sizeProportion * 0.158,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.End,
+            };
+        }
+
+        public static int GetTileLocationInArray(int row, int column)
+        {
+            int location = 0;
+            for (int i = 1; i < row; i++)
+            {
+                location += GetAmountOfColumnsTiles(i);
+            }
+            for (int i = 1; i < column; i++)
+            {
+                location++;
+            }
+            return location;
+        }
+
+        public static int GetAmountOfColumnsTiles(int i)
+        {
+            return i switch
+            {
+                1 or 5 => 3,
+                2 or 4 => 4,
+                3 => 5,
+                //Should not happen
+                _ => 0,
+            };
+        }
+
+        public static int GetAmountOfColumns(int i)
+        {
+            return i switch
+            {
+                1 or 23 => 4,
+                3 or 4 or 5 or 19 or 20 or 21 => 5,
+                7 or 8 or 9 or 15 or 16 or 17 => 6,
+                2 or 11 or 12 or 13 or 22 => 7,
+                6 or 18 => 9,
+                10 or 14 => 11,
+                //Should not happen
+                _ => 0,
+            };
+        }
+
+        public static int GetPieceLocationInArray(int row, int column)
+        {
+            int location = 0;
+            if (row % 2 == 0)
+            {
+                for (int i = 2; i < row; i += 2)
+                {
+                    location += GetAmountOfColumns(i) - 1;
+                }
+                for (int i = 0; i < column; i++)
+                {
+                    location++;
+                }
+                return location;
+            }
+            else
+            {
+                for (int i = 1; i < row; i += 2)
+                {
+                    location += GetAmountOfColumns(i) - 1;
+                }
+                for (int i = 0; i < column; i++)
+                {
+                    location++;
+                }
+                return location;
+            }
+        }
+
         public override void CloseTradePopUp()
         {
             if (CurrentTradePopUp != null)
                 MainThread.BeginInvokeOnMainThread(() => CurrentTradePopUp.Close());
             CurrentTradePopUp = null;
         }
+
         public override void SetVisibleRobberImages(int row, int column)
         {
             RobberImages[row][column].BorderWidth = Keys.ButtonVisible;
         }
+
         public override void UpdateResourceCounters()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -782,15 +845,15 @@ namespace CatanGame.ModelsLogic
                 if (Counters[4] != null && Counters[4].Text != Game.PlayerOreCount.ToString())
                     Counters[4].Text = Game.PlayerOreCount.ToString();
             });
-
         }
+
         public override void OnAnimationStatusChanged()
         {
             if (Game.IsRolling)
                 StartAnimations();
             else
             {
-                if(Game.RollTotal != 7)
+                if (Game.RollTotal != 7)
                 {
                     Game.AllocateResources();
                     UpdateResourceCounters();
@@ -798,6 +861,7 @@ namespace CatanGame.ModelsLogic
                 StopAnimations();
             }
         }
+
         public override void OnChange()
         {
             if (Game.BoardPieces != null && BoardPieceImages != null && BoardPieceButtons != null)
@@ -813,13 +877,13 @@ namespace CatanGame.ModelsLogic
                                 VertexNode vertex = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                                 vertex.PlayerIndex = GetPieceIndexFromColor(i, k);
                                 vertex.PieceType = GetPieceType(i, k);
-                                if(vertex.PieceType == BoardModel.PieceType.Town)
+                                if (vertex.PieceType == BoardModel.PieceType.Town)
                                     CheckLongestRoad();
                             }
                         }
             for (int i = 0; i < 5; i++)
                 for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
-                    if (BoardData.Hexes[GetTileLocationInArray(i + 1,k + 1)].HasRobber &&( i != Game.RobberPlacment[0] || k != Game.RobberPlacment[1]))
+                    if (BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && (i != Game.RobberPlacment[0] || k != Game.RobberPlacment[1]))
                     {
                         RobberImages[i][k].Source = null;
                         BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber = false;
@@ -834,9 +898,9 @@ namespace CatanGame.ModelsLogic
                 LongestRoad.Opacity = 1;
                 Game.LongestRoadLength = Game.PlayerLongestRoadLength;
                 Dictionary<string, object> dict = new()
-                {
-                    { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
-                };
+                    {
+                        { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
+                    };
                 Game.UpdateFields(dict);
             }
             if (LongestRoad.Opacity != Keys.DoesNotOwn && Game.PlayerLongestRoadLength < Game.LongestRoadLength)
@@ -847,6 +911,7 @@ namespace CatanGame.ModelsLogic
             (EndTurnCommand as Command)?.ChangeCanExecute();
             UpdateResourceCounters();
         }
+
         public override async void EnsurePlayerPlayed()
         {
             if (RollButton.IsEnabled)
@@ -858,7 +923,7 @@ namespace CatanGame.ModelsLogic
                 await Task.Delay(2000);
             if (Game.Turn <= Game.PlayerCount * 2)
             {
-                if(Game.PlayerTownCount <= Game.Turn / Game.PlayerCount)
+                if (Game.PlayerTownCount <= Game.Turn / Game.PlayerCount)
                 {
                     BuildTownAtFirstPosition();
                     await Task.Delay(2000);
@@ -869,13 +934,14 @@ namespace CatanGame.ModelsLogic
                     await Task.Delay(2000);
                 }
             }
-            if(Game.TradeInProgress)
+            if (Game.TradeInProgress)
             {
                 Game.CancelTradeRequest();
                 await Task.Delay(2000);
             }
             Game.EndTurn();
         }
+
         public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage)
         {
             CurrentGamePage = gamePage;
@@ -921,20 +987,20 @@ namespace CatanGame.ModelsLogic
                 string[] tiles =
                 [
                     Strings.FieldsTwo,Strings.FieldsTwo,Strings.FieldsOne,Strings.FieldsOne,
-                Strings.MountienOne,Strings.MountienTwo,Strings.MountienOne,
-                Strings.Hills,Strings.Hills,Strings.Hills,
-                Strings.ForestTwo,Strings.ForestTwo, Strings.ForestOne,Strings.ForestOne,
-                Strings.PastureTwo,Strings.PastureTwo,Strings.PastureOne,Strings.PastureOne,
-                Strings.Desert
+                        Strings.MountienOne,Strings.MountienTwo,Strings.MountienOne,
+                        Strings.Hills,Strings.Hills,Strings.Hills,
+                        Strings.ForestTwo,Strings.ForestTwo, Strings.ForestOne,Strings.ForestOne,
+                        Strings.PastureTwo,Strings.PastureTwo,Strings.PastureOne,Strings.PastureOne,
+                        Strings.Desert
                 ];
                 string[] numbers =
                 [
                     Strings.TwoImage,Strings.ThreeImage,Strings.ThreeImage,Strings.FourImage,
-                Strings.FourImage,Strings.FiveImage,Strings.FiveImage,Strings.SixImage,
-                Strings.SixImage,Strings.EightImage,Strings.EightImage,Strings.NineImage,
-                Strings.NineImage,Strings.TenImage,Strings.TenImage,Strings.ElevenImage,
-                Strings.ElevenImage,Strings.TwelveImage,
-                String.Empty
+                        Strings.FourImage,Strings.FiveImage,Strings.FiveImage,Strings.SixImage,
+                        Strings.SixImage,Strings.EightImage,Strings.EightImage,Strings.NineImage,
+                        Strings.NineImage,Strings.TenImage,Strings.TenImage,Strings.ElevenImage,
+                        Strings.ElevenImage,Strings.TwelveImage,
+                        String.Empty
                 ];
                 for (int i = 1; i < 6; i++)
                 {
@@ -947,7 +1013,6 @@ namespace CatanGame.ModelsLogic
                         // Determine the tile type and number based on whether the board is random or fixed
                         if (Game.IsRandomBoard)
                         {
-
                             int curent = random.Next(0, tiles.Length - count);
                             sourceTile = tiles[curent];
                             tiles[curent] = String.Empty;
@@ -993,11 +1058,11 @@ namespace CatanGame.ModelsLogic
                     Row = CreateEmptyCenteredGrid();
                 }
                 Dictionary<string, object> dict = new()
-                {
-                    {nameof(Game.TileNumbers), Game.TileNumbers},
-                    {nameof(Game.TileTypes), Game.TileTypes},
-                    {nameof(Game.RobberPlacment), Game.RobberPlacment}
-                };
+                    {
+                        { nameof(Game.TileNumbers), Game.TileNumbers },
+                        { nameof(Game.TileTypes), Game.TileTypes },
+                        { nameof(Game.RobberPlacment), Game.RobberPlacment }
+                    };
                 //Update the firebase with the new tile types and numbers
                 Game.UpdateFields(dict);
             }
@@ -1245,10 +1310,11 @@ namespace CatanGame.ModelsLogic
                 HeightRequest = sizeProportion * 0.12,
                 WidthRequest = sizeProportion * 0.37,
                 FontAttributes = FontAttributes.Bold,
-                Command = new Command(Trade,CenTrade)
+                Command = new Command(Trade, CenTrade)
             };
             otherPieces.Add(TradeButton, 1, 3);
         }
+
         public override void ShowBuildOptions(string pieceType)
         {
             //Shows all options for building a road, if the player has the resources to build it, or if the player just built a town as part of the first two turns
@@ -1289,7 +1355,6 @@ namespace CatanGame.ModelsLogic
                                 }
                             }
                         }
-
                     }
             //Shows all options for buiding a town, if the player has the resources to build it, if there are any
             if (pieceType == Strings.All && Game.PlayerWoodCount >= 1 && Game.PlayerBrickCount >= 1 && Game.PlayerSheepCount >= 1 && Game.PlayerWheatCount >= 1)
@@ -1307,7 +1372,7 @@ namespace CatanGame.ModelsLogic
                                 for (int j = 0; j < edges.Length; j++)
                                     if (edges[j].VertexNodeOne.PlayerIndex != -1 || edges[j].VertexNodeTwo.PlayerIndex != -1)
                                         cenBuild = false;
-                                if(cenBuild)
+                                if (cenBuild)
                                     BoardPieceButtons[edge.VertexNodeOne.Row][edge.VertexNodeOne.Column].BorderWidth = Keys.ButtonVisible;
                             }
                             if (edge.VertexNodeTwo.PlayerIndex == -1)
@@ -1348,7 +1413,7 @@ namespace CatanGame.ModelsLogic
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {
-                        if(i % 2 == 1)
+                        if (i % 2 == 1)
                         {
                             VertexNode vertexNode = BoardData.Vertices[GetPieceLocationInArray(i, k)];
                             if (vertexNode.PieceType == BoardModel.PieceType.Town && vertexNode.PlayerIndex == Game.PlayerIndicator)
@@ -1356,5 +1421,6 @@ namespace CatanGame.ModelsLogic
                         }
                     }
         }
+        #endregion
     }
 }

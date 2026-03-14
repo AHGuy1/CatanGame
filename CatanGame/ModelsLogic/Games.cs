@@ -8,30 +8,36 @@ namespace CatanGame.ModelsLogic
 {
     public class Games : GamesModel
     {
+        #region Constructor
         public Games()
         {
         }
+        #endregion
 
+        #region Private Methods
         protected override void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
             GameAdded?.Invoke(this, CurrentGame!);
         }
+
         protected override void OnCompleteGameAdded(Task task)
         {
             GameCode gameCode = new(CurrentGame!.Id);
             CurrentGame.GameCode = gameCode.GameCode;
             gameCode.SetDocument(OnCompleteGameCodeAdded);
             Dictionary<string, object> dict = new()
-            {
-                {nameof(CurrentGame.GameCode),gameCode.GameCode }
-            };
+                {
+                    { nameof(CurrentGame.GameCode), gameCode.GameCode }
+                };
             CurrentGame.UpdateFields(dict);
         }
+
         protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnChange);
         }
+
         protected override void OnChange(IQuerySnapshot qs)
         {
             GamesList!.Clear();
@@ -46,6 +52,7 @@ namespace CatanGame.ModelsLogic
             }
             GamesChanged?.Invoke(this, EventArgs.Empty);
         }
+
         protected override void OnCompleteGetCodeDocument(IDocumentSnapshot ds)
         {
             if (ds.Data != null)
@@ -55,11 +62,9 @@ namespace CatanGame.ModelsLogic
                 game.GetDocument(gameCode!.GameId, OnCompleteGetGameDocument);
             }
             else
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show());
         }
+
         protected override void OnCompleteGetGameDocument(IDocumentSnapshot ds)
         {
             if (ds.Data != null)
@@ -68,31 +73,26 @@ namespace CatanGame.ModelsLogic
                 game!.Id = ds.Id;
                 if (!game.IsFull)
                     if (Application.Current != null)
-                        MainThread.BeginInvokeOnMainThread(() =>
-                        {
-                            Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
-                        });
-                else
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.GameIsFull, ToastDuration.Long, 20).Show();
-                    });
+                        MainThread.BeginInvokeOnMainThread(() => Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true));
+                    else
+                        MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.GameIsFull, ToastDuration.Long, 20).Show());
             }
             else
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.GameDoesNotExiest, ToastDuration.Long, 20).Show());
         }
+        #endregion
 
+        #region Public Methods
         public override void AddSnapshotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, OnChange!);
         }
+
         public override void RemoveSnapshotListener()
         {
             ilr?.Remove();
         }
+
         public override void AddGame(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int TurnTime, bool isRandomBoard)
         {
             IsBusy = true;
@@ -104,11 +104,13 @@ namespace CatanGame.ModelsLogic
             CurrentGame = game;
             game.SetDocument(OnCompleteGameAdded);
         }
+
         public override void JoinGameWithCode(string gameCode)
         {
             IsBusy = true;
             GameCode gamecode = new();
             gamecode.GetDocument(gameCode, OnCompleteGetCodeDocument);
         }
+        #endregion
     }
 }

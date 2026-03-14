@@ -8,9 +8,13 @@ namespace CatanGame.ViewModels
 {
     public partial class LogInPageVM : ObservableObject
     {
+        #region Fields
         [GeneratedRegex(Strings.PhoneStructure)]
         private static partial Regex PhoneStructureRegex();
-        private readonly  User user = new();
+        private readonly User user = new();
+        #endregion
+
+        #region Properties
         public ICommand LoginCommand { get; }
         public ICommand LoginWithVerificationCodeCommand { get; }
         public ICommand SendVerificationCodeToPhoneCommand { get; }
@@ -79,7 +83,9 @@ namespace CatanGame.ViewModels
                 (SendVerificationCodeToPhoneCommand as Command)?.ChangeCanExecute();
             }
         }
+        #endregion
 
+        #region Constructor
         public LogInPageVM()
         {
             LoginCommand = new Command(Login, CanLogin);
@@ -93,7 +99,9 @@ namespace CatanGame.ViewModels
             user.PhoneNumberFalier += OnPhoneContactFalier;
             user.PhoneNumberComplete += OnPhoneContactComplete;
         }
+        #endregion
 
+        #region Private Methods
         private void NotBusy()
         {
             IsBusy = false;
@@ -101,6 +109,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
         }
+
         private void Busy()
         {
             IsBusy = true;
@@ -108,6 +117,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
         }
+
         private void OnPhoneContactComplete(object? sender, EventArgs e)
         {
             IsVisibileBeforeVerificationCodeSent = false;
@@ -116,10 +126,12 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibileBeforeVerificationCodeSent));
             OnPropertyChanged(nameof(IsVisibileAfterVerificationCodeSent));
         }
+
         private void OnPhoneContactFalier(object? sender, EventArgs e)
         {
             PhoneNumber = Strings.PhoneAreaCode;
         }
+
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
@@ -127,12 +139,14 @@ namespace CatanGame.ViewModels
                 {
                     Application.Current.MainPage = new AppShell();
                 });
-           NotBusy();
+            NotBusy();
         }
+
         private void OnAuthFalier(object? sender, EventArgs e)
         {
             ResetFields();
         }
+
         private void ResetFields()
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -144,62 +158,75 @@ namespace CatanGame.ViewModels
                 OnPropertyChanged(nameof(Password));
             });
         }
+
         private void RememberMe()
         {
             user.RememberMe();
         }
+
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
+
         private void ToggleIsVisiblePhoneMessege()
         {
             IsVisiblePhoneMessege = !String.IsNullOrWhiteSpace(PhoneNumber) && !PhoneStructureRegex().IsMatch(PhoneNumber) && !String.Equals(PhoneNumber, Strings.PhoneAreaCode + Strings.EmptySpace);
             OnPropertyChanged(nameof(IsVisiblePhoneMessege));
         }
+
         private void ToggleIsVisibleEmailMessege()
         {
             IsVisibleEmailMessege = !(user.Email.Contains(Strings.AtSign) && user.Email.Contains(Strings.Dot));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
+
         private void ToggleIsVisibleVerificationCodeMessege()
         {
             IsVisibleVerificationCodeMessege = !String.IsNullOrWhiteSpace(VerificationCode);
             OnPropertyChanged(nameof(IsVisibleVerificationCodeMessege));
         }
+
         private void ToggleIsVisiblePasswordMessege()
         {
             IsVisiblePasswordMessege = (user.Email.Contains(Strings.AtSign) && user.Email.Contains(Strings.Dot)) && !(user.Password.Length >= 8 && user.Password.Length <= 12);
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
+
         private void Login()
         {
             Busy();
             user.Login();
         }
+
         private bool CanLogin()
         {
             return (Email.Contains(Strings.AtSign) && Email.Contains(Strings.Dot) && Password.Length >= 8 && Password.Length <= 12);
         }
+
         private void LoginWithVerificationCode()
         {
             Busy();
             user.SignInWithPhoneNumber();
         }
+
         private bool CanLoginWithVerificationCode()
         {
             return !String.IsNullOrWhiteSpace(VerificationCode);
         }
+
         private void SendVerificationCodeToPhone()
         {
             Busy();
             user.VerifyPhoneNumber();
         }
+
         private bool CanSendVerificationCodeToPhone()
         {
             return PhoneStructureRegex().IsMatch(PhoneNumber);
         }
+
         private void GoToResetPassword()
         {
             Busy();
@@ -211,6 +238,7 @@ namespace CatanGame.ViewModels
                     OnPropertyChanged(nameof(IsEnabled));
                 });
         }
+
         private void GoToRegister()
         {
             Busy();
@@ -222,5 +250,6 @@ namespace CatanGame.ViewModels
                     OnPropertyChanged(nameof(IsEnabled));
                 });
         }
+        #endregion
     }
 }

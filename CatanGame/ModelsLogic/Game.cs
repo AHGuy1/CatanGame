@@ -9,8 +9,11 @@ namespace CatanGame.ModelsLogic
 {
     public class Game : GameModel
     {
+        #region Properties
         public override GameStatus Status => _status;
+        #endregion
 
+        #region Constructor
         public Game(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int turnTime, bool isRandomBoard)
         {
             TurnTime = turnTime;
@@ -25,12 +28,15 @@ namespace CatanGame.ModelsLogic
             IntArrayBoardPieces();
             InitAvatar();
         }
+
         public Game()
         {
             IntArrayBoardPieces();
             InitAvatar();
         }
+        #endregion
 
+        #region Private Methods
         private static Color GetStatusColor(int playerTurn)
         {
             return playerTurn switch
@@ -41,35 +47,55 @@ namespace CatanGame.ModelsLogic
                 4 => Colors.Red,
                 5 => Colors.LimeGreen,
                 6 => Colors.Cyan,
-                //Should not happen
                 _ => Colors.Black
             };
         }
+
         protected override void InitAvatar()
         {
-            PlayerAvatar.SelectedEyes = [AvatarModel.Eyes.Bulging, AvatarModel.Eyes.Dizzy, AvatarModel.Eyes.Eva, AvatarModel.Eyes.Frame1, AvatarModel.Eyes.Frame2, AvatarModel.Eyes.Glow, AvatarModel.Eyes.Robocop, AvatarModel.Eyes.Round,
-                AvatarModel.Eyes.RoundFrame01, AvatarModel.Eyes.RoundFrame02, AvatarModel.Eyes.Sensor, AvatarModel.Eyes.Shade01];
-            PlayerAvatar.SelectedMouths = [AvatarModel.Mouth.Bite, AvatarModel.Mouth.Diagram, AvatarModel.Mouth.Grill01, AvatarModel.Mouth.Grill02, AvatarModel.Mouth.Grill03, AvatarModel.Mouth.Square01, AvatarModel.Mouth.Square02];
-            PlayerAvatar.SelectedFaces = [AvatarModel.Face.Round01, AvatarModel.Face.Round02, AvatarModel.Face.Square01, AvatarModel.Face.Square02];
-            PlayerAvatar.SelectedColors = [AvatarModel.Colors.OrangeRed, AvatarModel.Colors.Orange, AvatarModel.Colors.Indigo, AvatarModel.Colors.Cyan, AvatarModel.Colors.BlueGrey, AvatarModel.Colors.Blue, AvatarModel.Colors.Brown, AvatarModel.Colors.Green,
-                AvatarModel.Colors.YellowGreen, AvatarModel.Colors.Yellow, AvatarModel.Colors.Red, AvatarModel.Colors.LightGreen, AvatarModel.Colors.LightBlue, AvatarModel.Colors.Grey, AvatarModel.Colors.Amber, AvatarModel.Colors.Teal, AvatarModel.Colors.Pink];
-            PlayerAvatar.SelectedTops = [AvatarModel.Top.Antenna, AvatarModel.Top.AntennaCrooked, AvatarModel.Top.Bulb01, AvatarModel.Top.GlowingBulb01, AvatarModel.Top.GlowingBulb02, AvatarModel.Top.Lights, AvatarModel.Top.Pyramid, AvatarModel.Top.Radar];
+            PlayerAvatar.SelectedEyes =
+            [
+                AvatarModel.Eyes.Bulging, AvatarModel.Eyes.Dizzy, AvatarModel.Eyes.Eva, AvatarModel.Eyes.Frame1, AvatarModel.Eyes.Frame2,
+                    AvatarModel.Eyes.Glow, AvatarModel.Eyes.Robocop, AvatarModel.Eyes.Round, AvatarModel.Eyes.RoundFrame01,
+                    AvatarModel.Eyes.RoundFrame02, AvatarModel.Eyes.Sensor, AvatarModel.Eyes.Shade01
+            ];
+            PlayerAvatar.SelectedMouths =
+            [
+                AvatarModel.Mouth.Bite, AvatarModel.Mouth.Diagram, AvatarModel.Mouth.Grill01, AvatarModel.Mouth.Grill02,
+                    AvatarModel.Mouth.Grill03, AvatarModel.Mouth.Square01, AvatarModel.Mouth.Square02
+            ];
+            PlayerAvatar.SelectedFaces =
+            [
+                AvatarModel.Face.Round01, AvatarModel.Face.Round02, AvatarModel.Face.Square01, AvatarModel.Face.Square02
+            ];
+            PlayerAvatar.SelectedColors =
+            [
+                AvatarModel.Colors.OrangeRed, AvatarModel.Colors.Orange, AvatarModel.Colors.Indigo, AvatarModel.Colors.Cyan,
+                    AvatarModel.Colors.BlueGrey, AvatarModel.Colors.Blue, AvatarModel.Colors.Brown, AvatarModel.Colors.Green,
+                    AvatarModel.Colors.YellowGreen, AvatarModel.Colors.Yellow, AvatarModel.Colors.Red, AvatarModel.Colors.LightGreen,
+                    AvatarModel.Colors.LightBlue, AvatarModel.Colors.Grey, AvatarModel.Colors.Amber, AvatarModel.Colors.Teal,
+                    AvatarModel.Colors.Pink
+            ];
+            PlayerAvatar.SelectedTops =
+            [
+                AvatarModel.Top.Antenna, AvatarModel.Top.AntennaCrooked, AvatarModel.Top.Bulb01, AvatarModel.Top.GlowingBulb01,
+                    AvatarModel.Top.GlowingBulb02, AvatarModel.Top.Lights, AvatarModel.Top.Pyramid, AvatarModel.Top.Radar
+            ];
         }
+
         protected override void IntArrayBoardPieces()
         {
             for (int i = 0; i < 276; i++)
                 BoardPieces[i] = string.Empty;
         }
+
         protected override void RegisterTimer()
         {
-            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
-            {
-                OnMessageReceived(m.Value);
-            });
+            WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) => OnMessageReceived(m.Value));
         }
+
         protected override void OnMessageReceived(long timeleft)
         {
-
             if (timeleft == Keys.FinishedSignal)
             {
                 TimeLeft = Strings.TimeUp;
@@ -87,19 +113,23 @@ namespace CatanGame.ModelsLogic
                 TimeLeftChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
         protected override void StartTimer()
         {
             TimerSettings ts = new((TurnTime * 1000) + 1, 10);
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
         }
+
         protected override void StopTimer()
         {
             WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
         }
+
         protected override void OnCompletePlayerLeft(Task task)
         {
             PlayerLeft?.Invoke(this, PlayerIndicator);
         }
+
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
@@ -142,9 +172,9 @@ namespace CatanGame.ModelsLogic
                 {
                     TradeMessage = string.Empty;
                     Dictionary<string, object> dict = new()
-                    {
-                        {nameof(TradeMessage),TradeMessage }
-                    };
+                        {
+                            { nameof(TradeMessage), TradeMessage }
+                        };
                     UpdateFields(dict);
                 }
                 WoodTradeGetAmount = updatedGame.WoodTradeGetAmount;
@@ -157,7 +187,7 @@ namespace CatanGame.ModelsLogic
                 SheepTradeGiveAmount = updatedGame.SheepTradeGiveAmount;
                 WheatTradeGiveAmount = updatedGame.WheatTradeGiveAmount;
                 OreTradeGiveAmount = updatedGame.OreTradeGiveAmount;
-                if(TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                if (TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
                 {
                     PlayersInTrade = updatedGame.PlayersInTrade;
                     ReciveCounterOffer();
@@ -165,7 +195,7 @@ namespace CatanGame.ModelsLogic
                 if (TradeInProgress != updatedGame.TradeInProgress)
                 {
                     TradeInProgress = updatedGame.TradeInProgress;
-                    if(TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                    if (TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
                     {
                         PlayersInTrade = updatedGame.PlayersInTrade;
                         RecivedTrade();
@@ -214,10 +244,10 @@ namespace CatanGame.ModelsLogic
                         PlayerOreCount = 0;
                     }
                     Dictionary<string, object> dict = new()
-                    {
-                        {nameof(PlayersPassed), PlayersPassed },
-                        {nameof(MonoplizedCardsCount), MonoplizedCardsCount }
-                    };
+                        {
+                            { nameof(PlayersPassed), PlayersPassed },
+                            { nameof(MonoplizedCardsCount), MonoplizedCardsCount }
+                        };
                     UpdateFields(dict);
                     gridChanged = true;
                 }
@@ -238,12 +268,12 @@ namespace CatanGame.ModelsLogic
                     MonoplizedCardsCount = 0;
                     PlayersPassed = 0;
                     Dictionary<string, object> dict = new()
-                    {
-                        {nameof(PlayersPassed), PlayersPassed },
-                        {nameof(PlayersPassed),PlayersPassed },
-                        {nameof(MonopolizedCard), MonopolizedCard },
-                        {nameof(MonoplizingPlayer),MonoplizingPlayer }
-                    };
+                        {
+                            { nameof(PlayersPassed), PlayersPassed },
+                            { nameof(PlayersPassed), PlayersPassed },
+                            { nameof(MonopolizedCard), MonopolizedCard },
+                            { nameof(MonoplizingPlayer), MonoplizingPlayer }
+                        };
                     UpdateFields(dict);
                     gridChanged = true;
                 }
@@ -298,28 +328,30 @@ namespace CatanGame.ModelsLogic
                     GameDeleted?.Invoke(this, string.Empty);
             }
         }
+
         protected override void ShowTradeAlert()
         {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Toast.Make(TradeMessage, ToastDuration.Long, 15).Show();
-            });
+            MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 15).Show());
         }
+
         protected override void OnCompleteDeleted(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 GameDeleted?.Invoke(this, string.Empty);
         }
+
         protected override void OnCompleteAddPlayerName(Task task)
         {
             if (!task.IsCompletedSuccessfully)
                 Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
         }
+
         protected override void OnTurnChanged(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 GameChanged?.Invoke(this, EventArgs.Empty);
         }
+
         protected override void UpdateStatus()
         {
             Array status = Enum.GetValues(typeof(GameStatus.Status));
@@ -328,32 +360,35 @@ namespace CatanGame.ModelsLogic
                 (GameStatus.Status)status.GetValue(PlayerTurn - 1)!;
             StatusColor = GetStatusColor(PlayerTurn);
         }
+
         protected override void ResetSelctedCardBorder()
         {
             if (PreviselySelctedCard != null)
                 PreviselySelctedCard.BorderWidth = 0;
         }
+
         protected override void UpdateTradeParamaters()
         {
             Dictionary<string, object> dict = new()
-            {
-                { nameof(TradeInProgress), TradeInProgress },
-                { nameof(PlayersInTrade), PlayersInTrade },
-                { nameof(SelectedPlayerName), SelectedPlayerName },
-                { nameof(WoodTradeGiveAmount), WoodTradeGiveAmount },
-                { nameof(BrickTradeGiveAmount), BrickTradeGiveAmount },
-                { nameof(SheepTradeGiveAmount), SheepTradeGiveAmount },
-                { nameof(WheatTradeGiveAmount), WheatTradeGiveAmount },
-                { nameof(OreTradeGiveAmount), OreTradeGiveAmount },
-                { nameof(WoodTradeGetAmount), WoodTradeGetAmount },
-                { nameof(BrickTradeGetAmount), BrickTradeGetAmount },
-                { nameof(SheepTradeGetAmount), SheepTradeGetAmount },
-                { nameof(WheatTradeGetAmount), WheatTradeGetAmount },
-                { nameof(OreTradeGetAmount), OreTradeGetAmount },
-                { nameof(TradeMessage), TradeMessage }
-            };
+                {
+                    { nameof(TradeInProgress), TradeInProgress },
+                    { nameof(PlayersInTrade), PlayersInTrade },
+                    { nameof(SelectedPlayerName), SelectedPlayerName },
+                    { nameof(WoodTradeGiveAmount), WoodTradeGiveAmount },
+                    { nameof(BrickTradeGiveAmount), BrickTradeGiveAmount },
+                    { nameof(SheepTradeGiveAmount), SheepTradeGiveAmount },
+                    { nameof(WheatTradeGiveAmount), WheatTradeGiveAmount },
+                    { nameof(OreTradeGiveAmount), OreTradeGiveAmount },
+                    { nameof(WoodTradeGetAmount), WoodTradeGetAmount },
+                    { nameof(BrickTradeGetAmount), BrickTradeGetAmount },
+                    { nameof(SheepTradeGetAmount), SheepTradeGetAmount },
+                    { nameof(WheatTradeGetAmount), WheatTradeGetAmount },
+                    { nameof(OreTradeGetAmount), OreTradeGetAmount },
+                    { nameof(TradeMessage), TradeMessage }
+                };
             UpdateFields(dict);
         }
+
         protected override void AllocateTradeResources()
         {
             if (PlayersInTrade[0] == PlayerNames[PlayerIndicator])
@@ -383,16 +418,15 @@ namespace CatanGame.ModelsLogic
                 PlayerOreCount -= Convert.ToInt32(OreTradeGetAmount);
             }
         }
+
         protected override void RecivedTrade()
         {
-            TradeRecived?.Invoke(this, EventArgs.Empty);  
+            TradeRecived?.Invoke(this, EventArgs.Empty);
         }
+
         protected override void CheckTradeResponce()
         {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Toast.Make(TradeMessage, ToastDuration.Long, 18).Show();
-            });
+            MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 18).Show());
             if (TradeMessage == Strings.TradeAccepted)
             {
                 AllocateTradeResources();
@@ -423,19 +457,21 @@ namespace CatanGame.ModelsLogic
                 ResetTradeParameters();
                 UpdateTradeParamaters();
             }
-            else if(TradeMessage == Strings.TradeDeclined || TradeMessage == Strings.TradeCanceled)
+            else if (TradeMessage == Strings.TradeDeclined || TradeMessage == Strings.TradeCanceled)
             {
                 TradeMessage = string.Empty;
                 ResetTradeParameters();
                 UpdateTradeParamaters();
             }
-            if(TradeMessage == Strings.TradeCanceled)
+            if (TradeMessage == Strings.TradeCanceled)
                 CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
+
         public override void CloseTrade()
         {
             CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
+
         protected override void ResetTradeParameters()
         {
             TradeInProgress = false;
@@ -453,14 +489,15 @@ namespace CatanGame.ModelsLogic
             WheatTradeGetAmount = Strings.Zero;
             OreTradeGetAmount = Strings.Zero;
         }
+
         protected override void ReciveCounterOffer()
         {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Toast.Make(TradeMessage, ToastDuration.Long, 20).Show();
-            });
+            MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 20).Show());
             RecivedTrade();
         }
+        #endregion
+
+        #region Public Methods
         public override string[] GetPlayersToTradeWith()
         {
             string[] playerNames = new string[PlayerNames.Length - 1];
@@ -475,26 +512,32 @@ namespace CatanGame.ModelsLogic
             }
             return playerNames;
         }
+
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
+
         public override void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict)
         {
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
+
         public override void UpdateFields(Dictionary<string, object> dict)
         {
             fbd.UpdateFields(Keys.GamesCollection, Id, dict);
         }
+
         public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
         {
             fbd.GetDocument(Keys.GamesCollection, Id, OnComplete);
         }
+
         public override void AddSnapshotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
+
         public override void RemoveSnapshotListener()
         {
             StopTimer();
@@ -512,20 +555,20 @@ namespace CatanGame.ModelsLogic
                     }
                 IsFull = false;
                 Dictionary<string, object> dict = new()
-                {
-
-                    { nameof(IsFull), IsFull },
-                    { nameof(PlayerNames), PlayerNames },
-
-                };
+                    {
+                        { nameof(IsFull), IsFull },
+                        { nameof(PlayerNames), PlayerNames },
+                    };
                 UpdateFields(OnCompletePlayerLeft, dict);
             }
         }
+
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id);
             fbd.DeleteDocument(Keys.GameCodesCollection, GameCode, OnComplete);
         }
+
         public override void EndTurn()
         {
             if (PlayerTurn == PlayerCount)
@@ -534,13 +577,14 @@ namespace CatanGame.ModelsLogic
                 PlayerTurn++;
             Turn++;
             Dictionary<string, object> dict = new()
-            {
-                { nameof(PlayerTurn), PlayerTurn },
-                { nameof(Turn), Turn }
-            };
+                {
+                    { nameof(PlayerTurn), PlayerTurn },
+                    { nameof(Turn), Turn }
+                };
             UpdateFields(OnTurnChanged, dict);
             StartTimer();
         }
+
         public override void StartGame()
         {
             if (!GameStarted)
@@ -552,12 +596,13 @@ namespace CatanGame.ModelsLogic
                 });
                 GameStarted = true;
                 Dictionary<string, object> dict = new()
-                {
-                    { nameof(GameStarted), GameStarted },
-                };
+                    {
+                        { nameof(GameStarted), GameStarted },
+                    };
                 UpdateFields(OnTurnChanged, dict);
             }
         }
+
         public override void AddPlayerName()
         {
             bool addedName = false;
@@ -568,17 +613,16 @@ namespace CatanGame.ModelsLogic
                     if (i + 1 == PlayerCount)
                         IsFull = true;
                     Dictionary<string, object> dict = new()
-                    {
-
-                        { nameof(IsFull), IsFull },
-                        { nameof(PlayerNames), PlayerNames },
-
-                    };
+                        {
+                            { nameof(IsFull), IsFull },
+                            { nameof(PlayerNames), PlayerNames },
+                        };
                     UpdateFields(OnCompleteAddPlayerName, dict);
                     PlayerIndicator = i;
                     addedName = true;
                 }
         }
+
         public override void AllocateResources()
         {
             HexTile[] hexTiles = GameBoard.Hexes;
@@ -605,6 +649,7 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         public override void TradeWithBank(object parameter)
         {
             if (parameter is object[] data && data.Length == 2)
@@ -651,6 +696,7 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         public override void PickCardToGet(object parameter)
         {
             if (parameter is ImageButton button)
@@ -661,6 +707,7 @@ namespace CatanGame.ModelsLogic
                 PreviselySelctedCard = button;
             }
         }
+
         public override void ConfirmTradeWithBank()
         {
             TradeMessage += Strings.EmptySpace + Strings.For + 1 + Strings.EmptySpace;
@@ -692,18 +739,19 @@ namespace CatanGame.ModelsLogic
             ResetSelctedCardBorder();
             ResourceCountersUpdated?.Invoke(this, EventArgs.Empty);
             Dictionary<string, object> dict = new()
-            {
-                {nameof(TradeMessage),TradeMessage }
-            };
+                {
+                    { nameof(TradeMessage), TradeMessage }
+                };
             UpdateFields(dict);
             ShowTradeAlert();
         }
+
         public override void ConfirmTradeWithPlayer()
         {
             TradeInProgress = true;
             PlayersInTrade[0] = PlayerNames[PlayerIndicator];
             PlayersInTrade[1] = SelectedPlayerName;
-            if(String.IsNullOrWhiteSpace(WoodTradeGiveAmount))
+            if (String.IsNullOrWhiteSpace(WoodTradeGiveAmount))
                 WoodTradeGiveAmount = Strings.Zero;
             if (String.IsNullOrWhiteSpace(BrickTradeGiveAmount))
                 BrickTradeGiveAmount = Strings.Zero;
@@ -725,12 +773,14 @@ namespace CatanGame.ModelsLogic
                 OreTradeGetAmount = Strings.Zero;
             UpdateTradeParamaters();
         }
+
         public override void CancelTradeRequest()
         {
             ResetTradeParameters();
             TradeMessage = Strings.TradeCanceled;
             UpdateTradeParamaters();
         }
+
         public override void CounterOffer()
         {
             (PlayersInTrade[1], PlayersInTrade[0]) = (PlayersInTrade[0], PlayersInTrade[1]);
@@ -742,6 +792,7 @@ namespace CatanGame.ModelsLogic
             SelectedPlayerName = PlayersInTrade[1];
             TradeMessage = Strings.PlayerCounterOffer;
         }
+
         public override void AcceptTrade()
         {
             AllocateTradeResources();
@@ -749,11 +800,13 @@ namespace CatanGame.ModelsLogic
             TradeMessage = Strings.TradeAccepted;
             UpdateTradeParamaters();
         }
+
         public override void DeclineTrade()
         {
             TradeMessage = Strings.TradeDeclined;
             UpdateTradeParamaters();
         }
+
         public override bool CenTradeWithPlayer()
         {
             bool givesACard =
@@ -768,16 +821,17 @@ namespace CatanGame.ModelsLogic
                 (!string.IsNullOrWhiteSpace(SheepTradeGetAmount) && Convert.ToInt32(SheepTradeGetAmount) > 0) ||
                 (!string.IsNullOrWhiteSpace(WheatTradeGetAmount) && Convert.ToInt32(WheatTradeGetAmount) > 0) ||
                 (!string.IsNullOrWhiteSpace(OreTradeGetAmount) && Convert.ToInt32(OreTradeGetAmount) > 0);
-
             return givesACard && getsACard && !string.IsNullOrWhiteSpace(SelectedPlayerName);
         }
+
         public override bool CenAcceptTrade()
-        {  
-            return(!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) <= PlayerWoodCount) &&
-                (!string.IsNullOrWhiteSpace(BrickTradeGetAmount) && Convert.ToInt32(BrickTradeGetAmount) <= PlayerBrickCount) && 
-                (!string.IsNullOrWhiteSpace(SheepTradeGetAmount) && Convert.ToInt32(SheepTradeGetAmount) <= PlayerSheepCount) && 
-                (!string.IsNullOrWhiteSpace(WheatTradeGetAmount) && Convert.ToInt32(WheatTradeGetAmount) <= PlayerWheatCount) && 
+        {
+            return (!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) <= PlayerWoodCount) &&
+                (!string.IsNullOrWhiteSpace(BrickTradeGetAmount) && Convert.ToInt32(BrickTradeGetAmount) <= PlayerBrickCount) &&
+                (!string.IsNullOrWhiteSpace(SheepTradeGetAmount) && Convert.ToInt32(SheepTradeGetAmount) <= PlayerSheepCount) &&
+                (!string.IsNullOrWhiteSpace(WheatTradeGetAmount) && Convert.ToInt32(WheatTradeGetAmount) <= PlayerWheatCount) &&
                 (!string.IsNullOrWhiteSpace(OreTradeGetAmount) && Convert.ToInt32(OreTradeGetAmount) <= PlayerOreCount);
         }
+        #endregion
     }
 }

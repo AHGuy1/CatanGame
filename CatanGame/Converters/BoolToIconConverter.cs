@@ -3,20 +3,21 @@ using CatanGame.Models;
 
 namespace CatanGame.Converters
 {
-	public class BoolToIconConverter : IValueConverter
-	{
-
+    public class BoolToIconConverter : IValueConverter
+    {
+        #region Public Methods
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-		{
-			string icon = Icons.Visibility_off;
+        {
+            string icon = Icons.Visibility_off;
             if (value != null)
-				icon =  (bool)value ? Icons.Visibility_off : Icons.Visibility_on;
-			return icon;
-		}
+                icon = (bool)value ? Icons.Visibility_off : Icons.Visibility_on;
+            return icon;
+        }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return null;
         }
+        #endregion
     }
 }

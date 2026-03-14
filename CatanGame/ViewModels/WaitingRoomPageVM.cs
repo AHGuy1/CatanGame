@@ -9,8 +9,11 @@ namespace CatanGame.ViewModels
 {
     public partial class WaitingRoomPageVM : ObservableObject
     {
+        #region Fields
         private readonly Game game;
+        #endregion
 
+        #region Properties
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
         public string[] PlayerNames => game.PlayerNames;
@@ -35,6 +38,9 @@ namespace CatanGame.ViewModels
         public bool IsVisiblePlayer5Visible => PlayerCount > 4;
         public bool IsVisiblePlayer6Visible => PlayerCount > 5;
         public ICommand StartGameCommand { get; }
+        #endregion
+
+        #region Constructor
         public WaitingRoomPageVM(Game game)
         {
             StartGameCommand = new Command(StartGame, CanStartGame);
@@ -44,7 +50,22 @@ namespace CatanGame.ViewModels
             this.game.PlayerLeft += OnPlayerLeft;
             this.game.GameChanged += OnGameChanged;
         }
+        #endregion
 
+        #region Public Methods
+        public void AddSnapshotListener()
+        {
+            game.AddSnapshotListener();
+        }
+
+        public void RemoveSnapshotListener()
+        {
+            if (!game.GameStarted)
+                game.RemoveSnapshotListener();
+        }
+        #endregion
+
+        #region Private Methods
         private void OnGameDeleted(object? sender, string message)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -88,7 +109,7 @@ namespace CatanGame.ViewModels
 
         private bool CanStartGame()
         {
-            return true; /*!String.IsNullOrWhiteSpace(Game.PlayerNames[PlayerNames.Length - 1]) && PlayerIndector == 0;*/
+            return true;
         }
 
         private void StartGame()
@@ -122,16 +143,6 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(StatusMessage));
             (StartGameCommand as Command)?.ChangeCanExecute();
         }
-
-        public void AddSnapshotListener()
-        {
-            game.AddSnapshotListener();
-        }
-
-        public void RemoveSnapshotListener()
-        {
-            if (!game.GameStarted)
-                game.RemoveSnapshotListener();
-        }
+        #endregion
     }
 }

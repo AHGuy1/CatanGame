@@ -7,7 +7,11 @@ namespace CatanGame.ViewModels
 {
     public partial class RegisterPageVM : ObservableObject
     {
+        #region Fields
         private readonly User user = new();
+        #endregion
+
+        #region Properties
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
@@ -71,7 +75,9 @@ namespace CatanGame.ViewModels
                 ToggleIsVisibleEmailMessege();
             }
         }
+        #endregion
 
+        #region Constructor
         public RegisterPageVM()
         {
             RegisterCommand = new Command(Register, CanRegister);
@@ -80,10 +86,12 @@ namespace CatanGame.ViewModels
             user.AuthComplete += OnAuthComplete;
             user.AuthFalier += OnAuthFalier;
         }
+        #endregion
 
+        #region Private Methods
         private void OnAuthComplete(object? sender, EventArgs e)
         {
-            if(Application.Current != null)
+            if (Application.Current != null)
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new LogInPage();
@@ -115,7 +123,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(UserName));
         }
 
-        public bool CanRegister()
+        private bool CanRegister()
         {
             return (!string.IsNullOrWhiteSpace(user.UserName) && !string.IsNullOrWhiteSpace(user.Password) && !string.IsNullOrWhiteSpace(user.ConfirmPassword) && !string.IsNullOrWhiteSpace(user.Email) && user.Password == user.ConfirmPassword && user.Email.Contains('@') && user.Email.Contains('.'));
         }
@@ -164,7 +172,6 @@ namespace CatanGame.ViewModels
             IsPasswordConfirmPassword = !IsPasswordConfirmPassword;
             OnPropertyChanged(nameof(IsPasswordConfirmPassword));
         }
-       
-
+        #endregion
     }
 }

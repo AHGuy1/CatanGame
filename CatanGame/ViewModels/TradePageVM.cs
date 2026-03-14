@@ -9,8 +9,11 @@ namespace CatanGame.ViewModels
 {
     public partial class TradePageVM : ObservableObject
     {
+        #region Fields
         private readonly Game game;
+        #endregion
 
+        #region Properties
         public ICommand ClosePopupCommand { get; }
         public ICommand GoToTradeWithPlayerCommand { get; }
         public ICommand GoToTradeWithBankCommand { get; }
@@ -140,7 +143,7 @@ namespace CatanGame.ViewModels
             get => game.WoodTradeGetAmount;
             set
             {
-                if(!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
+                if (!String.IsNullOrWhiteSpace(value) && Convert.ToInt32(value) > 25 && IsVisibleTradeWithPlayer)
                     game.WoodTradeGetAmount = 25.ToString();
                 else
                     game.WoodTradeGetAmount = value;
@@ -210,7 +213,9 @@ namespace CatanGame.ViewModels
                 (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
             }
         }
+        #endregion
 
+        #region Constructor
         public TradePageVM(Game game)
         {
             this.game = game;
@@ -219,8 +224,8 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
             OnPropertyChanged(nameof(IsVisibleTradeHub));
             ClosePopupCommand = new Command(ClosePopup);
-            GoToTradeWithPlayerCommand = new Command(GoToTradeWithPlayer,CenTrade);
-            GoToTradeWithBankCommand = new Command(GoToTradeWithBank,CenTrade);
+            GoToTradeWithPlayerCommand = new Command(GoToTradeWithPlayer, CenTrade);
+            GoToTradeWithBankCommand = new Command(GoToTradeWithBank, CenTrade);
             BackToTradeHubCommand = new Command(ReturnToTradeHub);
             TradeWithBankCommand = new Command(TradeWithBank);
             PickCardToGetCommand = new Command(PickCardToGet);
@@ -232,6 +237,9 @@ namespace CatanGame.ViewModels
             ConfirmTradeWithPlayerCommand = new Command(ConfirmTradeWithPlayer, CenTradeWithPlayer);
             PlayerNames = game.GetPlayersToTradeWith();
         }
+        #endregion
+
+        #region Private Methods
         private void RefreshTradeParameters()
         {
             OnPropertyChanged(nameof(SelectedPlayerName));
@@ -250,6 +258,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(ReciverGets));
             OnPropertyChanged(nameof(ReciverGives));
         }
+
         private void CounterOffer()
         {
             game.CounterOffer();
@@ -262,6 +271,7 @@ namespace CatanGame.ViewModels
             RefreshTradeParameters();
             (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
         }
+
         private void AcceptTrade()
         {
             game.AcceptTrade();
@@ -273,6 +283,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
         }
+
         private void DeclineTrade()
         {
             game.DeclineTrade();
@@ -284,6 +295,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
         }
+
         private void CancelTradeRequest()
         {
             game.CancelTradeRequest();
@@ -293,6 +305,7 @@ namespace CatanGame.ViewModels
                 Toast.Make(Strings.TradeCanceled, ToastDuration.Long, 20).Show();
             });
         }
+
         private void TradeWithBank(object parameter)
         {
             game.TradeWithBank(parameter);
@@ -302,10 +315,12 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisiblePickACard));
             UpdateCenTradeLists();
         }
+
         private void PickCardToGet(object parameter)
         {
             game.PickCardToGet(parameter);
         }
+
         private void ConfirmTradeWithBank()
         {
             game.ConfirmTradeWithBank();
@@ -316,6 +331,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisiblePickACard));
             UpdateCenTradeLists();
         }
+
         private void ConfirmTradeWithPlayer()
         {
             game.ConfirmTradeWithPlayer();
@@ -325,10 +341,12 @@ namespace CatanGame.ViewModels
             });
             ClosePopup();
         }
+
         private void ClosePopup()
         {
             game.CloseTrade();
         }
+
         private void GoToTradeWithPlayer()
         {
             IsVisibleTradeHub = false;
@@ -337,6 +355,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeWithPlayer));
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
+
         private void GoToTradeWithBank()
         {
             IsVisibleTradeHub = false;
@@ -345,6 +364,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeWithBank));
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
+
         private void ReturnToTradeHub()
         {
             IsVisibleTradeHub = true;
@@ -357,27 +377,33 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeWithBank));
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
+
         private void UpdateCenTradeLists()
         {
             OnPropertyChanged(nameof(CenTradeFourToOne));
             OnPropertyChanged(nameof(CenTradeThreeToOne));
             OnPropertyChanged(nameof(CenTradeTwoToOne));
         }
+
         private bool CenCancelTradeRequest()
         {
             return game.TradeInProgress && PlayersInTrade[0] == game.PlayerNames[game.PlayerIndicator];
         }
+
         private bool CenAcceptTrade()
         {
             return game.CenAcceptTrade();
         }
+
         private bool CenTradeWithPlayer()
         {
             return game.CenTradeWithPlayer();
         }
+
         private bool CenTrade()
         {
             return !game.TradeInProgress;
         }
+        #endregion
     }
 }

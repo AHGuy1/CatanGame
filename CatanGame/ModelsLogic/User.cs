@@ -6,14 +6,16 @@ namespace CatanGame.ModelsLogic
 {
     public class User : UserModel
     {
-
+        #region Constructor
         public User()
         {
             IsRegistered = Preferences.Get(Keys.IsRegisteredKey, false);
             Email = Preferences.Get(Keys.EmailKey, string.Empty);
             Password = Preferences.Get(Keys.PasswordKey, string.Empty);
         }
+        #endregion
 
+        #region Private Methods
         private static void SaveToPreferences()
         {
             Preferences.Set(Keys.IsRegisteredKey, true);
@@ -24,30 +26,22 @@ namespace CatanGame.ModelsLogic
             if (task.IsCompletedSuccessfully)
             {
                 SaveToPreferences();
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.AcoountCreated, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.AcoountCreated, ToastDuration.Long, 20).Show());
                 AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+
         protected override void ResetPasswordOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
@@ -55,159 +49,128 @@ namespace CatanGame.ModelsLogic
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+
         protected override void LoginOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Short, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Short, 20).Show());
                 AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+
         protected override void VerifyPhoneNumberOnComplete(Task task)
         {
-            if(task.IsCompletedSuccessfully)
+            if (task.IsCompletedSuccessfully)
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.CodeSentToPhone, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.CodeSentToPhone, ToastDuration.Long, 20).Show());
                 PhoneNumberComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 PhoneNumberFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 PhoneNumberFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+
         protected override void LinkPhoneToAcountOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.PhoneLinkedToAcoount, ToastDuration.Long, 20).Show();
-                });
-                VerificationCodeComplete?.Invoke(this, EventArgs.Empty);      
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.PhoneLinkedToAcoount, ToastDuration.Long, 20).Show());
+                VerificationCodeComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 VerificationCodeFalier?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 VerificationCodeFalier?.Invoke(this, EventArgs.Empty);
             }
         }
-        protected override void SignInWithPhoneNumberOnComplete(Task task)  
+
+        protected override void SignInWithPhoneNumberOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.LoginSuccessMessage, ToastDuration.Long, 20).Show());
                 AuthComplete?.Invoke(this, EventArgs.Empty);
             }
             else if (task.Exception != null)
             {
                 string msg = task.Exception.Message;
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(FbData.GetErrorMessage(msg), ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
-
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show();
-                });
+                MainThread.InvokeOnMainThreadAsync(() => Toast.Make(Strings.UnknownError, ToastDuration.Long, 20).Show());
                 AuthFalier?.Invoke(this, EventArgs.Empty);
             }
         }
+        #endregion
 
+        #region Public Methods
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);
         }
+
         public override void Login()
         {
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
         }
+
         public override void ResetPassword()
         {
             fbd.ResetPassword(Email, ResetPasswordOnComplete);
         }
+
         public override void VerifyPhoneNumber()
         {
             fbd.VerifyPhoneNumberAsync("+972504694685", VerifyPhoneNumberOnComplete);
         }
+
         public override void LinkPhoneNumberToAcount()
         {
             fbd.LinkWithPhoneNumberVerificationCodeAsync(VerificationCode, LinkPhoneToAcountOnComplete);
         }
+
         public override void SignInWithPhoneNumber()
         {
             fbd.SignInWithPhoneNumberVerificationCodeAsync(VerificationCode, SignInWithPhoneNumberOnComplete);
         }
+
         public override void RememberMe()
         {
             if (Preferences.Get(Keys.IsRememberedKey, false))
@@ -223,5 +186,6 @@ namespace CatanGame.ModelsLogic
                 Preferences.Set(Keys.IsRememberedKey, false);
             }
         }
+        #endregion
     }
 }

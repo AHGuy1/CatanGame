@@ -6,39 +6,40 @@ namespace CatanGame.ModelsLogic
 {
     public class SpecialCards : SpecialCardsModel
     {
+        #region Constructor
         public SpecialCards(GameGrid gameGrid, Game game, Board board)
         {
             GameGrid = gameGrid;
             Game = game;
             Board = board;
             Random random = new();
-            if(Game.PlayerIndicator == 0)
+            if (Game.PlayerIndicator == 0)
             {
                 if (Game.PlayerCount < 5)
                     CardPack =
                     [
                         Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage,
-                        Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
-                        Strings.UniversityImage, Strings.UniversityImage,
-                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
-                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.KnightImage, Strings.KnightImage,
+                            Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
+                            Strings.UniversityImage, Strings.UniversityImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
                     ];
                 else
                     CardPack =
                     [
                         Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                        Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
-                        Strings.UniversityImage, Strings.UniversityImage,
-                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
-                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
-                        Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
+                            Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
+                            Strings.UniversityImage, Strings.UniversityImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
                     ];
                 for (int i = CardPack.Length - 1; i > 0; i--)
                 {
@@ -48,20 +49,26 @@ namespace CatanGame.ModelsLogic
                 UpdateCardPack();
             }
         }
-        public SpecialCards() { }
 
+        public SpecialCards()
+        {
+        }
+        #endregion
+
+        #region Private Methods
         protected override void UpdateCardPack()
         {
-            if(Game != null)
+            if (Game != null)
             {
                 Game.SpecialCards = CardPack;
                 Dictionary<string, object> dict = new()
-                {
-                    {nameof(Game.SpecialCards), Game.SpecialCards}
-                };
+                    {
+                        { nameof(Game.SpecialCards), Game.SpecialCards }
+                    };
                 Game.UpdateFields(dict);
             }
         }
+
         protected override void ShowKnightRobberPlacmentOptions()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -81,9 +88,9 @@ namespace CatanGame.ModelsLogic
                             }
                             if (i > 0 && i < 3)
                             {
-                                if(k == 0)
+                                if (k == 0)
                                     GameGrid!.SetVisibleRobberImages(i - 1, k);
-                                else if(k == GameGrid.GetAmountOfColumnsTiles(i + 1) - 1)
+                                else if (k == GameGrid.GetAmountOfColumnsTiles(i + 1) - 1)
                                     GameGrid!.SetVisibleRobberImages(i - 1, k - 1);
                                 else
                                 {
@@ -91,12 +98,12 @@ namespace CatanGame.ModelsLogic
                                     GameGrid.SetVisibleRobberImages(i - 1, k);
                                 }
                             }
-                            if(i > 2 && i < 5)
+                            if (i > 2 && i < 5)
                             {
                                 GameGrid!.SetVisibleRobberImages(i - 1, k);
                                 GameGrid.SetVisibleRobberImages(i - 1, k + 1);
                             }
-                            if(i > 1 && i < 4)
+                            if (i > 1 && i < 4)
                             {
                                 if (k == 0)
                                     GameGrid!.SetVisibleRobberImages(i + 1, k);
@@ -111,11 +118,13 @@ namespace CatanGame.ModelsLogic
                         }
             });
         }
+
         protected override void ClosePopUp(object parameter)
         {
             if (parameter is Popup popup)
                 popup.Close();
         }
+
         protected override void ReturnCardToPackege(string card)
         {
             bool found = false;
@@ -129,14 +138,16 @@ namespace CatanGame.ModelsLogic
             }
             UpdateCardPack();
         }
+        #endregion
 
+        #region Public Methods
         public override void PickCardsToGet(object parameter)
         {
             if (parameter is ImageButton button)
             {
-                if(TotalSelectedCount < 2)
+                if (TotalSelectedCount < 2)
                 {
-                    if(button.BorderWidth == 0)
+                    if (button.BorderWidth == 0)
                         button.BorderWidth = 5;
                     if (button.Source.ToString()!.Contains(Strings.WoodImage))
                         SelectedWoodCount++;
@@ -149,7 +160,7 @@ namespace CatanGame.ModelsLogic
                     else if (button.Source.ToString()!.Contains(Strings.OreImage))
                         SelectedOreCount++;
                 }
-                else if(button.BorderWidth != 0)
+                else if (button.BorderWidth != 0)
                 {
                     button.BorderWidth = 0;
                     if (button.Source.ToString()!.Contains(Strings.WoodImage))
@@ -165,9 +176,10 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         public override void ConfirmSelectedCards(object parameter)
         {
-            if(Game != null && GameGrid != null)
+            if (Game != null && GameGrid != null)
             {
                 Game.PlayerWoodCount += SelectedWoodCount;
                 Game.PlayerBrickCount += SelectedBrickCount;
@@ -178,19 +190,21 @@ namespace CatanGame.ModelsLogic
             }
             ClosePopUp(parameter);
         }
+
         public override void PickCardToGet(object parameter)
         {
-            if(parameter is ImageButton image)
+            if (parameter is ImageButton image)
             {
-                if(SelectedImage != null)
+                if (SelectedImage != null)
                     SelectedImage!.BorderWidth = 0;
                 SelectedImage = image;
                 SelectedImage.BorderWidth = 5;
             }
         }
+
         public override void ConfirmSelectedCard(object parameter)
         {
-            if(Game != null)
+            if (Game != null)
             {
                 if (SelectedImage!.Source.ToString()!.Contains(Strings.WoodImage))
                     Game.MonopolizedCard = Strings.WoodImage;
@@ -205,20 +219,22 @@ namespace CatanGame.ModelsLogic
                 Game.MonoplizingPlayer = Game.PlayerNames[Game.PlayerIndicator];
                 Game.PlayersPassed = 1;
                 Dictionary<string, object> dict = new()
-                {
-                    {nameof(Game.PlayersPassed),Game.PlayersPassed },
-                    {nameof(Game.MonopolizedCard), Game.MonopolizedCard },
-                    {nameof(Game.MonoplizingPlayer), Game.MonoplizingPlayer }
-                };
+                    {
+                        { nameof(Game.PlayersPassed), Game.PlayersPassed },
+                        { nameof(Game.MonopolizedCard), Game.MonopolizedCard },
+                        { nameof(Game.MonoplizingPlayer), Game.MonoplizingPlayer }
+                    };
                 Game.UpdateFields(dict);
             }
             ClosePopUp(parameter);
         }
+
         public override void UseKnight()
         {
             ShowKnightRobberPlacmentOptions();
             PlayerKnightCount--;
         }
+
         public override void UseRoadBuilding()
         {
             RoadBuildingStuatus = RoadBuilding.First;
@@ -226,6 +242,7 @@ namespace CatanGame.ModelsLogic
             ReturnCardToPackege(Strings.RoadBuildingImage);
             PlayerRoadBuildingCount--;
         }
+
         public override void UseYearOfPlenty()
         {
             YearOfPlentyPage yearOfPlentyPage = new(this);
@@ -233,6 +250,7 @@ namespace CatanGame.ModelsLogic
             ReturnCardToPackege(Strings.YearOfPlentyImage);
             PlayerYearOfPlentyCount--;
         }
+
         public override void UseMonopoly()
         {
             SelectedWoodCount = 0;
@@ -245,6 +263,7 @@ namespace CatanGame.ModelsLogic
             ReturnCardToPackege(Strings.MonopolyImage);
             PlayerMonopolyCount--;
         }
+
         public override void GetCardFromPackege()
         {
             if (CardPack[0] == Strings.KnightImage)
@@ -265,6 +284,7 @@ namespace CatanGame.ModelsLogic
                 (CardPack[i], CardPack[i + 1]) = (CardPack[i + 1], CardPack[i]);
             UpdateCardPack();
         }
+        #endregion
     }
 }
   

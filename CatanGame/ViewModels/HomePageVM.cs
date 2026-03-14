@@ -8,9 +8,13 @@ namespace CatanGame.ViewModels
 {
     public partial class HomePageVM : ObservableObject
     {
+        #region Fields
         private readonly Games games = new();
-        private string GameCodePrivate { get; set; } = string.Empty;
+        private string GameCodePrivate = string.Empty;
         private string SelectedBoardTypePrivate = string.Empty;
+        #endregion
+
+        #region Properties
         public bool IsRandomBoard { get; set; }
         public bool IsBusy => games.IsBusy;
         public bool IsEnabled => !IsBusy;
@@ -46,7 +50,6 @@ namespace CatanGame.ViewModels
         public Game? SelectedItem
         {
             get => games.CurrentGame;
-
             set
             {
                 if (value != null)
@@ -59,7 +62,9 @@ namespace CatanGame.ViewModels
                 }
             }
         }
+        #endregion
 
+        #region Constructor
         public HomePageVM()
         {
             games.GameAdded += OnGameAdded;
@@ -67,17 +72,33 @@ namespace CatanGame.ViewModels
             JoinGameWithCodeCommand = new Command(JoinGameWithCode, CanJoinGameWithCode);
             AddGameCommand = new Command(AddGame);
         }
+        #endregion
 
+        #region Public Methods
+        public void AddSnapshotListener()
+        {
+            games.AddSnapshotListener();
+        }
+
+        public void RemoveSnapshotListener()
+        {
+            games.RemoveSnapshotListener();
+        }
+        #endregion
+
+        #region Private Methods
         private void AddGame()
         {
-            games.AddGame(SlectedAmountOfPlayers,SlectedAmountOfPointsNeeded,SelectedTurnTime.Time,IsRandomBoard);
+            games.AddGame(SlectedAmountOfPlayers, SlectedAmountOfPointsNeeded, SelectedTurnTime.Time, IsRandomBoard);
             OnPropertyChanged(nameof(IsBusy));
             OnPropertyChanged(nameof(IsEnabled));
         }
+
         private void OnGamesChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(GamesList));
         }
+
         private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
@@ -87,6 +108,7 @@ namespace CatanGame.ViewModels
                 Shell.Current.Navigation.PushAsync(new WaitingRoomPage(game), true);
             });
         }
+
         private bool CanJoinGameWithCode()
         {
             return !String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
@@ -96,14 +118,6 @@ namespace CatanGame.ViewModels
         {
             games.JoinGameWithCode(GameCode);
         }
-
-        public void AddSnapshotListener()
-        {
-            games.AddSnapshotListener();
-        }
-        public void RemoveSnapshotListener()
-        {
-            games.RemoveSnapshotListener();
-        }
+        #endregion
     }
 }

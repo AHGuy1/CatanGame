@@ -4,28 +4,30 @@ namespace CatanGame.ModelsLogic
 {
     public class Board : BoardModel
     {
+        #region Private Methods
         private static readonly Dictionary<string, BoardModel.TerrainType> TerrainMap = new()
-        {
-            { Board.TerrainType.Forest.ToString().ToLower(),   BoardModel.TerrainType.Forest },
-            { Board.TerrainType.Fields.ToString().ToLower(),   BoardModel.TerrainType.Fields },
-            { Board.TerrainType.Hills.ToString().ToLower(),    BoardModel.TerrainType.Hills },
-            { Board.TerrainType.Mountien.ToString().ToLower(), BoardModel.TerrainType.Mountien },
-            { Board.TerrainType.Pasture.ToString().ToLower(),  BoardModel.TerrainType.Pasture },
-            { Board.TerrainType.Desert.ToString().ToLower(),   BoardModel.TerrainType.Desert }
-        };
+            {
+                { Board.TerrainType.Forest.ToString().ToLower(), BoardModel.TerrainType.Forest },
+                { Board.TerrainType.Fields.ToString().ToLower(), BoardModel.TerrainType.Fields },
+                { Board.TerrainType.Hills.ToString().ToLower(), BoardModel.TerrainType.Hills },
+                { Board.TerrainType.Mountien.ToString().ToLower(), BoardModel.TerrainType.Mountien },
+                { Board.TerrainType.Pasture.ToString().ToLower(), BoardModel.TerrainType.Pasture },
+                { Board.TerrainType.Desert.ToString().ToLower(), BoardModel.TerrainType.Desert }
+            };
+
         private static readonly Dictionary<string, int> NumberTokenMap = new()
-        {
-            { Strings.TwoImage,    2 },
-            { Strings.ThreeImage,  3 },
-            { Strings.FourImage,   4 },
-            { Strings.FiveImage,   5 },
-            { Strings.SixImage,    6 },
-            { Strings.EightImage,  8 },
-            { Strings.NineImage,   9 },
-            { Strings.TenImage,    10 },
-            { Strings.ElevenImage, 11 },
-            { Strings.TwelveImage, 12 }
-        };
+            {
+                { Strings.TwoImage, 2 },
+                { Strings.ThreeImage, 3 },
+                { Strings.FourImage, 4 },
+                { Strings.FiveImage, 5 },
+                { Strings.SixImage, 6 },
+                { Strings.EightImage, 8 },
+                { Strings.NineImage, 9 },
+                { Strings.TenImage, 10 },
+                { Strings.ElevenImage, 11 },
+                { Strings.TwelveImage, 12 }
+            };
 
         private static BoardModel.TerrainType GetTerrainFromTileType(string tileType)
         {
@@ -40,6 +42,7 @@ namespace CatanGame.ModelsLogic
             //Should not happen
             return BoardModel.TerrainType.None;
         }
+
         private static int GetNumberTokenFromTile(string tileNumber)
         {
             // Check what value the tileNumber contains from the NumberTokenMap, and return the corresponding String value
@@ -64,6 +67,7 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         protected override void InitVertices()
         {
             Vertices = new VertexNode[54];
@@ -72,10 +76,11 @@ namespace CatanGame.ModelsLogic
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumns(i) - 1; k++)
                 {
-                    Vertices[GameGrid.GetPieceLocationInArray(i,k)] = new VertexNode(i, k);
+                    Vertices[GameGrid.GetPieceLocationInArray(i, k)] = new VertexNode(i, k);
                 }
             }
         }
+
         protected override void InitEdges()
         {
             Edges = new EdgeLink[72];
@@ -88,6 +93,7 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         protected override void SetEdgesVertices()
         {
             // Set the Vertices for each edge
@@ -101,7 +107,6 @@ namespace CatanGame.ModelsLogic
                         {
                             Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeOne = Vertices[GameGrid.GetPieceLocationInArray(i - 1, k / 2)];
                             Edges[GameGrid.GetPieceLocationInArray(i, k)].VertexNodeTwo = Vertices[GameGrid.GetPieceLocationInArray(i + 1, k / 2)];
-
                         }
                         else
                         {
@@ -138,6 +143,7 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
         protected override void SetVerticesEdegs()
         {
             // Set the edges for each vertex node
@@ -196,31 +202,38 @@ namespace CatanGame.ModelsLogic
                             if (i == 13)
                                 Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, k)];
                             else
-                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - 2 - k)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] =
+                                    Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - 2 - k)];
                             if (k < GameGrid.GetAmountOfColumns(i) - 2)
-                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 2)];
+                                Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] =
+                                    Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 2)];
                             if (k > 0)
                             {
                                 if (k < GameGrid.GetAmountOfColumns(i) - 2)
-                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[2] =
+                                        Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
                                 else
-                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
+                                    Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] =
+                                        Edges[GameGrid.GetPieceLocationInArray(i + 1, GameGrid.GetAmountOfColumns(i + 1) - (k * 2) - 1)];
                             }
                         }
                     }
                     else if (i == 23)
                     {
                         Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges = new EdgeLink[2];
-                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
-                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] = Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[0] =
+                            Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 2)];
+                        Vertices[GameGrid.GetPieceLocationInArray(i, k)].Edges[1] =
+                            Edges[GameGrid.GetPieceLocationInArray(i - 1, GameGrid.GetAmountOfColumns(i - 1) - (k * 2) - 3)];
                     }
                 }
             }
         }
+
         protected override void SetHexesVertices()
         {
             //Set the vertices for each hex tile
-            for(int i = 1; i < 6; i++)
+            for (int i = 1; i < 6; i++)
             {
                 for (int k = 0; k < GameGrid.GetAmountOfColumnsTiles(i); k++)
                 {
@@ -233,7 +246,7 @@ namespace CatanGame.ModelsLogic
                         Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
                         Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k + 1)];
                     }
-                    else if(i == 3)
+                    else if (i == 3)
                     {
                         Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k)];
                         Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k)];
@@ -241,12 +254,14 @@ namespace CatanGame.ModelsLogic
                     else
                     {
                         Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[0] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) - 3, k + 1)];
-                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k )];
+                        Hexes[GameGrid.GetTileLocationInArray(i, k + 1)].Corners[5] = Vertices[GameGrid.GetPieceLocationInArray((i * 4) + 3, k)];
                     }
                 }
             }
         }
+        #endregion
 
+        #region Public Methods
         public override void InitBoard(IndexedButton[][] Pieces, string[] tileTypes, string[] tileNumbers)
         {
             InitHex(tileTypes, tileNumbers);
@@ -256,5 +271,6 @@ namespace CatanGame.ModelsLogic
             SetVerticesEdegs();
             SetHexesVertices();
         }
+        #endregion
     }
 }

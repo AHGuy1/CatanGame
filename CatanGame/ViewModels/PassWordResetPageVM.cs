@@ -7,7 +7,11 @@ namespace CatanGame.ViewModels
 {
     public partial class PassWordResetPageVM : ObservableObject
     {
+        #region Fields
         private readonly User user = new();
+        #endregion
+
+        #region Properties
         public ICommand ResetPassWordCommand { get; }
         public ICommand SwitchPageBackCommand { get; }
         public ICommand SwitchToLogInPageCommand { get; }
@@ -15,7 +19,6 @@ namespace CatanGame.ViewModels
         public bool IsVisibleBeforePassWordReset { get; set; } = true;
         public bool IsBusy { get; set; } = false;
         public bool IsVisibleAfterPassWordReset { get; set; } = false;
-
         public string Email
         {
             get => user.Email;
@@ -26,7 +29,9 @@ namespace CatanGame.ViewModels
                 ToggleIsVisibleEmailMessege();
             }
         }
+        #endregion
 
+        #region Constructor
         public PassWordResetPageVM()
         {
             ResetPassWordCommand = new Command(ResetPassWord, CanResetPassWord);
@@ -35,7 +40,9 @@ namespace CatanGame.ViewModels
             user.AuthComplete += OnAuthComplete;
             user.AuthFalier += OnAuthFalier;
         }
+        #endregion
 
+        #region Private Methods
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             ChangePage();
@@ -69,7 +76,7 @@ namespace CatanGame.ViewModels
 
         private void SwitchToLogInPage()
         {
-            if (Application.Current != null)             
+            if (Application.Current != null)
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Application.Current.MainPage = new LogInPage();
@@ -81,16 +88,19 @@ namespace CatanGame.ViewModels
             IsVisibleEmailMessege = !(user.Email.Contains('@') && user.Email.Contains('.'));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
+
         private bool CanResetPassWord()
         {
             return user.Email.Contains('@') && user.Email.Contains('.');
         }
+
         private void ResetPassWord()
         {
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
             user.ResetPassword();
         }
+        #endregion
     }
     
 }
