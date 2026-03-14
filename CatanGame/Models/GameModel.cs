@@ -1,4 +1,4 @@
-﻿using Android.Media;
+using Android.Media;
 using CatanGame.ModelsLogic;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,20 +10,13 @@ namespace CatanGame.Models
 {
     public abstract class GameModel
     {
+        #region Fields
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
         protected GameStatus _status = new();
-        [Ignored]
-        public Avatar PlayerAvatar { get; set; } = new Avatar();
-        [Ignored]
-        public abstract GameStatus Status { get; }
-        [Ignored]
-        public string StatusMessage => Status.StatusMessage;
-        [Ignored]
-        public Color StatusColor { get; set; } = Colors.Black;
-        [Ignored]
-        //= new()?
-        public Board GameBoard { get; } = new();
+        #endregion
+
+        #region Events
         [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
@@ -46,6 +39,19 @@ namespace CatanGame.Models
         public EventHandler<string>? GameDeleted;
         [Ignored]
         public EventHandler<int>? PlayerLeft;
+        #endregion
+
+        #region Properties
+        [Ignored]
+        public Avatar PlayerAvatar { get; set; } = new Avatar();
+        [Ignored]
+        public abstract GameStatus Status { get; }
+        [Ignored]
+        public string StatusMessage => Status.StatusMessage;
+        [Ignored]
+        public Color StatusColor { get; set; } = Colors.Black;
+        [Ignored]
+        public Board GameBoard { get; } = new();
         [Ignored]
         public int PlayerLongestRoadLength { get; set; }
         [Ignored]
@@ -75,7 +81,7 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerVictoryPointCardsCount { get; set; }
         [Ignored]
-        public bool IsRandomBoard { get; set; } 
+        public bool IsRandomBoard { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
@@ -87,7 +93,7 @@ namespace CatanGame.Models
         public string SelectedTradeCard { get; set; } = string.Empty;
         [Ignored]
         public ImageButton? PreviselySelctedCard { get; set; }
-        public int Roll1 { get; set;}
+        public int Roll1 { get; set; }
         public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
         public int LongestRoadOwnerIndex { get; set; } = 0;
@@ -116,8 +122,8 @@ namespace CatanGame.Models
         public string WheatTradeGetAmount { get; set; } = string.Empty;
         public string OreTradeGetAmount { get; set; } = string.Empty;
         public string SelectedPlayerName = string.Empty;
-        public string MonopolizedCard {  get; set; } = string.Empty;
-        public string MonoplizingPlayer {  get; set; } = string.Empty;
+        public string MonopolizedCard { get; set; } = string.Empty;
+        public string MonoplizingPlayer { get; set; } = string.Empty;
         public int[] RobberPlacment { get; set; } = new int[2];
         public string[] SpecialCards { get; set; } = [];
         public string[] PlayersInTrade { get; set; } = new string[2];
@@ -126,26 +132,9 @@ namespace CatanGame.Models
         public string[] BoardPieces { get; set; } = new string[276];
         public string[] PlayerNames { get; set; } = [string.Empty];
         public DateTime Created { get; set; }
-        protected abstract void InitAvatar();
-        protected abstract void UpdateStatus();
-        protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
-        protected abstract void OnCompletePlayerLeft(Task task);
-        protected abstract void OnCompleteDeleted(Task task);
-        protected abstract void OnCompleteAddPlayerName(Task task);
-        protected abstract void OnTurnChanged(Task task);
-        protected abstract void OnMessageReceived(long timeleft);
-        protected abstract void CheckTradeResponce();
-        protected abstract void ResetTradeParameters();
-        protected abstract void ReciveCounterOffer();
-        protected abstract void StartTimer();
-        protected abstract void RegisterTimer();
-        protected abstract void StopTimer();
-        protected abstract void IntArrayBoardPieces();
-        protected abstract void ResetSelctedCardBorder();
-        protected abstract void ShowTradeAlert();
-        protected abstract void UpdateTradeParamaters();
-        protected abstract void AllocateTradeResources();
-        protected abstract void RecivedTrade();
+        #endregion
+
+        #region PublicMethods
         public abstract void SetDocument(Action<Task> OnComplete);
         public abstract void DeleteDocument(Action<Task> OnComplete);
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
@@ -169,5 +158,29 @@ namespace CatanGame.Models
         public abstract bool CenTradeWithPlayer();
         public abstract bool CenAcceptTrade();
         public abstract string[] GetPlayersToTradeWith();
+        #endregion
+
+        #region PrivateMethods
+        protected abstract void InitAvatar();
+        protected abstract void UpdateStatus();
+        protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
+        protected abstract void OnCompletePlayerLeft(Task task);
+        protected abstract void OnCompleteDeleted(Task task);
+        protected abstract void OnCompleteAddPlayerName(Task task);
+        protected abstract void OnTurnChanged(Task task);
+        protected abstract void OnMessageReceived(long timeleft);
+        protected abstract void CheckTradeResponce();
+        protected abstract void ResetTradeParameters();
+        protected abstract void ReciveCounterOffer();
+        protected abstract void StartTimer();
+        protected abstract void RegisterTimer();
+        protected abstract void StopTimer();
+        protected abstract void IntArrayBoardPieces();
+        protected abstract void ResetSelctedCardBorder();
+        protected abstract void ShowTradeAlert();
+        protected abstract void UpdateTradeParamaters();
+        protected abstract void AllocateTradeResources();
+        protected abstract void RecivedTrade();
+        #endregion
     }
 }

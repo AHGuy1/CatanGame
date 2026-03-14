@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,7 @@ namespace CatanGame.Models
 {
     public class Keys
     {
+        #region Fields
         public const string IsRegisteredKey = "IsRegistered";
         public const string EmailKey = "Email";
         public const string PasswordKey = "Password";
@@ -22,5 +23,6 @@ namespace CatanGame.Models
         public const int TheredSleepTime = 36000000;
         public const double ButtonVisible = 2;
         public const double DoesNotOwn = 0.5;
+        #endregion
     }
 }

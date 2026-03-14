@@ -1,10 +1,11 @@
-﻿using Android.Net.Wifi.Aware;
+using Android.Net.Wifi.Aware;
 using static CatanGame.Models.AvatarModel;
 
 namespace CatanGame.Models
 {
     public static class Strings
     {
+        #region Fields
         public const string LoginTitle = "Login";
         public const string UserNameLabel = "Username:";
         public const string PasswordLabel = "Password:";
@@ -218,5 +219,7 @@ namespace CatanGame.Models
         public const string SelectTwoCards = "Select 2 resource cards";
         public const string ConfirmSelection = "Confirm Selection";
         public const string SelectCardToMonopolize = "Select card to monopolize";
+        #endregion
     }
 }
+

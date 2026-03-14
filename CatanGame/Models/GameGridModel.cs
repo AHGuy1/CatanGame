@@ -1,4 +1,4 @@
-﻿using CatanGame.ModelsLogic;
+using CatanGame.ModelsLogic;
 using CatanGame.Views;
 using IntelliJ.Lang.Annotations;
 using SkiaSharp.Extended.UI.Controls;
@@ -9,6 +9,7 @@ namespace CatanGame.Models
 {
     public abstract class GameGridModel
     {
+        #region Fields
         protected Game Game = new();
         protected SpecialCards SpecialCards = new();
         protected Board BoardData = new();
@@ -28,14 +29,35 @@ namespace CatanGame.Models
         protected Image LongestRoad { get; set; } = new();
         protected Image LargestArmy { get; set; } = new();
         protected Label RollLabel { get; set; } = new();
+        #endregion
+
+        #region Commands
         protected ICommand? ShowBuildOptionsCommand { get; set; }
         protected ICommand? EndTurnCommand { get; set; }
+        #endregion
 
-        public GamePage? CurrentGamePage;
+        #region Events
         public EventHandler? EndTurnOnClicked;
+        #endregion
+
+        #region Properties
+        public GamePage? CurrentGamePage;
         public Button TradeButton { get; set; } = new();
         public Button RollButton { get; set; } = new();
+        #endregion
 
+        #region PublicMethods
+        public abstract void CloseTradePopUp();
+        public abstract void UpdateResourceCounters();
+        public abstract void EnsurePlayerPlayed();
+        public abstract void OnAnimationStatusChanged();
+        public abstract void OnChange();
+        public abstract void SetVisibleRobberImages(int row, int column);
+        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage);
+        public abstract void ShowBuildOptions(string pieceType);
+        #endregion
+
+        #region PrivateMethods
         protected abstract void OnBuildButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRollButtonClicked(object? sender, EventArgs e);
         protected abstract void OnRobberPlacementClicked(object? sender, EventArgs e);
@@ -69,14 +91,6 @@ namespace CatanGame.Models
         protected abstract Grid CreateRobberImage(int row, int column);
         protected abstract ImageButton CreateCardImageButton(string source);
         protected abstract BoardModel.PieceType GetPieceType(int row, int column);
-
-        public abstract void CloseTradePopUp();
-        public abstract void UpdateResourceCounters();
-        public abstract void EnsurePlayerPlayed();
-        public abstract void OnAnimationStatusChanged();
-        public abstract void OnChange();
-        public abstract void SetVisibleRobberImages(int row, int column);
-        public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage);
-        public abstract void ShowBuildOptions(string pieceType);
+        #endregion
     }
 }

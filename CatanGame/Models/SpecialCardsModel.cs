@@ -1,14 +1,26 @@
-﻿using CatanGame.ModelsLogic;
+using CatanGame.ModelsLogic;
 
 namespace CatanGame.Models
 {
     public abstract class SpecialCardsModel
     {
+        #region Enums
+        public enum RoadBuilding
+        {
+            Disabled = 0,
+            First = 1,
+            Second = 2,
+        }
+        #endregion
+
+        #region Fields
         protected GameGrid? GameGrid { get; set; }
         protected Game? Game { get; set; }
         protected Board? Board { get; set; }
         protected ImageButton? SelectedImage { get; set; }
+        #endregion
 
+        #region Properties
         public int PlayerKnightCount { get; set; }
         public int PlayerUniversityCount { get; set; }
         public int PlayerRoadBuildingCount { get; set; }
@@ -22,19 +34,9 @@ namespace CatanGame.Models
         public int TotalSelectedCount => SelectedWoodCount + SelectedBrickCount + SelectedSheepCount + SelectedWheatCount + SelectedOreCount;
         public string[] CardPack { get; set; } = new string[25];
         public RoadBuilding RoadBuildingStuatus { get; set; } = RoadBuilding.Disabled;
+        #endregion
 
-        public enum RoadBuilding
-        {
-            Disabled = 0,
-            First = 1,
-            Second = 2,
-        }
-
-        protected abstract void UpdateCardPack();
-        protected abstract void ShowKnightRobberPlacmentOptions();
-        protected abstract void ClosePopUp(object parameter);
-        protected abstract void ReturnCardToPackege(string card);
-
+        #region PublicMethods
         public abstract void ConfirmSelectedCards(object parameter);
         public abstract void PickCardsToGet(object parameter);
         public abstract void ConfirmSelectedCard(object parameter);
@@ -44,5 +46,13 @@ namespace CatanGame.Models
         public abstract void UseYearOfPlenty();
         public abstract void UseMonopoly();
         public abstract void GetCardFromPackege();
+        #endregion
+
+        #region PrivateMethods
+        protected abstract void UpdateCardPack();
+        protected abstract void ShowKnightRobberPlacmentOptions();
+        protected abstract void ClosePopUp(object parameter);
+        protected abstract void ReturnCardToPackege(string card);
+        #endregion
     }
 }

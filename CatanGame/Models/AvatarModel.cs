@@ -1,17 +1,8 @@
-﻿namespace CatanGame.Models
+namespace CatanGame.Models
 {
     public abstract class AvatarModel
     {
-        public string[] ColorCodes { get; set; } = [Strings.CyanCode,Strings.BlueCode,Strings.DeepPurpleCode,Strings.BrownCode,Strings.LightGreenCode,Strings.PurpleCode,Strings.LightBlueCode,Strings.GreenCode,Strings.BlueGreyCode,
-                Strings.TealCode,Strings.IndigoCode,Strings.GreyCode,Strings.YellowGreenCode,Strings.PinkCode,Strings.RedCode,Strings.OrangeRedCode,Strings.OrangeCode,Strings.YellowCode,Strings.AmberCode];
-        public Colors[] SelectedColors { get; set; } = [];
-        public Eyes[] SelectedEyes { get; set; } = [];
-        public Mouth[] SelectedMouths { get; set; } = [];
-        public Sides[] SelectedSides { get; set; } = [];
-        public Texture[] SelectedTextures { get; set; } = [];
-        public Face[] SelectedFaces { get; set; } = [];
-        public Top[] SelectedTops { get; set; } = [];
-
+        #region Enums
         public enum Colors
         {
             None,
@@ -118,7 +109,22 @@
             Pyramid,
             Radar
         }
+        #endregion
 
+        #region Properties
+        public string[] ColorCodes { get; set; } = [Strings.CyanCode,Strings.BlueCode,Strings.DeepPurpleCode,Strings.BrownCode,Strings.LightGreenCode,Strings.PurpleCode,Strings.LightBlueCode,Strings.GreenCode,
+        Strings.BlueGreyCode,Strings.TealCode,Strings.IndigoCode,Strings.GreyCode,Strings.YellowGreenCode,Strings.PinkCode,Strings.RedCode,Strings.OrangeRedCode,Strings.OrangeCode,Strings.YellowCode,Strings.AmberCode];
+        public Colors[] SelectedColors { get; set; } = [];
+        public Eyes[] SelectedEyes { get; set; } = [];
+        public Mouth[] SelectedMouths { get; set; } = [];
+        public Sides[] SelectedSides { get; set; } = [];
+        public Texture[] SelectedTextures { get; set; } = [];
+        public Face[] SelectedFaces { get; set; } = [];
+        public Top[] SelectedTops { get; set; } = [];
+        #endregion
+
+        #region PublicMethods
         public abstract string GetUrlWithString(string seed);
+        #endregion
     }
 }

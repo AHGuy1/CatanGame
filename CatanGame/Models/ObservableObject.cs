@@ -1,11 +1,20 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
-namespace CatanGame.Models;
-public partial class ObservableObject : INotifyPropertyChanged
+
+namespace CatanGame.Models
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    public partial class ObservableObject : INotifyPropertyChanged
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        #region Events
+        public event PropertyChangedEventHandler? PropertyChanged;
+        #endregion
+
+        #region PrivateMethods
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }
+
