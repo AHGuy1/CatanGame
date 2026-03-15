@@ -5,21 +5,30 @@
              xmlns:m="clr-namespace:CatanGame.Models"
              xmlns:vm="clr-namespace:CatanGame.ViewModels"
              x:DataType="vm:EndGamePageVM">
-    <VerticalStackLayout>
+    <VerticalStackLayout Spacing="20">
         <Label Text="{Binding GameResult}"
-               FontSize="22"
-               TextColor="DarkOrange"
-               FontAttributes="Bold"/>
+               FontSize="60"
+               TextColor="{Binding GameResultColor}"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               FontAttributes="Bold" />
         <Label Text="{Binding PointsEarnd}"
                IsVisible="{Binding PlayerLost}"
-               FontSize="18"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               FontSize="32"
                TextColor="DarkOrange"
                FontAttributes="Bold" />
         <Label Text="{Binding GoalReachedMessage}"
-               FontSize="20"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               FontSize="30"
                TextColor="DodgerBlue"
                FontAttributes="Bold" />
         <Button Text="{x:Static m:Strings.ReturnToHome}"
-                Command="{Binding ReturnToHomeCommand}"/>
+                FontSize="34"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Command="{Binding ReturnToHomeCommand}" />
     </VerticalStackLayout>
 </ContentPage>

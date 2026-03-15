@@ -12,7 +12,6 @@ namespace CatanGame.ViewModels
         private readonly Game game;
         private readonly GameGrid board;
         private readonly Animations animations;
-        public bool ShouldGameBeDeleted = true;
         #endregion
 
         #region Properties
@@ -58,8 +57,7 @@ namespace CatanGame.ViewModels
         #region Public Methods
         public void RemoveSnapshotListener()
         {
-            if (ShouldGameBeDeleted)
-                game.RemoveSnapshotListener();
+            game.RemoveSnapshotListener();
         }
         #endregion
 
@@ -127,7 +125,6 @@ namespace CatanGame.ViewModels
 
         private void OnGameDeleted(object? sender, string messgae)
         {
-            ShouldGameBeDeleted = false;
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.GameDeleted + messgae, ToastDuration.Long, 20).Show();

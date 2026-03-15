@@ -32,7 +32,6 @@ namespace CatanGame.ModelsLogic
                 };
             CurrentGame.UpdateFields(dict);
         }
-
         protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnChange);

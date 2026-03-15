@@ -298,6 +298,10 @@ namespace CatanGame.ModelsLogic
                             Game.PlayerSheepCount--;
                             Game.PlayerWoodCount--;
                         }
+                        else if(Game.Turn <= Game.PlayerCount)
+                        {
+                            Game.AllocateStartingResources(button.RowIndex, button.ColumnIndex - 1);
+                        }
                     }
                     else if (button.RowIndex % 2 == 1 && BoardPieceImages[button.RowIndex][button.ColumnIndex - 1].Source.ToString()!.Contains(GetPiecesColor(Game.PlayerIndicator + 1) + Strings.Town.ToLower()))
                     {
@@ -311,9 +315,9 @@ namespace CatanGame.ModelsLogic
                         Game.PlayerWheatCount -= 2;
                     }
                     UpdateBoardPices();
-                    UpdateResourceCounters();
                     HideButtuns();
                 }
+                UpdateResourceCounters();
                 //if just built a town and is one of the first 2 turns show road building options
                 if (Game.Turn <= Game.PlayerCount * 2 && button.RowIndex % 2 == 1 && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PlayerIndex == Game.PlayerIndicator && BoardData.Vertices[GetPieceLocationInArray(button.RowIndex, button.ColumnIndex - 1)].PieceType == BoardModel.PieceType.Town)
                     ShowBuildOptions(Strings.Road);
@@ -351,7 +355,8 @@ namespace CatanGame.ModelsLogic
             Dictionary<string, object> dict = new()
                 {
                     { nameof(Game.BoardPieces), Game.BoardPieces },
-                    { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
+                    { nameof(Game.LongestRoadLength), Game.LongestRoadLength },
+                    { nameof(Game.LongestRoadOwnerIndex), Game.LongestRoadOwnerIndex }
                 };
             Game.UpdateFields(dict);
         }
@@ -515,10 +520,12 @@ namespace CatanGame.ModelsLogic
                     if (Game.PlayerLargestArmySize > Game.LargestArmySize)
                     {
                         LargestArmy.Opacity = 1;
+                        Game.LargestArmyOwnerIndexe = Game.PlayerIndicator;
                         Game.LargestArmySize = Game.PlayerLargestArmySize;
                         Dictionary<string, object> dict = new()
                             {
-                                { nameof(Game.LargestArmySize), Game.LargestArmySize }
+                                { nameof(Game.LargestArmySize), Game.LargestArmySize },
+                                { nameof(Game.LargestArmyOwnerIndexe), Game.LargestArmyOwnerIndexe }
                             };
                         Game.UpdateFields(dict);
                     }
@@ -561,25 +568,30 @@ namespace CatanGame.ModelsLogic
         {
             await Task.Delay(2000);
             if (task.IsCompletedSuccessfully)
-            {
-                StopAnimations();
-                if (Game.RollTotal == 7)
+                MainThread.BeginInvokeOnMainThread(() => 
                 {
-                    ShowRobberPlacmentOptions();
-                }
-                else
-                {
-                    Game.AllocateResources();
-                    UpdateBoardPices();
-                }
-                Game.IsRolling = false;
-                Dictionary<string, object> dict = new()
-                {
-                    { nameof(Game.IsRolling), Game.IsRolling }
-                };
-                Game.UpdateFields(dict);
-                (EndTurnCommand as Command)?.ChangeCanExecute();
-            }
+                    StopAnimations();
+                    if (Game.RollTotal == 7)
+                    {
+                        ShowRobberPlacmentOptions();
+                    }
+                    else
+                    {
+                        Game.AllocateResources();
+                        UpdateResourceCounters();
+                    }
+                    Game.IsRolling = false;
+                    Dictionary<string, object> dict = new()
+                    {
+                        { nameof(Game.IsRolling), Game.IsRolling }
+                    };
+                    Game.UpdateFields(dict);
+                    (EndTurnCommand as Command)?.ChangeCanExecute();
+                    (RollButton.Command as Command)?.ChangeCanExecute();
+                    (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
+                    (SpecialCardImages[5].Command as Command)?.ChangeCanExecute();
+                    (TradeButton.Command as Command)?.ChangeCanExecute();
+                });
         }
 
         protected override BoardModel.PieceType GetPieceType(int row, int column)
@@ -702,7 +714,7 @@ namespace CatanGame.ModelsLogic
 
         protected override bool CanShowBuildOptions()
         {
-            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
+            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
         protected override bool CanEndTurn()
@@ -714,12 +726,12 @@ namespace CatanGame.ModelsLogic
 
         protected override bool CenTrade()
         {
-            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
+            return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
         protected override bool CenGetCardFromPackege()
         {
-            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2;
+            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
         protected override bool CenUseCard(object paramter)
@@ -903,10 +915,12 @@ namespace CatanGame.ModelsLogic
             {
                 LongestRoad.Opacity = 1;
                 Game.LongestRoadLength = Game.PlayerLongestRoadLength;
+                Game.LongestRoadOwnerIndex = Game.PlayerIndicator;
                 Dictionary<string, object> dict = new()
-                    {
-                        { nameof(Game.LongestRoadLength), Game.LongestRoadLength }
-                    };
+                {
+                    { nameof(Game.LongestRoadLength), Game.LongestRoadLength },
+                    { nameof(Game.LongestRoadOwnerIndex), Game.LongestRoadOwnerIndex }
+                };
                 Game.UpdateFields(dict);
             }
             if (LongestRoad.Opacity != Keys.DoesNotOwn && Game.PlayerLongestRoadLength < Game.LongestRoadLength)
@@ -1419,7 +1433,7 @@ namespace CatanGame.ModelsLogic
                         }
                     }
             //Shows all options for building a city, if the player has the resources to build it, if there are any
-            if (pieceType == Strings.All && Game.PlayerWheatCount >= 3 && Game.PlayerOreCount >= 2)
+            if (pieceType == Strings.All && Game.PlayerWheatCount >= 2 && Game.PlayerOreCount >= 3)
                 for (int i = 1; i < 24; i++)
                     for (int k = 0; k < GetAmountOfColumns(i) - 1; k++)
                     {

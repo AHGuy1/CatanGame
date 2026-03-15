@@ -72,17 +72,17 @@ namespace CatanGame.Models
             + (PlayerCityCount * 2)
             + PlayerVictoryPointCardsCount
             + (LongestRoadOwnerIndex == PlayerIndicator ? 2 : 0)
-            + (LargestArmySize == PlayerLargestArmySize ? 2 : 0);
+            + (LargestArmyOwnerIndexe == PlayerIndicator ? 2 : 0);
         [Ignored]
-        public int PlayerOreCount { get; set; } = 5;
+        public int PlayerOreCount { get; set; }
         [Ignored]
-        public int PlayerBrickCount { get; set; } = 5;
+        public int PlayerBrickCount { get; set; }
         [Ignored]
-        public int PlayerWoodCount { get; set; } = 5;
+        public int PlayerWoodCount { get; set; }
         [Ignored]
-        public int PlayerWheatCount { get; set; } = 5;
+        public int PlayerWheatCount { get; set; }
         [Ignored]
-        public int PlayerSheepCount { get; set; } = 5;
+        public int PlayerSheepCount { get; set; }
         [Ignored]
         public int PlayerVictoryPointCardsCount { get; set; }
         [Ignored]
@@ -102,8 +102,9 @@ namespace CatanGame.Models
         public int Roll1 { get; set; }
         public int Roll2 { get; set; }
         public int LongestRoadLength { get; set; } = 4;
-        public int LongestRoadOwnerIndex { get; set; } = 0;
+        public int LongestRoadOwnerIndex { get; set; } = -1;
         public int LargestArmySize { get; set; } = 2;
+        public int LargestArmyOwnerIndexe { get; set; } = -1;
         public int TurnTime { get; set; }
         public int Turn { get; set; } = 1;
         public int PointsGoal { get; set; }
@@ -156,6 +157,7 @@ namespace CatanGame.Models
         public abstract void CancelTradeRequest();
         public abstract void CounterOffer();
         public abstract void AllocateResources();
+        public abstract void AllocateStartingResources(int row, int column);
         public abstract void StartGame();
         public abstract void AddPlayerName();
         public abstract void EndTurn();
@@ -167,6 +169,7 @@ namespace CatanGame.Models
         #endregion
 
         #region PrivateMethods
+        protected abstract void ClearEventHandelers();
         protected abstract void InitAvatar();
         protected abstract void UpdateStatus();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);

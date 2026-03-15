@@ -133,7 +133,7 @@ namespace CatanGame.ModelsLogic
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
-            if (updatedGame != null)
+            if (updatedGame != null && WinnerIndecator == -1)
             {
                 for (int i = 1; i < PlayerCount; i++)
                     if (!String.IsNullOrWhiteSpace(PlayerNames[i]) && String.IsNullOrWhiteSpace(updatedGame.PlayerNames[i]))
@@ -156,179 +156,196 @@ namespace CatanGame.ModelsLogic
                 SpecialCards = updatedGame.SpecialCards;
                 if(WinnerIndecator != updatedGame.WinnerIndecator)
                 {
+                    ClearEventHandelers();
+                    StopTimer();
                     WinnerIndecator = updatedGame.WinnerIndecator;
                     MainThread.InvokeOnMainThreadAsync(() =>
                     {
-                        Shell.Current.Navigation.PushAsync(new EndGamePage(this), true);
+                        Application.Current!.MainPage = new EndGamePage(this);
                     });
                 }
-                if (TradeMessage != updatedGame.TradeMessage)
+                else
                 {
-                    TradeMessage = updatedGame.TradeMessage;
-                    if (TradeMessage != Strings.TradeDeclined && TradeMessage != Strings.TradeAccepted && TradeMessage != Strings.PlayerCounterOffer && TradeMessage != Strings.TradeCanceled)
+                    if (TradeMessage != updatedGame.TradeMessage)
                     {
-                        if (TradeMessage != string.Empty)
+                        TradeMessage = updatedGame.TradeMessage;
+                        if (TradeMessage != Strings.TradeDeclined && TradeMessage != Strings.TradeAccepted && TradeMessage != Strings.PlayerCounterOffer && TradeMessage != Strings.TradeCanceled)
                         {
-                            ShowTradeAlert();
-                            TradeMessage = string.Empty;
+                            if (TradeMessage != string.Empty)
+                            {
+                                ShowTradeAlert();
+                                TradeMessage = string.Empty;
+                            }
                         }
+                        else if (TradeInProgress && updatedGame.PlayersInTrade[0] == PlayerNames[PlayerIndicator])
+                            CheckTradeResponce();
                     }
-                    else if (TradeInProgress && updatedGame.PlayersInTrade[0] == PlayerNames[PlayerIndicator])
-                        CheckTradeResponce();
-                }
-                else if (TradeMessage.Contains(PlayerNames[PlayerIndicator]))
-                {
-                    TradeMessage = string.Empty;
-                    Dictionary<string, object> dict = new()
+                    else if (TradeMessage.Contains(PlayerNames[PlayerIndicator]))
+                    {
+                        TradeMessage = string.Empty;
+                        Dictionary<string, object> dict = new()
                         {
                             { nameof(TradeMessage), TradeMessage }
                         };
-                    UpdateFields(dict);
-                }
-                WoodTradeGetAmount = updatedGame.WoodTradeGetAmount;
-                BrickTradeGetAmount = updatedGame.BrickTradeGetAmount;
-                SheepTradeGetAmount = updatedGame.SheepTradeGetAmount;
-                WheatTradeGetAmount = updatedGame.WheatTradeGetAmount;
-                OreTradeGetAmount = updatedGame.OreTradeGetAmount;
-                WoodTradeGiveAmount = updatedGame.WoodTradeGiveAmount;
-                BrickTradeGiveAmount = updatedGame.BrickTradeGiveAmount;
-                SheepTradeGiveAmount = updatedGame.SheepTradeGiveAmount;
-                WheatTradeGiveAmount = updatedGame.WheatTradeGiveAmount;
-                OreTradeGiveAmount = updatedGame.OreTradeGiveAmount;
-                if (TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
-                {
+                        UpdateFields(dict);
+                    }
+                    WoodTradeGetAmount = updatedGame.WoodTradeGetAmount;
+                    BrickTradeGetAmount = updatedGame.BrickTradeGetAmount;
+                    SheepTradeGetAmount = updatedGame.SheepTradeGetAmount;
+                    WheatTradeGetAmount = updatedGame.WheatTradeGetAmount;
+                    OreTradeGetAmount = updatedGame.OreTradeGetAmount;
+                    WoodTradeGiveAmount = updatedGame.WoodTradeGiveAmount;
+                    BrickTradeGiveAmount = updatedGame.BrickTradeGiveAmount;
+                    SheepTradeGiveAmount = updatedGame.SheepTradeGiveAmount;
+                    WheatTradeGiveAmount = updatedGame.WheatTradeGiveAmount;
+                    OreTradeGiveAmount = updatedGame.OreTradeGiveAmount;
+                    if (TradeMessage == Strings.PlayerCounterOffer && TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                    {
+                        PlayersInTrade = updatedGame.PlayersInTrade;
+                        ReciveCounterOffer();
+                    }
+                    if (TradeInProgress != updatedGame.TradeInProgress)
+                    {
+                        TradeInProgress = updatedGame.TradeInProgress;
+                        if (TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                        {
+                            PlayersInTrade = updatedGame.PlayersInTrade;
+                            RecivedTrade();
+                        }
+                        else if (!TradeInProgress && PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                        {
+                            PlayersInTrade = updatedGame.PlayersInTrade;
+                            CloseTrade();
+                        }
+                    }
                     PlayersInTrade = updatedGame.PlayersInTrade;
-                    ReciveCounterOffer();
-                }
-                if (TradeInProgress != updatedGame.TradeInProgress)
-                {
-                    TradeInProgress = updatedGame.TradeInProgress;
-                    if (TradeInProgress && updatedGame.PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                    if (TileTypes[0] == null)
                     {
-                        PlayersInTrade = updatedGame.PlayersInTrade;
-                        RecivedTrade();
+                        TileNumbers = updatedGame.TileNumbers;
+                        TileTypes = updatedGame.TileTypes;
                     }
-                    else if (!TradeInProgress && PlayersInTrade[1] == PlayerNames[PlayerIndicator])
+                    bool gridChanged = false;
+                    if (MonoplizingPlayer != updatedGame.MonoplizingPlayer && updatedGame.MonoplizingPlayer != string.Empty && updatedGame.MonoplizingPlayer != PlayerNames[PlayerIndicator])
                     {
-                        PlayersInTrade = updatedGame.PlayersInTrade;
-                        CloseTrade();
-                    }
-                }
-                PlayersInTrade = updatedGame.PlayersInTrade;
-                if (TileTypes[0] == null)
-                {
-                    TileNumbers = updatedGame.TileNumbers;
-                    TileTypes = updatedGame.TileTypes;
-                }
-                bool gridChanged = false;
-                if (MonoplizingPlayer != updatedGame.MonoplizingPlayer && updatedGame.MonoplizingPlayer != string.Empty)
-                {
-                    MonoplizingPlayer = updatedGame.MonoplizingPlayer;
-                    MonopolizedCard = updatedGame.MonopolizedCard;
-                    PlayersPassed++;
-                    if (MonopolizedCard == Strings.WoodImage)
-                    {
-                        MonoplizedCardsCount += PlayerWoodCount;
-                        PlayerWoodCount = 0;
-                    }
-                    else if (MonopolizedCard == Strings.BrickImage)
-                    {
-                        MonoplizedCardsCount += PlayerBrickCount;
-                        PlayerBrickCount = 0;
-                    }
-                    else if (MonopolizedCard == Strings.SheepImage)
-                    {
-                        MonoplizedCardsCount += PlayerSheepCount;
-                        PlayerSheepCount = 0;
-                    }
-                    else if (MonopolizedCard == Strings.WheatImage)
-                    {
-                        MonoplizedCardsCount += PlayerWheatCount;
-                        PlayerWheatCount = 0;
-                    }
-                    else if (MonopolizedCard == Strings.OreImage)
-                    {
-                        MonoplizedCardsCount += PlayerOreCount;
-                        PlayerOreCount = 0;
-                    }
-                    Dictionary<string, object> dict = new()
+                        MonoplizingPlayer = updatedGame.MonoplizingPlayer;
+                        MonopolizedCard = updatedGame.MonopolizedCard;
+                        int takenCount = 0;
+                        if (MonopolizedCard == Strings.WoodImage)
                         {
-                            { nameof(PlayersPassed), PlayersPassed },
-                            { nameof(MonoplizedCardsCount), MonoplizedCardsCount }
+                            takenCount = PlayerWoodCount;
+                            PlayerWoodCount = 0;
+                        }
+                        else if (MonopolizedCard == Strings.BrickImage)
+                        {
+                            takenCount = PlayerBrickCount;
+                            PlayerBrickCount = 0;
+                        }
+                        else if (MonopolizedCard == Strings.SheepImage)
+                        {
+                            takenCount = PlayerSheepCount;
+                            PlayerSheepCount = 0;
+                        }
+                        else if (MonopolizedCard == Strings.WheatImage)
+                        {
+                            takenCount = PlayerWheatCount;
+                            PlayerWheatCount = 0;
+                        }
+                        else if (MonopolizedCard == Strings.OreImage)
+                        {
+                            takenCount = PlayerOreCount;
+                            PlayerOreCount = 0;
+                        }
+                        Dictionary<string, object> dict = new()
+                        {
+                            { nameof(PlayersPassed), FieldValue.Increment(1) },
+                            { nameof(MonoplizedCardsCount), FieldValue.Increment(takenCount) }
                         };
-                    UpdateFields(dict);
-                    gridChanged = true;
-                }
-                if (PlayersPassed == PlayerCount && MonoplizingPlayer == PlayerNames[PlayerIndicator])
-                {
-                    if (MonopolizedCard == Strings.WoodImage)
-                        PlayerWoodCount += MonoplizedCardsCount;
-                    else if (MonopolizedCard == Strings.BrickImage)
-                        PlayerBrickCount = MonoplizedCardsCount;
-                    else if (MonopolizedCard == Strings.SheepImage)
-                        PlayerSheepCount = MonoplizedCardsCount;
-                    else if (MonopolizedCard == Strings.WheatImage)
-                        PlayerWheatCount = MonoplizedCardsCount;
-                    else if (MonopolizedCard == Strings.OreImage)
-                        PlayerOreCount = MonoplizedCardsCount;
-                    MonoplizingPlayer = string.Empty;
-                    MonopolizedCard = string.Empty;
-                    MonoplizedCardsCount = 0;
-                    PlayersPassed = 0;
-                    Dictionary<string, object> dict = new()
+                        UpdateFields(dict);
+                        gridChanged = true;
+                    }
+                    if(updatedGame.MonoplizingPlayer == PlayerNames[PlayerIndicator])
+                    {
+                        PlayersPassed = updatedGame.PlayersPassed;
+                        MonoplizedCardsCount = updatedGame.MonoplizedCardsCount;
+                    }
+                    if (PlayersPassed == PlayerCount && MonoplizingPlayer == PlayerNames[PlayerIndicator])
+                    {
+                        if (MonopolizedCard == Strings.WoodImage)
+                            PlayerWoodCount += MonoplizedCardsCount;
+                        else if (MonopolizedCard == Strings.BrickImage)
+                            PlayerBrickCount += MonoplizedCardsCount;
+                        else if (MonopolizedCard == Strings.SheepImage)
+                            PlayerSheepCount += MonoplizedCardsCount;
+                        else if (MonopolizedCard == Strings.WheatImage)
+                            PlayerWheatCount += MonoplizedCardsCount;
+                        else if (MonopolizedCard == Strings.OreImage)
+                            PlayerOreCount += MonoplizedCardsCount;
+                        MonoplizingPlayer = string.Empty;
+                        MonopolizedCard = string.Empty;
+                        MonoplizedCardsCount = 0;
+                        PlayersPassed = 0;
+                        Dictionary<string, object> dict = new()
                         {
-                            { nameof(PlayersPassed), PlayersPassed },
                             { nameof(PlayersPassed), PlayersPassed },
                             { nameof(MonopolizedCard), MonopolizedCard },
                             { nameof(MonoplizingPlayer), MonoplizingPlayer }
                         };
-                    UpdateFields(dict);
-                    gridChanged = true;
-                }
-                if (Turn != updatedGame.Turn)
-                {
-                    PlayerTurn = updatedGame.PlayerTurn;
-                    Turn = updatedGame.Turn;
-                    TurnChanged?.Invoke(this, EventArgs.Empty);
-                    gridChanged = true;
-                    StartTimer();
-                }
-                for (int i = 0; i < BoardPieces.Length; i++)
-                    if (BoardPieces[i] != updatedGame.BoardPieces[i])
-                    {
+                        UpdateFields(dict);
                         gridChanged = true;
-                        BoardPieces[i] = updatedGame.BoardPieces[i];
                     }
-                if (LongestRoadLength != updatedGame.LongestRoadLength || LargestArmySize != updatedGame.LargestArmySize)
-                {
-                    LongestRoadLength = updatedGame.LongestRoadLength;
-                    LargestArmySize = updatedGame.LargestArmySize;
-                    gridChanged = true;
-                }
-                if (RobberPlacment[0] != updatedGame.RobberPlacment[0] || RobberPlacment[1] != updatedGame.RobberPlacment[1])
-                {
-                    RobberPlacment = updatedGame.RobberPlacment;
-                    gridChanged = true;
-                }
-                if (IsRolling != updatedGame.IsRolling)
-                {
-                    IsRolling = updatedGame.IsRolling;
-                    AnimationStatusChanged?.Invoke(this, EventArgs.Empty);
-                }
-                if (gridChanged)
-                    GridChanged?.Invoke(this, EventArgs.Empty);
-                if (updatedGame.GameStarted && !GameStarted)
-                    MainThread.InvokeOnMainThreadAsync(() =>
+                    if (Turn != updatedGame.Turn)
                     {
-                        RegisterTimer();
-                        StartTimer();
-                        GameStarted = updatedGame.GameStarted;
-                        Application.Current!.MainPage = new GamePage(this);
-                    });
-                UpdateStatus();
-                GameChanged?.Invoke(this, EventArgs.Empty);
+                        PlayerTurn = updatedGame.PlayerTurn;
+                        Turn = updatedGame.Turn;
+                        if (WinnerIndecator == -1)
+                        {
+                            TurnChanged?.Invoke(this, EventArgs.Empty);
+                            gridChanged = true;
+                            StartTimer();
+                        }
+                    }
+                    if (PlayerTurn == PlayerIndicator + 2)
+                        gridChanged = true;
+                    for (int i = 0; i < BoardPieces.Length; i++)
+                        if (BoardPieces[i] != updatedGame.BoardPieces[i])
+                        {
+                            gridChanged = true;
+                            BoardPieces[i] = updatedGame.BoardPieces[i];
+                        }
+                    if (LongestRoadLength != updatedGame.LongestRoadLength || LongestRoadOwnerIndex != updatedGame.LongestRoadOwnerIndex ||
+                        LargestArmySize != updatedGame.LargestArmySize || LargestArmyOwnerIndexe != updatedGame.LargestArmyOwnerIndexe)
+                    {
+                        LongestRoadLength = updatedGame.LongestRoadLength;
+                        LongestRoadOwnerIndex = updatedGame.LongestRoadOwnerIndex;
+                        LargestArmySize = updatedGame.LargestArmySize;
+                        LargestArmyOwnerIndexe = updatedGame.LargestArmyOwnerIndexe;
+                        gridChanged = true;
+                    }
+                    if (RobberPlacment[0] != updatedGame.RobberPlacment[0] || RobberPlacment[1] != updatedGame.RobberPlacment[1])
+                    {
+                        RobberPlacment = updatedGame.RobberPlacment;
+                        gridChanged = true;
+                    }
+                    if (IsRolling != updatedGame.IsRolling)
+                    {
+                        IsRolling = updatedGame.IsRolling;
+                        AnimationStatusChanged?.Invoke(this, EventArgs.Empty);
+                    }
+                    if (gridChanged)
+                        GridChanged?.Invoke(this, EventArgs.Empty);
+                    if (updatedGame.GameStarted && !GameStarted)
+                        MainThread.InvokeOnMainThreadAsync(() =>
+                        {
+                            RegisterTimer();
+                            StartTimer();
+                            GameStarted = updatedGame.GameStarted;
+                            Application.Current!.MainPage = new GamePage(this);
+                        });
+                    UpdateStatus();
+                    GameChanged?.Invoke(this, EventArgs.Empty);
+                }              
             }
-            else
+            else if(WinnerIndecator == -1)
             {
                 if (!GameStarted)
                     GameDeleted?.Invoke(this, Strings.HostLeft);
@@ -431,7 +448,20 @@ namespace CatanGame.ModelsLogic
         {
             TradeRecived?.Invoke(this, EventArgs.Empty);
         }
-
+        protected override void ClearEventHandelers()
+        {
+            TimeLeftChanged = null;
+            EndTurnOutOfTime = null;
+            GameChanged = null;
+            GridChanged = null;
+            TurnChanged = null;
+            AnimationStatusChanged = null;
+            ResourceCountersUpdated = null;
+            TradeRecived = null;
+            CloseTradePopUp = null;
+            GameDeleted = null;
+            PlayerLeft = null;
+        }
         protected override void CheckTradeResponce()
         {
             MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 18).Show());
@@ -593,10 +623,20 @@ namespace CatanGame.ModelsLogic
             {
                 WinnerIndecator = PlayerIndicator;
                 dict.Add(nameof(WinnerIndecator), WinnerIndecator);
+                UpdateFields(dict);
+                ClearEventHandelers();
+                StopTimer();
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Application.Current!.MainPage = new EndGamePage(this);
+                });
             }
-            UpdateFields(OnTurnChanged, dict);
-            GridChanged?.Invoke(this, EventArgs.Empty);
-            StartTimer();
+            else
+            {
+                UpdateFields(OnTurnChanged, dict);
+                GridChanged?.Invoke(this, EventArgs.Empty);
+                StartTimer();
+            }
         }
 
         public override void StartGame()
@@ -663,6 +703,30 @@ namespace CatanGame.ModelsLogic
                 }
             }
         }
+
+        public override void AllocateStartingResources(int row, int column)
+        {
+            VertexNode vertexNode = GameBoard.Vertices[GameGrid.GetPieceLocationInArray(row, column)];
+            for(int i = 0; i < GameBoard.Hexes.Length; i++)
+            {
+                for(int k = 0; k < GameBoard.Hexes[i].Corners.Length; k++)
+                {
+                    if(GameBoard.Hexes[i].Corners[k] == vertexNode)
+                    {
+                        if (GameBoard.Hexes[i].Terrain == BoardModel.TerrainType.Mountien)
+                            PlayerOreCount++;
+                        else if (GameBoard.Hexes[i].Terrain == BoardModel.TerrainType.Hills)
+                            PlayerBrickCount++;
+                        else if (GameBoard.Hexes[i].Terrain == BoardModel.TerrainType.Fields)
+                            PlayerWheatCount++;
+                        else if (GameBoard.Hexes[i].Terrain == BoardModel.TerrainType.Pasture)
+                            PlayerSheepCount++;
+                        else if (GameBoard.Hexes[i].Terrain == BoardModel.TerrainType.Forest)
+                            PlayerWoodCount++;
+                    }
+                }
+            }
+        }   
 
         public override void TradeWithBank(object parameter)
         {
