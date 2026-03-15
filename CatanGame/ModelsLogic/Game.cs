@@ -287,7 +287,6 @@ namespace CatanGame.ModelsLogic
                 }
                 if (Turn != updatedGame.Turn)
                 {
-                    Rold = false;
                     PlayerTurn = updatedGame.PlayerTurn;
                     Turn = updatedGame.Turn;
                     TurnChanged?.Invoke(this, EventArgs.Empty);
@@ -311,7 +310,7 @@ namespace CatanGame.ModelsLogic
                     RobberPlacment = updatedGame.RobberPlacment;
                     gridChanged = true;
                 }
-                if (IsRolling != updatedGame.IsRolling && !Rold)
+                if (IsRolling != updatedGame.IsRolling)
                 {
                     IsRolling = updatedGame.IsRolling;
                     AnimationStatusChanged?.Invoke(this, EventArgs.Empty);
@@ -585,7 +584,6 @@ namespace CatanGame.ModelsLogic
             else
                 PlayerTurn++;
             Turn++;
-            Rold = false;
             Dictionary<string, object> dict = new()
             {
                 { nameof(PlayerTurn), PlayerTurn },

@@ -111,7 +111,6 @@ namespace CatanGame.Models
         public int PlayerCount { get; set; }
         public int MonoplizedCardsCount { get; set; }
         public int PlayersPassed { get; set; }
-        public bool Rold { get; set; }
         public bool IsFull { get; set; }
         public bool IsRolling { get; set; }
         public bool GameStarted { get; set; }

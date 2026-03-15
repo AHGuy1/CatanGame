@@ -363,7 +363,6 @@ namespace CatanGame.ModelsLogic
 
         protected override void RollDice()
         {
-            Game.Rold = true;
             RollButton.IsEnabled = false;
             Random random = new();
             Game.Roll1 = random.Next(1, 7);
@@ -396,7 +395,6 @@ namespace CatanGame.ModelsLogic
         {
             MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Game.Rold = true;
                 Dice1Roll.IsVisible = false;
                 Dice1Roll.IsAnimationEnabled = false;
                 Dice1Image.Source = GetDiceImage(Game.Roll1);
@@ -564,47 +562,15 @@ namespace CatanGame.ModelsLogic
             await Task.Delay(2000);
             if (task.IsCompletedSuccessfully)
             {
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Game.Rold = true;
-                    Dice1Roll.IsVisible = false;
-                    Dice1Roll.IsAnimationEnabled = false;
-                    Dice1Image.Source = GetDiceImage(Game.Roll1);
-                    Dice1Image.IsVisible = true;
-                    Dice2Roll.IsAnimationEnabled = false;
-                    Dice2Image.Source = GetDiceImage(Game.Roll2);
-                    Dice2Image.IsVisible = true;
-                    Dice2Roll.IsVisible = false;
-                    RollLabel.Text = Strings.Rolled + Game.RollTotal;
-                });
-
+                StopAnimations();
                 if (Game.RollTotal == 7)
                 {
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        for (int i = 0; i < 5; i++)
-                            for (int k = 0; k < GetAmountOfColumnsTiles(i + 1); k++)
-                                if (!BoardData.Hexes[GetTileLocationInArray(i + 1, k + 1)].HasRobber && RobberImages[i][k] != null)
-                                    SetVisibleRobberImages(i, k);
-                    });
+                    ShowRobberPlacmentOptions();
                 }
                 else
                 {
                     Game.AllocateResources();
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        (SpecialCardImages[5].Command as Command)?.ChangeCanExecute();
-                        if (Counters[0] != null && Counters[0].Text != Game.PlayerWoodCount.ToString())
-                            Counters[0].Text = Game.PlayerWoodCount.ToString();
-                        if (Counters[1] != null && Counters[1].Text != Game.PlayerBrickCount.ToString())
-                            Counters[1].Text = Game.PlayerBrickCount.ToString();
-                        if (Counters[2] != null && Counters[2].Text != Game.PlayerSheepCount.ToString())
-                            Counters[2].Text = Game.PlayerSheepCount.ToString();
-                        if (Counters[3] != null && Counters[3].Text != Game.PlayerWheatCount.ToString())
-                            Counters[3].Text = Game.PlayerWheatCount.ToString();
-                        if (Counters[4] != null && Counters[4].Text != Game.PlayerOreCount.ToString())
-                            Counters[4].Text = Game.PlayerOreCount.ToString();
-                    });
+                    UpdateBoardPices();
                 }
                 Game.IsRolling = false;
                 Dictionary<string, object> dict = new()
@@ -743,7 +709,7 @@ namespace CatanGame.ModelsLogic
         {
             return Game.PlayerIndicator + 1 == Game.PlayerTurn && Game.IsFull &&
                 ((Game.Turn <= Game.PlayerCount * 2 && Game.PlayerRoadCount >= (double)(Game.Turn / Game.PlayerCount)) ||
-                (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && Game.Rold));
+                (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && !RollButton.IsEnabled));
         }
 
         protected override bool CenTrade()
