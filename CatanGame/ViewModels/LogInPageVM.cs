@@ -9,15 +9,11 @@ namespace CatanGame.ViewModels
     public partial class LogInPageVM : ObservableObject
     {
         #region Fields
-        [GeneratedRegex(Strings.PhoneStructure)]
-        private static partial Regex PhoneStructureRegex();
         private readonly User user = new();
         #endregion
 
         #region Commands
         public ICommand LoginCommand { get; }
-        public ICommand LoginWithVerificationCodeCommand { get; }
-        public ICommand SendVerificationCodeToPhoneCommand { get; }
         public ICommand CreateAcoountPageCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand PasswordReset { get; }
@@ -25,13 +21,9 @@ namespace CatanGame.ViewModels
 
         #region Properties
         public bool IsBusy { get; set; } = false;
-        public bool IsVisibileBeforeVerificationCodeSent { get; set; } = true;
-        public bool IsVisibileAfterVerificationCodeSent { get; set; } = false;
         public bool IsEnabled { get; set; } = true;
         public bool IsVisibleEmailMessege { get; set; } = true;
-        public bool IsVisiblePhoneMessege { get; set; } = false;
         public bool IsVisiblePasswordMessege { get; set; } = false;
-        public bool IsVisibleVerificationCodeMessege { get; set; } = false;
         public bool IsPassword { get; set; } = true;
         public bool IsRemembered
         {
@@ -66,41 +58,17 @@ namespace CatanGame.ViewModels
                 (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
-        public string VerificationCode
-        {
-            get => user.VerificationCode;
-            set
-            {
-                user.VerificationCode = value;
-                ToggleIsVisibleVerificationCodeMessege();
-                (LoginWithVerificationCodeCommand as Command)?.ChangeCanExecute();
-            }
-        }
-        public string PhoneNumber
-        {
-            get => user.PhoneNumber;
-            set
-            {
-                user.PhoneNumber = value;
-                ToggleIsVisiblePhoneMessege();
-                (SendVerificationCodeToPhoneCommand as Command)?.ChangeCanExecute();
-            }
-        }
         #endregion
 
         #region Constructor
         public LogInPageVM()
         {
             LoginCommand = new Command(Login, CanLogin);
-            LoginWithVerificationCodeCommand = new Command(LoginWithVerificationCode, CanLoginWithVerificationCode);
-            SendVerificationCodeToPhoneCommand = new Command(SendVerificationCodeToPhone, CanSendVerificationCodeToPhone);
             CreateAcoountPageCommand = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             PasswordReset = new Command(GoToResetPassword);
             user.AuthFalier += OnAuthFalier;
             user.AuthComplete += OnAuthComplete;
-            user.PhoneNumberFalier += OnPhoneContactFalier;
-            user.PhoneNumberComplete += OnPhoneContactComplete;
         }
         #endregion
 
@@ -119,20 +87,6 @@ namespace CatanGame.ViewModels
             IsEnabled = false;
             OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
-        }
-
-        private void OnPhoneContactComplete(object? sender, EventArgs e)
-        {
-            IsVisibileBeforeVerificationCodeSent = false;
-            IsVisibileAfterVerificationCodeSent = true;
-            NotBusy();
-            OnPropertyChanged(nameof(IsVisibileBeforeVerificationCodeSent));
-            OnPropertyChanged(nameof(IsVisibileAfterVerificationCodeSent));
-        }
-
-        private void OnPhoneContactFalier(object? sender, EventArgs e)
-        {
-            PhoneNumber = Strings.PhoneAreaCode;
         }
 
         private void OnAuthComplete(object? sender, EventArgs e)
@@ -173,22 +127,10 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsPassword));
         }
 
-        private void ToggleIsVisiblePhoneMessege()
-        {
-            IsVisiblePhoneMessege = !String.IsNullOrWhiteSpace(PhoneNumber) && !PhoneStructureRegex().IsMatch(PhoneNumber) && !String.Equals(PhoneNumber, Strings.PhoneAreaCode + Strings.EmptySpace);
-            OnPropertyChanged(nameof(IsVisiblePhoneMessege));
-        }
-
         private void ToggleIsVisibleEmailMessege()
         {
             IsVisibleEmailMessege = !(user.Email.Contains(Strings.AtSign) && user.Email.Contains(Strings.Dot));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
-        }
-
-        private void ToggleIsVisibleVerificationCodeMessege()
-        {
-            IsVisibleVerificationCodeMessege = !String.IsNullOrWhiteSpace(VerificationCode);
-            OnPropertyChanged(nameof(IsVisibleVerificationCodeMessege));
         }
 
         private void ToggleIsVisiblePasswordMessege()
@@ -208,35 +150,13 @@ namespace CatanGame.ViewModels
             return (Email.Contains(Strings.AtSign) && Email.Contains(Strings.Dot) && Password.Length >= 8 && Password.Length <= 12);
         }
 
-        private void LoginWithVerificationCode()
-        {
-            Busy();
-            user.SignInWithPhoneNumber();
-        }
-
-        private bool CanLoginWithVerificationCode()
-        {
-            return !String.IsNullOrWhiteSpace(VerificationCode);
-        }
-
-        private void SendVerificationCodeToPhone()
-        {
-            Busy();
-            user.VerifyPhoneNumber();
-        }
-
-        private bool CanSendVerificationCodeToPhone()
-        {
-            return PhoneStructureRegex().IsMatch(PhoneNumber);
-        }
-
         private void GoToResetPassword()
         {
             Busy();
             if (Application.Current != null)
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Application.Current.MainPage = new PassWordResetPage();
+                    Application.Current.MainPage = new PasswordResetPage();
                     IsEnabled = true;
                     OnPropertyChanged(nameof(IsEnabled));
                 });

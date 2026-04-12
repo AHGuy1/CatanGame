@@ -1,6 +1,3 @@
-using Android.Net.Wifi.Aware;
-using static CatanGame.Models.AvatarModel;
-
 namespace CatanGame.Models
 {
     public static class Strings
@@ -28,14 +25,6 @@ namespace CatanGame.Models
         public const string UnknownError = "Unknown error";
         public const string RememberMeLabel = "Remember me:";
         public const string ContainsINVALID_LOGIN_CREDENTIALS = "INVALID_LOGIN_CREDENTIALS";
-        public const string CodeSentToPhone = "Verification Code Sent To Phone";
-        public const string PhoneLinkedToAcoount = "Phone Linked To Acoount";
-        public const string PhoneAreaCode = "+972";
-        public const string PhoneStructure = @"^\+972 5[0-9]-[0-9]{3}-[0-9]{4}$";
-        public const string VaildPhoneNumber = "You must enter a vaild phone number!";
-        public const string PhoneNumberLabel = "Phone number:";
-        public const string SendVerificationCode = "Send verification code";
-        public const string VerificationCodeLabel = "Verification code:";
         public const string ContainsReason = "Reason";
         public const string EmptySpace = " ";
         public const string AtSign = "@";

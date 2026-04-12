@@ -31,7 +31,7 @@ namespace CatanGame.Models
         protected Label RollLabel { get; set; } = new();
         #endregion
 
-        #region Events
+        #region Eventscxd
         public EventHandler? EndTurnOnClicked;
         #endregion
 
@@ -52,6 +52,7 @@ namespace CatanGame.Models
         public abstract void EnsurePlayerPlayed();
         public abstract void OnAnimationStatusChanged();
         public abstract void OnChange();
+        public abstract void OnTurnChanged();
         public abstract void SetVisibleRobberImages(int row, int column);
         public abstract void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage);
         public abstract void ShowBuildOptions(string pieceType);

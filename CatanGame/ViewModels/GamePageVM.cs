@@ -95,13 +95,7 @@ namespace CatanGame.ViewModels
 
         private void OnTurnChanged(object? sender, EventArgs e)
         {
-            if (game.Turn <= game.PlayerCount * 2)
-            {
-                if (game.PlayerTurn == game.PlayerIndicator + 1)
-                    board.ShowBuildOptions(Strings.Town);
-            }
-            else if (game.PlayerTurn == game.PlayerIndicator + 1)
-                board.RollButton.IsEnabled = true;
+            board.OnTurnChanged();
         }
 
         private void UpdateTimeLeft(object? sender, EventArgs e)
@@ -132,33 +126,12 @@ namespace CatanGame.ViewModels
             });
         }
 
-        private void OnPlayerLeft(object? sender, int Player)
+        private void OnPlayerLeft(object? sender, string message)
         {
-            if (Player == 1)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player2Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 2)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player3Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 3)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player4Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 4)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player5Left, ToastDuration.Long, 20).Show();
-                });
-            else if (Player == 5)
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
-                });
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(message, ToastDuration.Long, 20).Show();
+            });
         }
 
         private void OnGameChanged(object? sender, EventArgs e)

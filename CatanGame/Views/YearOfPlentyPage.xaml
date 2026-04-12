@@ -32,7 +32,7 @@
                              CornerRadius="8"
                              Command="{Binding PickCardToGetCommand}"
                              CommandParameter="{x:Reference WoodPickImage}" />
-                <Label Text="{Binding SelectedWoodCount}"
+                <Label Text="{Binding SelectedGetCounters[0]}"
                        FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"
@@ -49,7 +49,7 @@
                              Command="{Binding PickCardToGetCommand}"
                              CommandParameter="{x:Reference BrickPickImage}" />
                 <Label Grid.Column="1"
-                       Text="{Binding SelectedBrickCount}"
+                       Text="{Binding SelectedGetCounters[1]}"
                        FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"
@@ -66,7 +66,7 @@
                              Command="{Binding PickCardToGetCommand}"
                              CommandParameter="{x:Reference SheepPickImage}" />
                 <Label Grid.Column="2"
-                       Text="{Binding SelectedSheepCount}"
+                       Text="{Binding SelectedGetCounters[2]}"
                        FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"
@@ -83,7 +83,7 @@
                              Command="{Binding PickCardToGetCommand}"
                              CommandParameter="{x:Reference WheatPickImage}" />
                 <Label Grid.Column="3"
-                       Text="{Binding SelectedWheatCount}"
+                       Text="{Binding SelectedGetCounters[3]}"
                        FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"
@@ -100,7 +100,7 @@
                              Command="{Binding PickCardToGetCommand}"
                              CommandParameter="{x:Reference OrePickImage}" />
                 <Label Grid.Column="4"
-                       Text="{Binding SelectedOreCount}"
+                       Text="{Binding SelectedGetCounters[4]}"
                        FontAttributes="Bold"
                        TextColor="White"
                        HorizontalOptions="Center"

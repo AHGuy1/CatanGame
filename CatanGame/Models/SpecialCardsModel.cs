@@ -17,21 +17,15 @@ namespace CatanGame.Models
         protected GameGrid? GameGrid { get; set; }
         protected Game? Game { get; set; }
         protected Board? Board { get; set; }
-        protected ImageButton? SelectedImage { get; set; }
+        protected ImageButton? SelectedCard { get; set; }
         #endregion
 
         #region Properties
-        public int PlayerKnightCount { get; set; }
-        public int PlayerUniversityCount { get; set; }
-        public int PlayerRoadBuildingCount { get; set; }
-        public int PlayerMonopolyCount { get; set; }
-        public int PlayerYearOfPlentyCount { get; set; }
-        public int SelectedWoodCount { get; set; }
-        public int SelectedBrickCount { get; set; }
-        public int SelectedSheepCount { get; set; }
-        public int SelectedWheatCount { get; set; }
-        public int SelectedOreCount { get; set; }
-        public int TotalSelectedCount => SelectedWoodCount + SelectedBrickCount + SelectedSheepCount + SelectedWheatCount + SelectedOreCount;
+        //Index 0 = Knight, Index 1 = University, Index 2 = Road Building, Index 3 = Monopoley, Index 4 = YearOfPlenty, Index 5 = CardBackGroud
+        public int[] SpecialCardCounters { get; set; } = new int[5];
+        //Index 0 = Wood, Index 1 = Brick, Index 2 = Sheep, Index 3 = Wheat, Index 4 = Ore
+        public int[] SelectedGetCounters { get; set; } = new int[5];
+        public int TotalSelectedCount => SelectedGetCounters[0] + SelectedGetCounters[1] + SelectedGetCounters[2] + SelectedGetCounters[3] + SelectedGetCounters[4];
         public string[] CardPack { get; set; } = new string[25];
         public RoadBuilding RoadBuildingStuatus { get; set; } = RoadBuilding.Disabled;
         #endregion

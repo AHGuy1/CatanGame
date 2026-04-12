@@ -38,16 +38,14 @@ namespace CatanGame.Models
         [Ignored]
         public EventHandler<string>? GameDeleted;
         [Ignored]
-        public EventHandler<int>? PlayerLeft;
+        public EventHandler<string>? PlayerLeft;
         #endregion
 
         #region Properties
         [Ignored]
         public Avatar PlayerAvatar { get; set; } = new Avatar();
         [Ignored]
-        public abstract GameStatus Status { get; }
-        [Ignored]
-        public string StatusMessage => Status.StatusMessage;
+        public string StatusMessage => _status.StatusMessage;
         [Ignored]
         public Color StatusColor { get; set; } = Colors.Black;
         [Ignored]
@@ -55,7 +53,7 @@ namespace CatanGame.Models
         [Ignored]
         public int PlayerLongestRoadLength { get; set; }
         [Ignored]
-        public int PlayerLargestArmySize { get; set; }
+        public int PlayerArmySize { get; set; }
         [Ignored]
         public int PlayerIndicator { get; set; }
         [Ignored]

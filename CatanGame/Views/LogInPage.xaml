@@ -17,7 +17,6 @@
                 FontAttributes="Bold"
                 FontSize="32"
                 HorizontalOptions="Center"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Text="{x:Static m:Strings.LoginTitle}"
                 TextColor="DodgerBlue" />
 
@@ -26,18 +25,16 @@
                 FontFamily="MaterialSymbols"
                 FontSize="32"
                 HorizontalOptions="Center"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Text="{StaticResource IconVerified_user}"
                 TextColor="DodgerBlue" />
 
             <Border
                 Padding="10"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Stroke="DodgerBlue"
                 StrokeShape="RoundRectangle 16"
                 StrokeThickness="1">
 
-                <Grid IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}" RowDefinitions="auto,auto,auto">
+                <Grid RowDefinitions="auto,auto,auto">
                     <Label
                         FontAttributes="Bold"
                         FontSize="20"
@@ -63,12 +60,11 @@
 
             <Border
                 Padding="10"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Stroke="DodgerBlue"
                 StrokeShape="RoundRectangle 16"
                 StrokeThickness="1">
 
-                <Grid IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}" RowDefinitions="auto,auto,auto">
+                <Grid RowDefinitions="auto,auto,auto">
                     <Label
                         FontAttributes="Bold"
                         FontSize="20"
@@ -103,7 +99,7 @@
                 </Grid>
             </Border>
 
-            <Grid ColumnDefinitions="*,*,*" IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
+            <Grid ColumnDefinitions="*,*,*">
                 <CheckBox
                     Grid.Column="2"
                     HorizontalOptions="Start"
@@ -121,7 +117,7 @@
 
             </Grid>
 
-            <Grid IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}">
+            <Grid>
                 <Label
                     FontSize="20"
                     HorizontalOptions="Center"
@@ -136,14 +132,12 @@
                 </Label>
             </Grid>
 
-            <Button
-                Command="{Binding LoginCommand}"
-                FontSize="18"
-                HeightRequest="70"
-                IsEnabled="{Binding IsEnabled}"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
-                Text="{x:Static m:Strings.LoginButton}"
-                TextColor="White">
+            <Button Command="{Binding LoginCommand}"
+                    FontSize="18"
+                    HeightRequest="70"
+                    IsEnabled="{Binding IsEnabled}"
+                    Text="{x:Static m:Strings.LoginButton}"
+                    TextColor="White">
 
                 <Button.ImageSource>
                     <FontImageSource Glyph="{StaticResource IconLogin}">
@@ -153,80 +147,10 @@
 
             </Button>
 
-            <Border
-                Padding="10"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
-                Stroke="DodgerBlue"
-                StrokeShape="RoundRectangle 16"
-                StrokeThickness="1">
-
-                <Grid IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}" RowDefinitions="auto,auto,auto">
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="20"
-                        HorizontalOptions="Center"
-                        Text="{x:Static m:Strings.PhoneNumberLabel}"
-                        TextColor="DarkOrange" />
-
-                    <Entry
-                        Grid.Row="1"
-                        FontSize="18"
-                        Text="{Binding PhoneNumber}"
-                        TextColor="black" />
-                    <Label
-                        Grid.Row="2"
-                        FontAttributes="Bold"
-                        FontSize="12"
-                        HorizontalOptions="Center"
-                        IsVisible="{Binding IsVisiblePhoneMessege}"
-                        Text="{x:Static m:Strings.VaildPhoneNumber}"
-                        TextColor="#E32636" />
-                </Grid>
-
-            </Border>
-            <Button
-                Command="{Binding SendVerificationCodeToPhoneCommand}"
-                FontSize="18"
-                HeightRequest="70"
-                IsEnabled="{Binding IsEnabled}"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
-                Text="{x:Static m:Strings.SendVerificationCode}"
-                TextColor="White" />
-
-            <Border Padding="10"
-                    IsVisible="{Binding IsVisibileAfterVerificationCodeSent}"
-                    Stroke="DodgerBlue"
-                    StrokeShape="RoundRectangle 16"
-                    StrokeThickness="1">
-
-                <Grid IsVisible="{Binding IsVisibileAfterVerificationCodeSent}"
-                      RowDefinitions="auto,auto,auto">
-                    <Label FontAttributes="Bold"
-                           FontSize="20"
-                           HorizontalOptions="Center"
-                           Text="{x:Static m:Strings.VerificationCodeLabel}"
-                           TextColor="DarkOrange" />
-
-                    <Entry Grid.Row="1"
-                           FontSize="18"
-                           Text="{Binding VerificationCode}"
-                           TextColor="black" />
-                    <Label Grid.Row="2"
-                           FontAttributes="Bold"
-                           FontSize="12"
-                           HorizontalOptions="Center"
-                           IsVisible="{Binding IsVisibleVerificationCodeMessege}"
-                           Text="{x:Static m:Strings.invalidEmail}"
-                           TextColor="#E32636" />
-                </Grid>
-
-            </Border>
-
             <Label
                 FontAttributes="Bold"
                 FontSize="25"
                 HorizontalOptions="Center"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Text="{x:Static m:Strings.DontHaveAnAcoountLabel}"
                 TextColor="DarkOrange" />
 
@@ -235,7 +159,6 @@
                 FontSize="18"
                 HeightRequest="70"
                 IsEnabled="{Binding IsEnabled}"
-                IsVisible="{Binding IsVisibileBeforeVerificationCodeSent}"
                 Text="{x:Static m:Strings.CreateAnAcoountLabel}"
                 TextColor="White" />
         </VerticalStackLayout>

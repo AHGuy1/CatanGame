@@ -10,7 +10,6 @@ namespace CatanGame.Models
         #region Fields
         protected FbData fbd = new();
         protected IListenerRegistration? ilr;
-        protected GameCode? CurrentGameCode;
         #endregion
 
         #region Events

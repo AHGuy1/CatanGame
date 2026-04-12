@@ -27,9 +27,9 @@ namespace CatanGame.ModelsLogic
             CurrentGame.GameCode = gameCode.GameCode;
             gameCode.SetDocument(OnCompleteGameCodeAdded);
             Dictionary<string, object> dict = new()
-                {
-                    { nameof(CurrentGame.GameCode), gameCode.GameCode }
-                };
+            {
+                { nameof(CurrentGame.GameCode), gameCode.GameCode }
+            };
             CurrentGame.UpdateFields(dict);
         }
         protected override void OnChange(IQuerySnapshot snapshot, Exception error)

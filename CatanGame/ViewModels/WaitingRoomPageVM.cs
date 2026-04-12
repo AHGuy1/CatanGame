@@ -78,36 +78,12 @@ namespace CatanGame.ViewModels
             });
         }
 
-        private void OnPlayerLeft(object? sender, int Player)
+        private void OnPlayerLeft(object? sender, string message)
         {
-            if (PlayerIndector != Player)
+            MainThread.InvokeOnMainThreadAsync(() =>
             {
-                if (Player == 1)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.Player2Left, ToastDuration.Long, 20).Show();
-                    });
-                else if (Player == 2)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.Player3Left, ToastDuration.Long, 20).Show();
-                    });
-                else if (Player == 3)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.Player4Left, ToastDuration.Long, 20).Show();
-                    });
-                else if (Player == 4)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.Player5Left, ToastDuration.Long, 20).Show();
-                    });
-                else if (Player == 5)
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Toast.Make(Strings.Player6Left, ToastDuration.Long, 20).Show();
-                    });
-            }
+                Toast.Make(message, ToastDuration.Long, 20).Show();
+            });
         }
 
         private bool CanStartGame()

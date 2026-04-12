@@ -2,13 +2,13 @@ using CatanGame.ViewModels;
 
 namespace CatanGame.Views;
 
-public partial class PassWordResetPage : ContentPage
+public partial class PasswordResetPage : ContentPage
 {
     private object? SOToRestore { get; set; }
-    public PassWordResetPage()
+    public PasswordResetPage()
 	{
 		InitializeComponent();
-		BindingContext = new PassWordResetPageVM();
+		BindingContext = new PasswordResetPageVM();
     }
     protected override void OnAppearing()
     {

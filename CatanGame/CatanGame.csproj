@@ -59,7 +59,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<PackageReference Include="Plugin.CloudFirestore" Version="4.1.0" />
-		<PackageReference Include="Plugin.Firebase.Auth" Version="3.1.1" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0-preview.13" />
 		<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.5.1" />
 	</ItemGroup>
@@ -67,6 +66,9 @@
 	<ItemGroup>
 	  <Compile Update="Views\BoardTest.xaml.cs">
 	    <DependentUpon>BoardTest.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\PassWordResetPage.xaml.cs">
+	    <DependentUpon>PasswordResetPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\TradePage.xaml.cs">
 	    <DependentUpon>TradePage.xaml</DependentUpon>
@@ -101,16 +103,13 @@
 	  <MauiXaml Update="Views\LogInPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MainPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\MonopolyPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TradePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\PassWordResetPage.xaml">
+	  <MauiXaml Update="Views\PasswordResetPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RegisterPage.xaml">

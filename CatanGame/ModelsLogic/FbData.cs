@@ -1,6 +1,5 @@
 ﻿using CatanGame.Models;
 using Plugin.CloudFirestore;
-using Plugin.Firebase.Auth;
 
 namespace CatanGame.ModelsLogic
 {
@@ -61,21 +60,6 @@ namespace CatanGame.ModelsLogic
         public override async void ResetPassword(string email, Action<Task> OnComplete)
         {
             await facl.ResetEmailPasswordAsync(email).ContinueWith(OnComplete);
-        }
-
-        public override async void VerifyPhoneNumberAsync(string phoneNumber, Action<Task> OnComplete)
-        {
-            await fbauth.VerifyPhoneNumberAsync(phoneNumber).ContinueWith(OnComplete);
-        }
-
-        public override async void LinkWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete)
-        {
-            await fbauth.LinkWithPhoneNumberVerificationCodeAsync(verificationCode).ContinueWith(OnComplete);
-        }
-
-        public override async void SignInWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete)
-        {
-            await fbauth.SignInWithPhoneNumberVerificationCodeAsync(verificationCode).ContinueWith(OnComplete);
         }
 
         public override async void UpdateFields(string collectonName, string id, Dictionary<string, object> dict, Action<Task> OnComplete)

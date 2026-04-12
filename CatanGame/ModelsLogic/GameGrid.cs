@@ -77,7 +77,7 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static double GetSizeProportion()
+        private static new double GetSizeProportion()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
             if (mainDisplay.Height < mainDisplay.Width)
@@ -516,12 +516,12 @@ namespace CatanGame.ModelsLogic
                 if (source == Strings.KnightImage)
                 {
                     SpecialCards.UseKnight();
-                    Game.PlayerLargestArmySize++;
-                    if (Game.PlayerLargestArmySize > Game.LargestArmySize)
+                    Game.PlayerArmySize++;
+                    if (Game.PlayerArmySize > Game.LargestArmySize)
                     {
                         LargestArmy.Opacity = 1;
                         Game.LargestArmyOwnerIndexe = Game.PlayerIndicator;
-                        Game.LargestArmySize = Game.PlayerLargestArmySize;
+                        Game.LargestArmySize = Game.PlayerArmySize;
                         Dictionary<string, object> dict = new()
                             {
                                 { nameof(Game.LargestArmySize), Game.LargestArmySize },
@@ -542,15 +542,15 @@ namespace CatanGame.ModelsLogic
 
         protected override void UpdateSpecialCards()
         {
-            Counters[5].Text = SpecialCards.PlayerKnightCount.ToString();
+            Counters[5].Text = SpecialCards.SpecialCardCounters[0].ToString();
             (SpecialCardImages[0].Command as Command)?.ChangeCanExecute();
-            Counters[6].Text = SpecialCards.PlayerUniversityCount.ToString();
+            Counters[6].Text = SpecialCards.SpecialCardCounters[1].ToString();
             (SpecialCardImages[1].Command as Command)?.ChangeCanExecute();
-            Counters[7].Text = SpecialCards.PlayerRoadBuildingCount.ToString();
+            Counters[7].Text = SpecialCards.SpecialCardCounters[2].ToString();
             (SpecialCardImages[2].Command as Command)?.ChangeCanExecute();
-            Counters[8].Text = SpecialCards.PlayerMonopolyCount.ToString();
+            Counters[8].Text = SpecialCards.SpecialCardCounters[3].ToString();
             (SpecialCardImages[3].Command as Command)?.ChangeCanExecute();
-            Counters[9].Text = SpecialCards.PlayerYearOfPlentyCount.ToString();
+            Counters[9].Text = SpecialCards.SpecialCardCounters[4].ToString();
             (SpecialCardImages[4].Command as Command)?.ChangeCanExecute();
         }
 
@@ -739,13 +739,13 @@ namespace CatanGame.ModelsLogic
             if (paramter is string source)
             {
                 if (source == Strings.KnightImage)
-                    return SpecialCards.PlayerKnightCount > 0 && Game.StatusMessage == Strings.YourTurn;
+                    return SpecialCards.SpecialCardCounters[0] > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.RoadBuildingImage)
-                    return SpecialCards.PlayerRoadBuildingCount > 0 && Game.StatusMessage == Strings.YourTurn;
+                    return SpecialCards.SpecialCardCounters[2] > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.MonopolyImage)
-                    return SpecialCards.PlayerMonopolyCount > 0 && Game.StatusMessage == Strings.YourTurn;
+                    return SpecialCards.SpecialCardCounters[3] > 0 && Game.StatusMessage == Strings.YourTurn;
                 else if (source == Strings.YearOfPlentyImage)
-                    return SpecialCards.PlayerYearOfPlentyCount > 0 && Game.StatusMessage == Strings.YourTurn;
+                    return SpecialCards.SpecialCardCounters[4] > 0 && Game.StatusMessage == Strings.YourTurn;
             }
             //wont happan
             return false;
@@ -879,7 +879,19 @@ namespace CatanGame.ModelsLogic
                 StopAnimations();
             }
         }
-
+        public override void OnTurnChanged()
+        {
+            if (Game.PlayerTurn == Game.PlayerIndicator + 1)
+            {
+                if (Game.Turn <= Game.PlayerCount * 2)
+                {
+                    ShowBuildOptions(Strings.Town);
+                }
+                else 
+                    RollButton.IsEnabled = true;
+            }
+           
+        }
         public override void OnChange()
         {
             if (Game.BoardPieces != null && BoardPieceImages != null && BoardPieceButtons != null)
@@ -925,7 +937,7 @@ namespace CatanGame.ModelsLogic
             }
             if (LongestRoad.Opacity != Keys.DoesNotOwn && Game.PlayerLongestRoadLength < Game.LongestRoadLength)
                 LongestRoad.Opacity = Keys.DoesNotOwn;
-            if (LargestArmy.Opacity != Keys.DoesNotOwn && Game.PlayerLargestArmySize < Game.LargestArmySize)
+            if (LargestArmy.Opacity != Keys.DoesNotOwn && Game.PlayerArmySize < Game.LargestArmySize)
                 LargestArmy.Opacity = Keys.DoesNotOwn;
             (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
             (EndTurnCommand as Command)?.ChangeCanExecute();
@@ -1309,19 +1321,19 @@ namespace CatanGame.ModelsLogic
             SpecialCardImages[4] = CreateCardImageButton(Strings.YearOfPlentyImage);
             Row.Add(SpecialCardImages[4], 5);
             Counters[5] = CreateCardLabel();
-            Counters[5].Text = SpecialCards.PlayerKnightCount.ToString();
+            Counters[5].Text = SpecialCards.SpecialCardCounters[0].ToString();
             Row.Add(Counters[5], 1);
             Counters[6] = CreateCardLabel();
-            Counters[6].Text = SpecialCards.PlayerUniversityCount.ToString();
+            Counters[6].Text = SpecialCards.SpecialCardCounters[1].ToString();
             Row.Add(Counters[6], 2);
             Counters[7] = CreateCardLabel();
-            Counters[7].Text = SpecialCards.PlayerRoadBuildingCount.ToString();
+            Counters[7].Text = SpecialCards.SpecialCardCounters[2].ToString();
             Row.Add(Counters[7], 3);
             Counters[8] = CreateCardLabel();
-            Counters[8].Text = SpecialCards.PlayerMonopolyCount.ToString();
+            Counters[8].Text = SpecialCards.SpecialCardCounters[3].ToString();
             Row.Add(Counters[8], 4);
             Counters[9] = CreateCardLabel();
-            Counters[9].Text = SpecialCards.PlayerYearOfPlentyCount.ToString();
+            Counters[9].Text = SpecialCards.SpecialCardCounters[4].ToString();
             Row.Add(Counters[9], 5);
             otherPieces.Add(Row, 0, 4);
             Grid.SetColumnSpan(Row, 2);

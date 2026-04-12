@@ -9,7 +9,6 @@ namespace CatanGame.Models
     public class Keys
     {
         #region Fields
-        public const string IsRegisteredKey = "IsRegistered";
         public const string EmailKey = "Email";
         public const string PasswordKey = "Password";
         public const string IsRememberedKey = "IsRemembered";

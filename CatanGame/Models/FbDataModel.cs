@@ -1,7 +1,6 @@
 using Firebase.Auth;
 using Firebase.Auth.Providers;
 using Plugin.CloudFirestore;
-using Plugin.Firebase.Auth;
 
 namespace CatanGame.Models
 {
@@ -10,7 +9,6 @@ namespace CatanGame.Models
         #region Fields
         protected FirebaseAuthClient facl;
         protected IFirestore fdb;
-        protected IFirebaseAuth fbauth;
         #endregion
 
         #region Properties
@@ -29,16 +27,12 @@ namespace CatanGame.Models
             };
             facl = new FirebaseAuthClient(fac);
             fdb = CrossCloudFirestore.Current.Instance;
-            fbauth = CrossFirebaseAuth.Current;
         }
         #endregion
 
         #region PublicMethods
         public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<Task> OnComplete);
         public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<Task> OnComplete);
-        public abstract void VerifyPhoneNumberAsync(string phoneNumber, Action<Task> OnComplete);
-        public abstract void LinkWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete);
-        public abstract void SignInWithPhoneNumberVerificationCodeAsync(string verificationCode, Action<Task> OnComplete);
         public abstract void ResetPassword(string email, Action<Task> OnComplete);
         public abstract void DeleteDocument(string collectonName, string id, Action<Task> onComplete);
         public abstract void DeleteDocument(string collectonName, string id);

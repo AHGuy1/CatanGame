@@ -16,11 +16,8 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Properties
-        public string SelectedWoodCount => SpecialCards.SelectedWoodCount.ToString();
-        public string SelectedBrickCount => SpecialCards.SelectedBrickCount.ToString();
-        public string SelectedSheepCount => SpecialCards.SelectedSheepCount.ToString();
-        public string SelectedWheatCount => SpecialCards.SelectedWheatCount.ToString();
-        public string SelectedOreCount => SpecialCards.SelectedOreCount.ToString();
+        public string[] SelectedGetCounters => [SpecialCards.SelectedGetCounters[0].ToString(), SpecialCards.SelectedGetCounters[1].ToString(),
+            SpecialCards.SelectedGetCounters[2].ToString(), SpecialCards.SelectedGetCounters[3].ToString(), SpecialCards.SelectedGetCounters[4].ToString()];
         #endregion
 
         #region Constructor
@@ -36,11 +33,7 @@ namespace CatanGame.ViewModels
         private void PickCardToGet(object parameter)
         {
             SpecialCards.PickCardsToGet(parameter);
-            OnPropertyChanged(nameof(SelectedWoodCount));
-            OnPropertyChanged(nameof(SelectedBrickCount));
-            OnPropertyChanged(nameof(SelectedSheepCount));
-            OnPropertyChanged(nameof(SelectedWheatCount));
-            OnPropertyChanged(nameof(SelectedOreCount));
+            OnPropertyChanged(nameof(SelectedGetCounters));
         }
 
         private void ConfirmSelectedCards(object Paramter)

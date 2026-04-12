@@ -10,7 +10,6 @@ namespace CatanGame.ModelsLogic
     public class Game : GameModel
     {
         #region Properties
-        public override GameStatus Status => _status;
         #endregion
 
         #region Constructor
@@ -127,7 +126,18 @@ namespace CatanGame.ModelsLogic
 
         protected override void OnCompletePlayerLeft(Task task)
         {
-            PlayerLeft?.Invoke(this, PlayerIndicator);
+            string message = "";
+            if (PlayerIndicator == 1)
+                message = Strings.Player2Left;
+            else if (PlayerIndicator == 2)
+                message = Strings.Player3Left;
+            else if (PlayerIndicator == 3)
+                message = Strings.Player4Left;
+            else if (PlayerIndicator == 4)
+                message = Strings.Player5Left;
+            else if (PlayerIndicator == 5)
+                message = Strings.Player6Left;
+            PlayerLeft?.Invoke(this, message);
         }
 
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
@@ -141,7 +151,18 @@ namespace CatanGame.ModelsLogic
                         for (int j = 1; j < PlayerCount; j++)
                             if (PlayerNames[j] != updatedGame.PlayerNames[j])
                             {
-                                PlayerLeft?.Invoke(this, j);
+                                string message = "";
+                                if (j == 1)
+                                    message = Strings.Player2Left;
+                                else if (j == 2)
+                                    message = Strings.Player3Left;
+                                else if (j == 3)
+                                    message = Strings.Player4Left;
+                                else if (j == 4)
+                                    message = Strings.Player5Left;
+                                else if (j == 5)
+                                    message = Strings.Player6Left;
+                                PlayerLeft?.Invoke(this, message);
                                 if (j < PlayerIndicator)
                                     PlayerIndicator--;
                                 j = PlayerCount;
@@ -583,7 +604,7 @@ namespace CatanGame.ModelsLogic
             PlayerNames[PlayerIndicator] = string.Empty;
             if (PlayerIndicator == 0 || GameStarted)
                 DeleteDocument(OnCompleteDeleted);
-            else
+            else if(!GameStarted)
             {
                 for (int i = 0; i < PlayerCount - 1; i++)
                     if (String.IsNullOrWhiteSpace(PlayerNames[i]))
@@ -650,9 +671,9 @@ namespace CatanGame.ModelsLogic
                 });
                 GameStarted = true;
                 Dictionary<string, object> dict = new()
-                    {
-                        { nameof(GameStarted), GameStarted },
-                    };
+                {
+                    { nameof(GameStarted), GameStarted },
+                };
                 UpdateFields(OnTurnChanged, dict);
             }
         }
