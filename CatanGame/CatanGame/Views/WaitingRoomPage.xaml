@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="CatanGame.Views.WaitingRoomPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:CatanGame.Models"
+             xmlns:vm="clr-namespace:CatanGame.ViewModels"
+             Title="WaitingRoom"
+             x:DataType="vm:WaitingRoomPageVM"
+             IsBusy="{Binding IsBusy}"
+             IsEnabled="{Binding IsEnabled}">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label HorizontalOptions="Center"
+                   Text="{Binding GameCode}" />
+            <Label Margin="30"
+                   HorizontalOptions="Center"
+                   Text="{Binding StatusMessage}" />
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl1}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player1Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl2}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player2Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  IsVisible="{Binding IsVisiblePlayer3Visible}">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl3}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player3Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  IsVisible="{Binding IsVisiblePlayer4Visible}">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl4}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player4Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  IsVisible="{Binding IsVisiblePlayer5Visible}">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl5}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player5Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Grid ColumnDefinitions="auto,auto"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Center"
+                  IsVisible="{Binding IsVisiblePlayer6Visible}">
+                <Image Aspect="AspectFill"
+                       HeightRequest="30"
+                       WidthRequest="30">
+                    <Image.Source>
+                        <UriImageSource Uri="{Binding AvatarUrl6}"
+                                        CachingEnabled="True"
+                                        CacheValidity="14:00:00:00" />
+                    </Image.Source>
+                </Image>
+                <Label HorizontalOptions="Center"
+                       Text="{Binding Player6Name}"
+                       Grid.Column="1"
+                       VerticalOptions="Center" />
+            </Grid>
+            <Button Command="{Binding StartGameCommand}"
+                    Text="{x:Static m:Strings.StartGame}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

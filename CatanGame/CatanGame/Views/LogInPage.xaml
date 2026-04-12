@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CatanGame.Views.LogInPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:CatanGame.Models"
+    xmlns:vm="clr-namespace:CatanGame.ViewModels"
+    x:DataType="vm:LogInPageVM"
+    IsBusy="{Binding IsBusy}">
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="25"
+            VerticalOptions="Center">
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.LoginTitle}"
+                TextColor="DodgerBlue" />
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="MaterialSymbols"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{StaticResource IconVerified_user}"
+                TextColor="DodgerBlue" />
+
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.EmailLabel}"
+                        TextColor="DarkOrange" />
+
+                    <Entry
+                        Grid.Row="1"
+                        FontSize="18"
+                        Text="{Binding Email}"
+                        TextColor="black" />
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisibleEmailMessege}"
+                        Text="{x:Static m:Strings.invalidEmail}"
+                        TextColor="#E32636" />
+                </Grid>
+            </Border>
+
+            <Border
+                Padding="10"
+                Stroke="DodgerBlue"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+
+                <Grid RowDefinitions="auto,auto,auto">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        Text="{x:Static m:Strings.PasswordLabel}"
+                        TextColor="DarkOrange" />
+                    <Grid Grid.Row="1" ColumnDefinitions="*,auto">
+                        <Entry
+                            FontSize="18"
+                            IsPassword="{Binding IsPassword}"
+                            Text="{Binding Password}"
+                            TextColor="black" />
+                        <Button
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Command="{Binding ToggleIsPasswordCommand}"
+                            FontFamily="MaterialSymbols"
+                            FontSize="24"
+                            HorizontalOptions="End"
+                            Style="{StaticResource IconButtonStyle}"
+                            Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+                            TextColor="DodgerBlue" />
+                    </Grid>
+                    <Label
+                        Grid.Row="2"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsVisiblePasswordMessege}"
+                        Text="{x:Static m:Strings.ValidPasswordRequiredMessage}"
+                        TextColor="#E32636" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*">
+                <CheckBox
+                    Grid.Column="2"
+                    HorizontalOptions="Start"
+                    IsChecked="{Binding IsRemembered}"
+                    VerticalOptions="Center"
+                    Color="DodgerBlue" />
+                <Label
+                    Grid.ColumnSpan="2"
+                    FontAttributes="Bold"
+                    FontSize="25"
+                    HorizontalOptions="End"
+                    Text="{x:Static m:Strings.RememberMeLabel}"
+                    TextColor="DarkOrange"
+                    VerticalOptions="Center" />
+
+            </Grid>
+
+            <Grid>
+                <Label
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    IsEnabled="{Binding IsEnabled}"
+                    Text="{x:Static m:Strings.ForgotPassword}"
+                    TextColor="DodgerBlue"
+                    TextDecorations="Underline"
+                    VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PasswordReset}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <Button Command="{Binding LoginCommand}"
+                    FontSize="18"
+                    HeightRequest="70"
+                    IsEnabled="{Binding IsEnabled}"
+                    Text="{x:Static m:Strings.LoginButton}"
+                    TextColor="White">
+
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{StaticResource IconLogin}">
+                        <FontImageSource.FontFamily>MaterialSymbols</FontImageSource.FontFamily>
+                    </FontImageSource>
+                </Button.ImageSource>
+
+            </Button>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Center"
+                Text="{x:Static m:Strings.DontHaveAnAcoountLabel}"
+                TextColor="DarkOrange" />
+
+            <Button
+                Command="{Binding CreateAcoountPageCommand}"
+                FontSize="18"
+                HeightRequest="70"
+                IsEnabled="{Binding IsEnabled}"
+                Text="{x:Static m:Strings.CreateAnAcoountLabel}"
+                TextColor="White" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
