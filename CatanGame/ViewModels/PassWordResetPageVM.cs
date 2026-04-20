@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace CatanGame.ViewModels
 {
-    public partial class PassWordResetPageVM : ObservableObject
+    public partial class PasswordResetPageVM : ObservableObject
     {
         #region Fields
         private readonly User user = new();
@@ -35,7 +35,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Constructor
-        public PassWordResetPageVM()
+        public PasswordResetPageVM()
         {
             ResetPassWordCommand = new Command(ResetPassWord, CanResetPassWord);
             SwitchPageBackCommand = new Command(ChangePage);

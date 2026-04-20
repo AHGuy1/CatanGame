@@ -18,7 +18,7 @@ namespace CatanGame.ViewModels
         public string GameResult => Game.PlayerIndicator == Game.WinnerIndecator ? Strings.YouWonLabel : Strings.YouLostLabel;
         public string PointsEarnd => Strings.FinishedWith + Game.PlayerPoints + Strings.EmptySpace + Strings.VictoryPoints;
         public string GoalReachedMessage => (Game.PlayerIndicator == Game.WinnerIndecator ? Strings.YouReachedTheGoal :
-            Game.PlayerNames[Game.WinnerIndecator] + Strings.EmptySpace + Strings.HasReachedTheGoal) + Game.PointsGoal + Strings.VictoryPoints;
+            Game.PlayerNames[Game.WinnerIndecator] + Strings.EmptySpace + Strings.HasReachedTheGoal) + Strings.EmptySpace + Game.PointsGoal + Strings.VictoryPoints;
         public bool PlayerLost => Game.PlayerIndicator != Game.WinnerIndecator;
 
         public Color GameResultColor  => Game.PlayerIndicator == Game.WinnerIndecator ? Colors.Green : Colors.Red;

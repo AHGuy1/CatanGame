@@ -60,7 +60,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<PackageReference Include="Plugin.CloudFirestore" Version="4.1.0" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0-preview.13" />
-		<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.5.1" />
 	</ItemGroup>
 
 	<ItemGroup>
