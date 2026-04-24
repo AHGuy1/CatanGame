@@ -31,7 +31,7 @@ namespace CatanGame.Models
         protected Label RollLabel { get; set; } = new();
         #endregion
 
-        #region Eventscxd
+        #region Events
         public EventHandler? EndTurnOnClicked;
         #endregion
 

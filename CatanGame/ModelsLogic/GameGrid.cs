@@ -77,7 +77,7 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static new double GetSizeProportion()
+        private static double GetSizeProportion()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
             if (mainDisplay.Height < mainDisplay.Width)
