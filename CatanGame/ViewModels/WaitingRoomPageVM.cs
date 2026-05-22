@@ -56,11 +56,13 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Public Methods
+        // Starts listening for waiting room changes.
         public void AddSnapshotListener()
         {
             game.AddSnapshotListener();
         }
 
+        // Stops listening if the game has not started.
         public void RemoveSnapshotListener()
         {
             if (!game.GameStarted)
@@ -69,6 +71,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Returns home when the game is deleted.
         private void OnGameDeleted(object? sender, string message)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -78,6 +81,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Shows a message when a player leaves.
         private void OnPlayerLeft(object? sender, string message)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -86,11 +90,13 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Checks whether the start game command can run.
         private bool CanStartGame()
         {
             return true;
         }
 
+        // Navigates into the game page.
         private void StartGame()
         {
             IsBusy = true;
@@ -102,6 +108,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Refreshes waiting room player bindings.
         private void OnGameChanged(object? sender, EventArgs e)
         {
             IsBusy = false;

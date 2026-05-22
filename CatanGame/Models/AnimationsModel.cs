@@ -12,6 +12,7 @@ namespace CatanGame.Models
         #endregion
 
         #region PrivateMethods
+        // Handles timer messages for animation state.
         protected abstract void OnMessageReceived(long timeleft);
         #endregion
     }

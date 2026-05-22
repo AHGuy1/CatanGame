@@ -56,6 +56,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Private Methods
+        // Syncs the development card pack to the game.
         protected override void UpdateCardPack()
         {
             if (Game != null)
@@ -69,6 +70,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Shows robber moves allowed by a knight card.
         protected override void ShowKnightRobberPlacmentOptions()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -119,12 +121,14 @@ namespace CatanGame.ModelsLogic
             });
         }
 
+        // Closes the popup passed as a command parameter.
         protected override void ClosePopUp(object parameter)
         {
             if (parameter is Popup popup)
                 popup.Close();
         }
 
+        // Returns a used card to the development card pack.
         protected override void ReturnCardToPackege(string card)
         {
             bool found = false;
@@ -141,6 +145,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
+        // Selects resources for the Year of Plenty card.
         public override void PickCardsToGet(object parameter)
         {
             if (parameter is ImageButton button)
@@ -177,6 +182,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Adds selected Year of Plenty resources to the player.
         public override void ConfirmSelectedCards(object parameter)
         {
             if (Game != null && GameGrid != null)
@@ -191,6 +197,7 @@ namespace CatanGame.ModelsLogic
             ClosePopUp(parameter);
         }
 
+        // Selects a resource for the Monopoly card.
         public override void PickCardToGet(object parameter)
         {
             if (parameter is ImageButton image)
@@ -202,6 +209,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Starts the Monopoly card effect for the selected resource.
         public override void ConfirmSelectedCard(object parameter)
         {
             if (Game != null)
@@ -229,12 +237,14 @@ namespace CatanGame.ModelsLogic
             ClosePopUp(parameter);
         }
 
+        // Uses a knight card and enables robber movement.
         public override void UseKnight()
         {
             ShowKnightRobberPlacmentOptions();
             SpecialCardCounters[0]--;
         }
 
+        // Uses a Road Building card and starts road placement.
         public override void UseRoadBuilding()
         {
             RoadBuildingStuatus = RoadBuilding.First;
@@ -243,6 +253,7 @@ namespace CatanGame.ModelsLogic
             SpecialCardCounters[2]--;
         }
 
+        // Uses a Year of Plenty card and opens its popup.
         public override void UseYearOfPlenty()
         {
             YearOfPlentyPage yearOfPlentyPage = new(this);
@@ -251,6 +262,7 @@ namespace CatanGame.ModelsLogic
             SpecialCardCounters[4]--;
         }
 
+        // Uses a Monopoly card and opens its popup.
         public override void UseMonopoly()
         {
             MonopolyPage monopolyPage = new(this);
@@ -259,6 +271,7 @@ namespace CatanGame.ModelsLogic
             SpecialCardCounters[3]--;
         }
 
+        // Draws the top development card into the player's hand.
         public override void GetCardFromPackege()
         {
             if (CardPack[0] == Strings.KnightImage)
@@ -282,4 +295,3 @@ namespace CatanGame.ModelsLogic
         #endregion
     }
 }
-  

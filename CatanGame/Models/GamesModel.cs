@@ -28,18 +28,28 @@ namespace CatanGame.Models
         #endregion
 
         #region PublicMethods
+        // Starts listening for available games.
         public abstract void AddSnapshotListener();
+        // Stops listening for available games.
         public abstract void RemoveSnapshotListener();
+        // Creates a new game with selected settings.
         public abstract void AddGame(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int TurnTime, bool isRandomBoard);
+        // Joins a game using its code.
         public abstract void JoinGameWithCode(string gameCode);
         #endregion
 
         #region PrivateMethods
+        // Handles completion after saving a game code.
         protected abstract void OnCompleteGameCodeAdded(Task task);
+        // Handles completion after saving a game.
         protected abstract void OnCompleteGameAdded(Task task);
+        // Handles available game collection changes.
         protected abstract void OnChange(IQuerySnapshot snapshot, Exception error);
+        // Applies a refreshed games query.
         protected abstract void OnChange(IQuerySnapshot qs);
+        // Handles a loaded game code document.
         protected abstract void OnCompleteGetCodeDocument(IDocumentSnapshot ds);
+        // Handles a loaded game document.
         protected abstract void OnCompleteGetGameDocument(IDocumentSnapshot ds);
         #endregion
     }

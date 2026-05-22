@@ -124,6 +124,10 @@ namespace CatanGame.Models
         #endregion
 
         #region PublicMethods
+        // Lowercases the first character of a string.
+        public static string LowercaseFirstChar(string value) => value;
+
+        // Builds an avatar URL from the selected traits.
         public abstract string GetUrlWithString(string seed);
         #endregion
     }

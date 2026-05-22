@@ -30,12 +30,14 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Selects a resource for Year of Plenty.
         private void PickCardToGet(object parameter)
         {
             SpecialCards.PickCardsToGet(parameter);
             OnPropertyChanged(nameof(SelectedGetCounters));
         }
 
+        // Confirms the selected Year of Plenty resources.
         private void ConfirmSelectedCards(object Paramter)
         {
             SpecialCards.ConfirmSelectedCards(Paramter);

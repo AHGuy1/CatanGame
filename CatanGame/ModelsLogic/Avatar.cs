@@ -11,11 +11,13 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
-        public static string LowercaseFirstChar(string value)
+        // Lowercases the first character of a string.
+        public new static string LowercaseFirstChar(string value)
         {
             return char.ToLower(value[0]) + value[1..];
         }
 
+        // Builds an avatar URL using selected traits and a seed.
         public override string GetUrlWithString(string seed)
         {
             string url = Keys.AvatrBaseUrl;

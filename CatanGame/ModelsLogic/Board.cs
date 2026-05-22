@@ -29,7 +29,8 @@ namespace CatanGame.ModelsLogic
                 { Strings.TwelveImage, 12 }
             };
 
-        private static BoardModel.TerrainType GetTerrainFromTileType(string tileType)
+        // Maps a tile image name to its terrain type.
+        protected new static BoardModel.TerrainType GetTerrainFromTileType(string tileType)
         {
             // Check what value the tileType contains from the terrainMap, and return the corresponding TerrainType
             foreach (KeyValuePair<string, BoardModel.TerrainType> entry in TerrainMap)
@@ -43,7 +44,8 @@ namespace CatanGame.ModelsLogic
             return BoardModel.TerrainType.None;
         }
 
-        private static int GetNumberTokenFromTile(string tileNumber)
+        // Maps a number token image name to its dice value.
+        protected new static int GetNumberTokenFromTile(string tileNumber)
         {
             // Check what value the tileNumber contains from the NumberTokenMap, and return the corresponding String value
             if (NumberTokenMap.TryGetValue(tileNumber, out int value))
@@ -54,6 +56,7 @@ namespace CatanGame.ModelsLogic
             return 0;
         }
 
+        // Creates all hex tiles with their terrain and number tokens.
         protected override void InitHex(string[] tileTypes, string[] tileNumbers)
         {
             Hexes = new HexTile[19];
@@ -68,6 +71,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Creates all vertex nodes on the board.
         protected override void InitVertices()
         {
             Vertices = new VertexNode[54];
@@ -81,6 +85,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Creates all edge links on the board.
         protected override void InitEdges()
         {
             Edges = new EdgeLink[72];
@@ -94,6 +99,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Connects each edge to its two endpoint vertices.
         protected override void SetEdgesVertices()
         {
             // Set the Vertices for each edge
@@ -144,6 +150,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Connects each vertex to its adjacent edges.
         protected override void SetVerticesEdegs()
         {
             // Set the edges for each vertex node
@@ -230,6 +237,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Connects each hex tile to its six corner vertices.
         protected override void SetHexesVertices()
         {
             //Set the vertices for each hex tile
@@ -262,6 +270,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
+        // Initializes the logical board graph from the selected tiles.
         public override void InitBoard(IndexedButton[][] Pieces, string[] tileTypes, string[] tileNumbers)
         {
             InitHex(tileTypes, tileNumbers);

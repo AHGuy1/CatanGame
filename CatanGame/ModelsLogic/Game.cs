@@ -36,7 +36,8 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Private Methods
-        private static Color GetStatusColor(int playerTurn)
+        // Gets the display color for the active player.
+        protected new static Color GetStatusColor(int playerTurn)
         {
             return playerTurn switch
             {
@@ -50,6 +51,7 @@ namespace CatanGame.ModelsLogic
             };
         }
 
+        // Sets the avatar parts available to players.
         protected override void InitAvatar()
         {
             PlayerAvatar.SelectedEyes =
@@ -82,17 +84,20 @@ namespace CatanGame.ModelsLogic
             ];
         }
 
+        // Clears the board piece image sources.
         protected override void IntArrayBoardPieces()
         {
             for (int i = 0; i < 276; i++)
                 BoardPieces[i] = string.Empty;
         }
 
+        // Subscribes this game to timer messages.
         protected override void RegisterTimer()
         {
             WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) => OnMessageReceived(m.Value));
         }
 
+        // Updates the displayed turn timer from timer messages.
         protected override void OnMessageReceived(long timeleft)
         {
             if (timeleft == Keys.FinishedSignal)
@@ -113,17 +118,20 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Starts the turn timer.
         protected override void StartTimer()
         {
             TimerSettings ts = new((TurnTime * 1000) + 1, 10);
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(ts));
         }
 
+        // Stops the turn timer.
         protected override void StopTimer()
         {
             WeakReferenceMessenger.Default.Send(new AppMessage<string>(Keys.StopSignal));
         }
 
+        // Notifies the UI after a waiting room player leaves.
         protected override void OnCompletePlayerLeft(Task task)
         {
             string message = "";
@@ -140,6 +148,7 @@ namespace CatanGame.ModelsLogic
             PlayerLeft?.Invoke(this, message);
         }
 
+        // Applies remote game document changes to this game.
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
@@ -375,29 +384,34 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Shows the current trade message as a toast.
         protected override void ShowTradeAlert()
         {
             MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 15).Show());
         }
 
+        // Notifies listeners when delete completes successfully.
         protected override void OnCompleteDeleted(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 GameDeleted?.Invoke(this, string.Empty);
         }
 
+        // Handles failures when adding this player to a game.
         protected override void OnCompleteAddPlayerName(Task task)
         {
             if (!task.IsCompletedSuccessfully)
                 Toast.Make(Strings.JoinGameEror, ToastDuration.Long, 14);
         }
 
+        // Notifies listeners after a turn update completes.
         protected override void OnTurnChanged(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 GameChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        // Updates the current status message and color.
         protected override void UpdateStatus()
         {
             Array status = Enum.GetValues(typeof(GameStatus.Status));
@@ -407,12 +421,14 @@ namespace CatanGame.ModelsLogic
             StatusColor = GetStatusColor(PlayerTurn);
         }
 
+        // Removes the selection border from the previous trade card.
         protected override void ResetSelctedCardBorder()
         {
             if (PreviselySelctedCard != null)
                 PreviselySelctedCard.BorderWidth = 0;
         }
 
+        // Sends the current trade parameters to Firestore.
         protected override void UpdateTradeParamaters()
         {
             Dictionary<string, object> dict = new()
@@ -435,6 +451,7 @@ namespace CatanGame.ModelsLogic
             UpdateFields(dict);
         }
 
+        // Transfers resources between the two players in a trade.
         protected override void AllocateTradeResources()
         {
             if (PlayersInTrade[0] == PlayerNames[PlayerIndicator])
@@ -465,10 +482,12 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Notifies the UI that a trade was received.
         protected override void RecivedTrade()
         {
             TradeRecived?.Invoke(this, EventArgs.Empty);
         }
+        // Clears game event subscriptions.
         protected override void ClearEventHandelers()
         {
             TimeLeftChanged = null;
@@ -483,6 +502,7 @@ namespace CatanGame.ModelsLogic
             GameDeleted = null;
             PlayerLeft = null;
         }
+        // Handles an accepted, declined, canceled, or countered trade.
         protected override void CheckTradeResponce()
         {
             MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 18).Show());
@@ -526,11 +546,13 @@ namespace CatanGame.ModelsLogic
                 CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
 
+        // Closes the active trade popup.
         public override void CloseTrade()
         {
             CloseTradePopUp?.Invoke(this, EventArgs.Empty);
         }
 
+        // Resets all trade state to defaults.
         protected override void ResetTradeParameters()
         {
             TradeInProgress = false;
@@ -549,6 +571,7 @@ namespace CatanGame.ModelsLogic
             OreTradeGetAmount = Strings.Zero;
         }
 
+        // Shows a counter offer and reopens the trade flow.
         protected override void ReciveCounterOffer()
         {
             MainThread.InvokeOnMainThreadAsync(() => Toast.Make(TradeMessage, ToastDuration.Long, 20).Show());
@@ -557,6 +580,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
+        // Gets all other players available for trading.
         public override string[] GetPlayersToTradeWith()
         {
             string[] playerNames = new string[PlayerNames.Length - 1];
@@ -572,31 +596,37 @@ namespace CatanGame.ModelsLogic
             return playerNames;
         }
 
+        // Saves this game document to Firestore.
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
 
+        // Updates game fields and runs a completion callback.
         public override void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict)
         {
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
 
+        // Updates selected game fields.
         public override void UpdateFields(Dictionary<string, object> dict)
         {
             fbd.UpdateFields(Keys.GamesCollection, Id, dict);
         }
 
+        // Loads a game document by id.
         public override void GetDocument(string Id, Action<IDocumentSnapshot> OnComplete)
         {
             fbd.GetDocument(Keys.GamesCollection, Id, OnComplete);
         }
 
+        // Starts listening to this game document.
         public override void AddSnapshotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
 
+        // Leaves the game and removes the snapshot listener.
         public override void RemoveSnapshotListener()
         {
             StopTimer();
@@ -622,12 +652,14 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Deletes the game and its join code.
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id);
             fbd.DeleteDocument(Keys.GameCodesCollection, GameCode, OnComplete);
         }
 
+        // Ends the current player's turn and advances the game.
         public override void EndTurn()
         {
             if (PlayerTurn == PlayerCount)
@@ -660,6 +692,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Starts the game for all joined players.
         public override void StartGame()
         {
             if (!GameStarted)
@@ -678,6 +711,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Adds the current user to the first open player slot.
         public override void AddPlayerName()
         {
             bool addedName = false;
@@ -698,6 +732,7 @@ namespace CatanGame.ModelsLogic
                 }
         }
 
+        // Gives resources for hexes matching the dice roll.
         public override void AllocateResources()
         {
             HexTile[] hexTiles = GameBoard.Hexes;
@@ -725,6 +760,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Gives starting resources for a new settlement.
         public override void AllocateStartingResources(int row, int column)
         {
             VertexNode vertexNode = GameBoard.Vertices[GameGrid.GetPieceLocationInArray(row, column)];
@@ -749,6 +785,7 @@ namespace CatanGame.ModelsLogic
             }
         }   
 
+        // Removes resources for a selected bank trade.
         public override void TradeWithBank(object parameter)
         {
             if (parameter is object[] data && data.Length == 2)
@@ -796,6 +833,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Selects the resource card to receive from the bank.
         public override void PickCardToGet(object parameter)
         {
             if (parameter is ImageButton button)
@@ -807,6 +845,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Completes the selected bank trade.
         public override void ConfirmTradeWithBank()
         {
             TradeMessage += Strings.EmptySpace + Strings.For + 1 + Strings.EmptySpace;
@@ -845,6 +884,7 @@ namespace CatanGame.ModelsLogic
             ShowTradeAlert();
         }
 
+        // Sends a player-to-player trade request.
         public override void ConfirmTradeWithPlayer()
         {
             TradeInProgress = true;
@@ -873,6 +913,7 @@ namespace CatanGame.ModelsLogic
             UpdateTradeParamaters();
         }
 
+        // Cancels the active trade request.
         public override void CancelTradeRequest()
         {
             ResetTradeParameters();
@@ -880,6 +921,7 @@ namespace CatanGame.ModelsLogic
             UpdateTradeParamaters();
         }
 
+        // Converts the current trade into a counter offer.
         public override void CounterOffer()
         {
             (PlayersInTrade[1], PlayersInTrade[0]) = (PlayersInTrade[0], PlayersInTrade[1]);
@@ -892,6 +934,7 @@ namespace CatanGame.ModelsLogic
             TradeMessage = Strings.PlayerCounterOffer;
         }
 
+        // Accepts the current trade offer.
         public override void AcceptTrade()
         {
             AllocateTradeResources();
@@ -900,12 +943,14 @@ namespace CatanGame.ModelsLogic
             UpdateTradeParamaters();
         }
 
+        // Declines the current trade offer.
         public override void DeclineTrade()
         {
             TradeMessage = Strings.TradeDeclined;
             UpdateTradeParamaters();
         }
 
+        // Checks whether a player trade can be sent.
         public override bool CenTradeWithPlayer()
         {
             bool givesACard =
@@ -923,6 +968,7 @@ namespace CatanGame.ModelsLogic
             return givesACard && getsACard && !string.IsNullOrWhiteSpace(SelectedPlayerName);
         }
 
+        // Checks whether this player has the resources to accept.
         public override bool CenAcceptTrade()
         {
             return (!string.IsNullOrWhiteSpace(WoodTradeGetAmount) && Convert.ToInt32(WoodTradeGetAmount) <= PlayerWoodCount) &&

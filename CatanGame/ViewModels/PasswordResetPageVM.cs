@@ -46,16 +46,19 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Shows the reset confirmation state.
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             ChangePage();
         }
 
+        // Resets the form after reset failure.
         private void OnAuthFalier(object? sender, EventArgs e)
         {
             ResetFields();
         }
 
+        // Clears the email field and busy state.
         private void ResetFields()
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -67,6 +70,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Switches between reset form and confirmation views.
         private void ChangePage()
         {
             IsVisibleAfterPassWordReset = !IsVisibleAfterPassWordReset;
@@ -77,6 +81,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsBusy));
         }
 
+        // Navigates back to the login page.
         private void SwitchToLogInPage()
         {
             if (Application.Current != null)
@@ -86,17 +91,20 @@ namespace CatanGame.ViewModels
                 });
         }
 
+        // Updates email validation message visibility.
         private void ToggleIsVisibleEmailMessege()
         {
             IsVisibleEmailMessege = !(user.Email.Contains('@') && user.Email.Contains('.'));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
 
+        // Checks whether password reset can be requested.
         private bool CanResetPassWord()
         {
             return user.Email.Contains('@') && user.Email.Contains('.');
         }
 
+        // Starts the password reset request.
         private void ResetPassWord()
         {
             IsBusy = true;

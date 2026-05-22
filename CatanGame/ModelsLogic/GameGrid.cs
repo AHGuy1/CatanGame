@@ -29,7 +29,8 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Private Methods
-        private static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
+        // Gets the fixed board tile and number for a grid position.
+        protected new static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber)
         {
             // Determine the tile type and number based on fixed board layout
             (sourceTile, sourceNumber) = (i, k) switch
@@ -62,7 +63,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static string GetPiecesColor(int i)
+        // Gets the piece color name for a player number.
+        protected new static string GetPiecesColor(int i)
         {
             return i switch
             {
@@ -77,7 +79,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static double GetSizeProportion()
+        // Gets a screen-based size value for board controls.
+        protected new static double GetSizeProportion()
         {
             Microsoft.Maui.Devices.DisplayInfo mainDisplay = Microsoft.Maui.Devices.DeviceDisplay.Current.MainDisplayInfo;
             if (mainDisplay.Height < mainDisplay.Width)
@@ -85,7 +88,8 @@ namespace CatanGame.ModelsLogic
             return mainDisplay.Width / mainDisplay.Density;
         }
 
-        private static Grid CreateEmptyCenteredGrid()
+        // Creates a centered empty grid.
+        protected new static Grid CreateEmptyCenteredGrid()
         {
             return new()
             {
@@ -94,7 +98,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Grid CreateEmptyCardRowGrid()
+        // Creates a grid row used for card displays.
+        protected new static Grid CreateEmptyCardRowGrid()
         {
             double sizeProportion = GetSizeProportion();
             return new()
@@ -105,7 +110,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static SKLottieView CreateDiceAnimation()
+        // Creates a hidden looping dice roll animation.
+        protected new static SKLottieView CreateDiceAnimation()
         {
             double sizeProportion = GetSizeProportion();
             return new()
@@ -120,7 +126,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Image CreateTileImage(string imageSource)
+        // Creates an image for a board tile.
+        protected new static Image CreateTileImage(string imageSource)
         {
             return new()
             {
@@ -131,7 +138,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Image CreateDiceImage()
+        // Creates a visible dice face image.
+        protected new static Image CreateDiceImage()
         {
             double sizeProportion = GetSizeProportion();
             return new()
@@ -145,7 +153,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Image CreateNumberImage(string imageSource)
+        // Creates an image for a number token.
+        protected new static Image CreateNumberImage(string imageSource)
         {
             return new()
             {
@@ -156,7 +165,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Image CreateRoadImage(int rotation)
+        // Creates a road piece image with the given rotation.
+        protected new static Image CreateRoadImage(int rotation)
         {
             return new()
             {
@@ -167,7 +177,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Image CreateApexImage()
+        // Creates an image for a settlement or city position.
+        protected new static Image CreateApexImage()
         {
             return new()
             {
@@ -176,7 +187,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static Label CreateCardLabel()
+        // Creates a label for resource and card counters.
+        protected new static Label CreateCardLabel()
         {
             return new()
             {
@@ -188,17 +200,20 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        private static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
+        // Creates a clickable road position.
+        protected new static IndexedButton CreateRoadButton(int rotation, int colmnIndex, int rowIndex)
         {
             return new(rowIndex, colmnIndex, GetSizeProportion() * 0.0165, GetSizeProportion() * 0.0495, rotation);
         }
 
-        private static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
+        // Creates a clickable settlement or city position.
+        protected new static IndexedButton CreateApexButton(int colmnIndex, int rowIndex)
         {
             return new(rowIndex, colmnIndex, GetSizeProportion() * 0.03525, GetSizeProportion() * 0.03525);
         }
 
-        private static string GetDiceImage(int dice)
+        // Gets the dice image source for a roll value.
+        protected new static string GetDiceImage(int dice)
         {
             return dice == 1 ? Strings.DiceOneImage :
                 dice == 2 ? Strings.DiceTwoImage :
@@ -208,6 +223,7 @@ namespace CatanGame.ModelsLogic
                 Strings.DiceSixImage;
         }
 
+        // Moves the robber to a selected visible tile.
         protected override void OnRobberPlacementClicked(object? sender, EventArgs e)
         {
             IndexedImageButton? imageButton = (IndexedImageButton)sender!;
@@ -228,11 +244,13 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Shows all currently available build options.
         protected override void ShowBuildOptions()
         {
             ShowBuildOptions(Strings.All);
         }
 
+        // Shows all valid robber placement tiles.
         protected override void ShowRobberPlacmentOptions()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -244,6 +262,7 @@ namespace CatanGame.ModelsLogic
             });
         }
 
+        // Hides all robber placement buttons.
         protected override void HideRobberButtuns()
         {
             for (int i = 0; i < 5; i++)
@@ -252,6 +271,7 @@ namespace CatanGame.ModelsLogic
                         RobberImages[i][k].BorderWidth = 0;
         }
 
+        // Hides all build position buttons.
         protected override void HideButtuns()
         {
             for (int i = 1; i < 24; i++)
@@ -260,6 +280,7 @@ namespace CatanGame.ModelsLogic
                         BoardPieceButtons[i][k].BorderWidth = 0;
         }
 
+        // Builds the selected road, town, or city.
         protected override void OnBuildButtonClicked(object? sender, EventArgs e)
         {
             IndexedButton? button = (IndexedButton)sender!;
@@ -325,6 +346,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Recalculates this player's longest road.
         protected override void CheckLongestRoad()
         {
             EdgeLink[] edges = BoardData.Edges;
@@ -361,11 +383,13 @@ namespace CatanGame.ModelsLogic
             Game.UpdateFields(dict);
         }
 
+        // Rolls dice when the roll button is clicked.
         protected override void OnRollButtonClicked(object? sender, EventArgs e)
         {
             RollDice();
         }
 
+        // Generates dice rolls and syncs them to the game.
         protected override void RollDice()
         {
             RollButton.IsEnabled = false;
@@ -383,6 +407,7 @@ namespace CatanGame.ModelsLogic
             Game.UpdateFields(OnDiceUpdated, dict);
         }
 
+        // Starts the dice rolling animations.
         protected override void StartAnimations()
         {
             Dice1Image.IsVisible = false;
@@ -396,6 +421,7 @@ namespace CatanGame.ModelsLogic
             RollLabel.Text = Strings.Rolling;
         }
 
+        // Stops dice animations and shows final dice values.
         protected override void StopAnimations()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -412,11 +438,13 @@ namespace CatanGame.ModelsLogic
             });
         }
 
+        // Raises the end turn event.
         protected override void EndTurn()
         {
             EndTurnOnClicked?.Invoke(this, EventArgs.Empty);
         }
 
+        // Builds a town at the first valid visible position.
         protected override void BuildTownAtFirstPosition()
         {
             bool foundPlaceToBuild = false;
@@ -435,6 +463,7 @@ namespace CatanGame.ModelsLogic
                     }
         }
 
+        // Places a town for the current player.
         protected override void BuildTown(int row, int column)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -448,6 +477,7 @@ namespace CatanGame.ModelsLogic
             });
         }
 
+        // Grants harbor access for a settlement position.
         protected override void CheckIfOnHarbor(int row, int column)
         {
             int harborType;
@@ -466,6 +496,7 @@ namespace CatanGame.ModelsLogic
                 Game.PlayerOwnedHarbors[harborType] = true;
         }
 
+        // Builds a road at the first valid visible position.
         protected override void BuildRoadAtFirstPosition()
         {
             bool foundPlaceToBuild = false;
@@ -483,6 +514,7 @@ namespace CatanGame.ModelsLogic
                     }
         }
 
+        // Places a road for the current player.
         protected override void BuildRoad(int row, int column)
         {
             BoardPieceImages[row][column].Source = (GetPiecesColor(Game.PlayerIndicator + 1) + Strings.Road).ToLower();
@@ -492,6 +524,7 @@ namespace CatanGame.ModelsLogic
             CheckLongestRoad();
         }
 
+        // Syncs board piece image sources to Firestore.
         protected override void UpdateBoardPices()
         {
             Dictionary<string, object> dict = new()
@@ -501,6 +534,7 @@ namespace CatanGame.ModelsLogic
             Game.UpdateFields(dict);
         }
 
+        // Opens the trade popup.
         protected override void Trade()
         {
             if (CurrentTradePopUp != null)
@@ -509,6 +543,7 @@ namespace CatanGame.ModelsLogic
             CurrentGamePage?.ShowPopup(CurrentTradePopUp);
         }
 
+        // Uses the selected development card.
         protected override void UseCard(object paramter)
         {
             if (paramter is string source)
@@ -540,6 +575,7 @@ namespace CatanGame.ModelsLogic
             UpdateSpecialCards();
         }
 
+        // Refreshes development card counters and commands.
         protected override void UpdateSpecialCards()
         {
             Counters[5].Text = SpecialCards.SpecialCardCounters[0].ToString();
@@ -554,6 +590,7 @@ namespace CatanGame.ModelsLogic
             (SpecialCardImages[4].Command as Command)?.ChangeCanExecute();
         }
 
+        // Buys a development card from the pack.
         protected override void GetCardFromPackege()
         {
             Game.PlayerSheepCount--;
@@ -564,6 +601,7 @@ namespace CatanGame.ModelsLogic
             UpdateSpecialCards();
         }
 
+        // Handles dice update completion after the roll animation.
         protected override async void OnDiceUpdated(Task task)
         {
             await Task.Delay(2000);
@@ -594,6 +632,7 @@ namespace CatanGame.ModelsLogic
                 });
         }
 
+        // Gets the piece type shown at a board position.
         protected override BoardModel.PieceType GetPieceType(int row, int column)
         {
             return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Town, StringComparison.CurrentCultureIgnoreCase) ? BoardModel.PieceType.Town :
@@ -601,6 +640,7 @@ namespace CatanGame.ModelsLogic
                 BoardModel.PieceType.None;
         }
 
+        // Creates a clickable development card image.
         protected override ImageButton CreateCardImageButton(string source)
         {
             double sizeProportion = GetSizeProportion();
@@ -618,6 +658,7 @@ namespace CatanGame.ModelsLogic
             return imageButton;
         }
 
+        // Creates the robber image button for a tile.
         protected override Grid CreateRobberImage(int row, int column)
         {
             Grid grid = CreateEmptyCenteredGrid();
@@ -635,6 +676,7 @@ namespace CatanGame.ModelsLogic
             return grid;
         }
 
+        // Gets the owning player index from a piece image color.
         protected override int GetPieceIndexFromColor(int row, int column)
         {
             return BoardPieceImages[row][column].Source.ToString()!.Contains(Strings.Oreange, StringComparison.CurrentCultureIgnoreCase) ? 0 :
@@ -646,6 +688,7 @@ namespace CatanGame.ModelsLogic
                 -1;
         }
 
+        // Recursively measures the longest road from an edge.
         protected override int CheckLongestRoad(EdgeLink edge, bool[] visited)
         {
             if (visited[GetPieceLocationInArray(edge.Row, edge.Column)])
@@ -712,11 +755,13 @@ namespace CatanGame.ModelsLogic
             return longestBranch;
         }
 
+        // Checks whether build options can be shown now.
         protected override bool CanShowBuildOptions()
         {
             return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
+        // Checks whether the current player can end the turn.
         protected override bool CanEndTurn()
         {
             return Game.PlayerIndicator + 1 == Game.PlayerTurn && Game.IsFull &&
@@ -724,16 +769,19 @@ namespace CatanGame.ModelsLogic
                 (Game.Turn > Game.PlayerCount * 2 && !Game.IsRolling && !RollButton.IsEnabled));
         }
 
+        // Checks whether the trade popup can be opened.
         protected override bool CenTrade()
         {
             return Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
+        // Checks whether the player can buy a development card.
         protected override bool CenGetCardFromPackege()
         {
             return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
+        // Checks whether the selected development card can be used.
         protected override bool CenUseCard(object paramter)
         {
             if (paramter is string source)
@@ -753,7 +801,8 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
-        public static Image CreateCardImage(string source)
+        // Creates a display image for a resource or bonus card.
+        public new static Image CreateCardImage(string source)
         {
             double sizeProportion = GetSizeProportion();
             return new()
@@ -765,7 +814,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        public static int GetTileLocationInArray(int row, int column)
+        // Converts a tile row and column to the hex array index.
+        public new static int GetTileLocationInArray(int row, int column)
         {
             int location = 0;
             for (int i = 1; i < row; i++)
@@ -779,7 +829,8 @@ namespace CatanGame.ModelsLogic
             return location;
         }
 
-        public static int GetAmountOfColumnsTiles(int i)
+        // Gets the number of hex tiles in a board row.
+        public new static int GetAmountOfColumnsTiles(int i)
         {
             return i switch
             {
@@ -791,7 +842,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        public static int GetAmountOfColumns(int i)
+        // Gets the number of piece columns in a board row.
+        public new static int GetAmountOfColumns(int i)
         {
             return i switch
             {
@@ -806,7 +858,8 @@ namespace CatanGame.ModelsLogic
             };
         }
 
-        public static int GetPieceLocationInArray(int row, int column)
+        // Converts a piece row and column to its array index.
+        public new static int GetPieceLocationInArray(int row, int column)
         {
             int location = 0;
             if (row % 2 == 0)
@@ -835,6 +888,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Closes and clears the current trade popup.
         public override void CloseTradePopUp()
         {
             if (CurrentTradePopUp != null)
@@ -842,11 +896,13 @@ namespace CatanGame.ModelsLogic
             CurrentTradePopUp = null;
         }
 
+        // Marks one robber image button as selectable.
         public override void SetVisibleRobberImages(int row, int column)
         {
             RobberImages[row][column].BorderWidth = Keys.ButtonVisible;
         }
 
+        // Refreshes the displayed resource counters.
         public override void UpdateResourceCounters()
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -865,6 +921,7 @@ namespace CatanGame.ModelsLogic
             });
         }
 
+        // Updates dice UI when another player changes animation state.
         public override void OnAnimationStatusChanged()
         {
             if (Game.IsRolling)
@@ -879,6 +936,7 @@ namespace CatanGame.ModelsLogic
                 StopAnimations();
             }
         }
+        // Prepares the UI when the current player's turn starts.
         public override void OnTurnChanged()
         {
             if (Game.PlayerTurn == Game.PlayerIndicator + 1)
@@ -892,6 +950,7 @@ namespace CatanGame.ModelsLogic
             }
            
         }
+        // Applies changed game state to the board UI.
         public override void OnChange()
         {
             if (Game.BoardPieces != null && BoardPieceImages != null && BoardPieceButtons != null)
@@ -948,6 +1007,7 @@ namespace CatanGame.ModelsLogic
             UpdateResourceCounters();
         }
 
+        // Auto-completes a turn when a player runs out of time.
         public override async void EnsurePlayerPlayed()
         {
             if (RollButton.IsEnabled)
@@ -978,6 +1038,7 @@ namespace CatanGame.ModelsLogic
             Game.EndTurn();
         }
 
+        // Builds the board, piece, dice, card, and action UI.
         public override void Init(Grid gameBoard, Grid grdPieces, Grid otherPieces, Image frame, GamePage gamePage)
         {
             CurrentGamePage = gamePage;
@@ -1351,6 +1412,7 @@ namespace CatanGame.ModelsLogic
             otherPieces.Add(TradeButton, 1, 3);
         }
 
+        // Shows valid build positions for the requested piece type.
         public override void ShowBuildOptions(string pieceType)
         {
             //Shows all options for building a road, if the player has the resources to build it, or if the player just built a town as part of the first two turns

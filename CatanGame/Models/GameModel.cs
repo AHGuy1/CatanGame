@@ -140,53 +140,101 @@ namespace CatanGame.Models
         #endregion
 
         #region PublicMethods
+        // Saves the game document.
         public abstract void SetDocument(Action<Task> OnComplete);
+        // Deletes the game document.
         public abstract void DeleteDocument(Action<Task> OnComplete);
+        // Updates game fields and reports completion.
         public abstract void UpdateFields(Action<Task> OnComplete, Dictionary<string, object> dict);
+        // Updates selected game fields.
         public abstract void UpdateFields(Dictionary<string, object> dict);
+        // Loads a game document.
         public abstract void GetDocument(string GameCode, Action<IDocumentSnapshot> OnComplete);
+        // Starts a bank trade.
         public abstract void TradeWithBank(object parameter);
+        // Selects a card to receive.
         public abstract void PickCardToGet(object paramater);
+        // Closes the trade flow.
         public abstract void CloseTrade();
+        // Accepts a trade offer.
         public abstract void AcceptTrade();
+        // Declines a trade offer.
         public abstract void DeclineTrade();
+        // Sends a player trade offer.
         public abstract void ConfirmTradeWithPlayer();
+        // Completes a bank trade.
         public abstract void ConfirmTradeWithBank();
+        // Cancels a trade request.
         public abstract void CancelTradeRequest();
+        // Creates a counter offer.
         public abstract void CounterOffer();
+        // Allocates resources from a dice roll.
         public abstract void AllocateResources();
+        // Allocates starting settlement resources.
         public abstract void AllocateStartingResources(int row, int column);
+        // Starts the game.
         public abstract void StartGame();
+        // Adds the current player name.
         public abstract void AddPlayerName();
+        // Ends the current turn.
         public abstract void EndTurn();
+        // Removes the game listener.
         public abstract void RemoveSnapshotListener();
+        // Adds the game listener.
         public abstract void AddSnapshotListener();
+        // Checks whether a player trade can be sent.
         public abstract bool CenTradeWithPlayer();
+        // Checks whether a trade offer can be accepted.
         public abstract bool CenAcceptTrade();
+        // Gets players available for trading.
         public abstract string[] GetPlayersToTradeWith();
         #endregion
 
         #region PrivateMethods
+        // Gets the display color for the active player.
+        protected static Color GetStatusColor(int playerTurn) => Colors.Black;
+
+        // Clears game event handlers.
         protected abstract void ClearEventHandelers();
+        // Initializes avatar options.
         protected abstract void InitAvatar();
+        // Updates status text and color.
         protected abstract void UpdateStatus();
+        // Applies remote document changes.
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
+        // Handles a player leaving before start.
         protected abstract void OnCompletePlayerLeft(Task task);
+        // Handles game deletion completion.
         protected abstract void OnCompleteDeleted(Task task);
+        // Handles add player completion.
         protected abstract void OnCompleteAddPlayerName(Task task);
+        // Handles turn update completion.
         protected abstract void OnTurnChanged(Task task);
+        // Handles timer messages.
         protected abstract void OnMessageReceived(long timeleft);
+        // Handles a trade response.
         protected abstract void CheckTradeResponce();
+        // Resets trade state.
         protected abstract void ResetTradeParameters();
+        // Handles a counter offer.
         protected abstract void ReciveCounterOffer();
+        // Starts the turn timer.
         protected abstract void StartTimer();
+        // Registers timer message handling.
         protected abstract void RegisterTimer();
+        // Stops the turn timer.
         protected abstract void StopTimer();
+        // Initializes board piece sources.
         protected abstract void IntArrayBoardPieces();
+        // Clears selected card styling.
         protected abstract void ResetSelctedCardBorder();
+        // Shows a trade message.
         protected abstract void ShowTradeAlert();
+        // Syncs trade parameters.
         protected abstract void UpdateTradeParamaters();
+        // Transfers trade resources.
         protected abstract void AllocateTradeResources();
+        // Notifies that a trade was received.
         protected abstract void RecivedTrade();
         #endregion
     }

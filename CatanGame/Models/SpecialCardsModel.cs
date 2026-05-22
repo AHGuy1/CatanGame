@@ -31,21 +31,34 @@ namespace CatanGame.Models
         #endregion
 
         #region PublicMethods
+        // Confirms selected Year of Plenty resources.
         public abstract void ConfirmSelectedCards(object parameter);
+        // Selects Year of Plenty resources.
         public abstract void PickCardsToGet(object parameter);
+        // Confirms the selected Monopoly resource.
         public abstract void ConfirmSelectedCard(object parameter);
+        // Selects a Monopoly resource card.
         public abstract void PickCardToGet(object parameter);
+        // Uses a knight card.
         public abstract void UseKnight();
+        // Uses a Road Building card.
         public abstract void UseRoadBuilding();
+        // Uses a Year of Plenty card.
         public abstract void UseYearOfPlenty();
+        // Uses a Monopoly card.
         public abstract void UseMonopoly();
+        // Draws a development card.
         public abstract void GetCardFromPackege();
         #endregion
 
         #region PrivateMethods
+        // Syncs the development card pack.
         protected abstract void UpdateCardPack();
+        // Shows robber options for a knight card.
         protected abstract void ShowKnightRobberPlacmentOptions();
+        // Closes the active popup.
         protected abstract void ClosePopUp(object parameter);
+        // Returns a used card to the pack.
         protected abstract void ReturnCardToPackege(string card);
         #endregion
     }

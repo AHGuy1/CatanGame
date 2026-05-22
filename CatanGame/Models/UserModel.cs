@@ -22,15 +22,22 @@ namespace CatanGame.Models
         #endregion
 
         #region PublicMethods
+        // Starts account registration.
         public abstract void Register();
+        // Starts user login.
         public abstract void Login();
+        // Starts password reset.
         public abstract void ResetPassword();
+        // Saves or clears remembered credentials.
         public abstract void RememberMe();
         #endregion
 
         #region PrivateMethods
+        // Handles registration completion.
         protected abstract void RegisterOnComplete(Task task);
+        // Handles password reset completion.
         protected abstract void ResetPasswordOnComplete(Task task);
+        // Handles login completion.
         protected abstract void LoginOnComplete(Task task);
         #endregion
     }

@@ -10,6 +10,7 @@ namespace CatanGame.Models
         #endregion
 
         #region PrivateMethods
+        // Raises a property changed notification.
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

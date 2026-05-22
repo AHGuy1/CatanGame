@@ -19,6 +19,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Private Methods
+        // Updates timer color and opacity based on remaining time.
         protected override void OnMessageReceived(long timeleft)
         {
             if (timeleft == Keys.FinishedSignal)

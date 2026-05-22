@@ -17,6 +17,7 @@ namespace CatanGame.ViewModels
             Command = new Command(UseYearOfPlenty);
         }
 
+        // Opens the special card test popup.
         private void UseYearOfPlenty(object parameter)
         {
             if(parameter is Check1 r)

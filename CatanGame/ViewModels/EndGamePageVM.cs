@@ -33,6 +33,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Returns to the app home screen.
         private void ReturnToHome()
         {
             if (Application.Current != null)

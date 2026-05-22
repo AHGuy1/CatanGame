@@ -15,6 +15,7 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Private Methods
+        // Handles the result of a registration request.
         protected override void RegisterOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
@@ -35,6 +36,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Handles the result of a password reset request.
         protected override void ResetPasswordOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
@@ -52,6 +54,7 @@ namespace CatanGame.ModelsLogic
             }
         }
 
+        // Handles the result of a login request.
         protected override void LoginOnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
@@ -74,21 +77,25 @@ namespace CatanGame.ModelsLogic
         #endregion
 
         #region Public Methods
+        // Starts account registration with the current user details.
         public override void Register()
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, RegisterOnComplete);
         }
 
+        // Starts login with the current credentials.
         public override void Login()
         {
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
         }
 
+        // Starts a password reset for the current email.
         public override void ResetPassword()
         {
             fbd.ResetPassword(Email, ResetPasswordOnComplete);
         }
 
+        // Saves or clears remembered login credentials.
         public override void RememberMe()
         {
             if (Preferences.Get(Keys.IsRememberedKey, false))

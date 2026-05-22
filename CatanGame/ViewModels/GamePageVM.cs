@@ -55,6 +55,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Public Methods
+        // Removes the active game listener.
         public void RemoveSnapshotListener()
         {
             game.RemoveSnapshotListener();
@@ -62,47 +63,56 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Closes the trade popup from game events.
         private void OnCloseTradePopUp(object? sender, EventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(() => board.CloseTradePopUp());
         }
 
+        // Opens the trade popup for a received trade.
         private void OnTradeRecived(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() => { board.TradeButton.Command.Execute(null); });
         }
 
+        // Refreshes resource counters after resource changes.
         private void OnResourceCountersUpdated(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() => board.UpdateResourceCounters());
         }
 
+        // Applies dice animation state changes.
         private void OnAnimationStatusChanged(object? sender, EventArgs e)
         {
             board.OnAnimationStatusChanged();
         }
 
+        // Applies board state changes to the grid.
         private void OnGridChanged(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() => board.OnChange());
         }
 
+        // Refreshes timer animation binding values.
         private void OnOpacityChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(TimeColor));
             OnPropertyChanged(nameof(TimeOpacity));
         }
 
+        // Updates the board when a new turn starts.
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             board.OnTurnChanged();
         }
 
+        // Refreshes the displayed time left.
         private void UpdateTimeLeft(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(TimeLeft));
         }
 
+        // Shows timeout feedback and ends the turn.
         private void OutOfTimeEndTurn(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -112,11 +122,13 @@ namespace CatanGame.ViewModels
             EndTurn();
         }
 
+        // Handles the board end turn event.
         private void OnEndTurn(object? sender, EventArgs e)
         {
             EndTurn();
         }
 
+        // Returns home when the game is deleted.
         private void OnGameDeleted(object? sender, string messgae)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -126,6 +138,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Shows a message when another player leaves.
         private void OnPlayerLeft(object? sender, string message)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -134,6 +147,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Refreshes game page bindings after game changes.
         private void OnGameChanged(object? sender, EventArgs e)
         {
             IsBusy = false;
@@ -145,6 +159,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(StatusColor));
         }
 
+        // Ensures the turn is complete and advances it.
         private void EndTurn()
         {
             IsBusy = true;

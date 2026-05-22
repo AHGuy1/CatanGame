@@ -78,11 +78,13 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Public Methods
+        // Starts listening for available games.
         public void AddSnapshotListener()
         {
             games.AddSnapshotListener();
         }
 
+        // Stops listening for available games.
         public void RemoveSnapshotListener()
         {
             games.RemoveSnapshotListener();
@@ -90,6 +92,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Creates a game with the selected settings.
         private void AddGame()
         {
             games.AddGame(SlectedAmountOfPlayers, SlectedAmountOfPointsNeeded, SelectedTurnTime.Time, IsRandomBoard);
@@ -97,11 +100,13 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsEnabled));
         }
 
+        // Refreshes the displayed games list.
         private void OnGamesChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(GamesList));
         }
 
+        // Opens the waiting room after game creation.
         private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
@@ -112,11 +117,13 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Checks whether the entered game code is valid.
         private bool CanJoinGameWithCode()
         {
             return !String.IsNullOrEmpty(GameCode) && int.Parse(GameCode) > 100000 && int.Parse(GameCode) < 1000000;
         }
 
+        // Starts joining by game code.
         private void JoinGameWithCode()
         {
             games.JoinGameWithCode(GameCode);

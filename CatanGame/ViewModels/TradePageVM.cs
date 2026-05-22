@@ -245,6 +245,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Refreshes all trade amount bindings.
         private void RefreshTradeParameters()
         {
             OnPropertyChanged(nameof(SelectedPlayerName));
@@ -264,6 +265,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(ReciverGives));
         }
 
+        // Switches the current trade into a counter offer.
         private void CounterOffer()
         {
             game.CounterOffer();
@@ -277,6 +279,7 @@ namespace CatanGame.ViewModels
             (ConfirmTradeWithPlayerCommand as Command)?.ChangeCanExecute();
         }
 
+        // Accepts the current trade and closes the popup.
         private void AcceptTrade()
         {
             game.AcceptTrade();
@@ -289,6 +292,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
         }
 
+        // Declines the current trade and closes the popup.
         private void DeclineTrade()
         {
             game.DeclineTrade();
@@ -301,6 +305,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleReciveTradeWithPlayer));
         }
 
+        // Cancels the active trade request.
         private void CancelTradeRequest()
         {
             game.CancelTradeRequest();
@@ -311,6 +316,7 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Starts a bank trade and moves to card selection.
         private void TradeWithBank(object parameter)
         {
             game.TradeWithBank(parameter);
@@ -321,11 +327,13 @@ namespace CatanGame.ViewModels
             UpdateCenTradeLists();
         }
 
+        // Selects the resource card to receive.
         private void PickCardToGet(object parameter)
         {
             game.PickCardToGet(parameter);
         }
 
+        // Completes the bank trade.
         private void ConfirmTradeWithBank()
         {
             game.ConfirmTradeWithBank();
@@ -337,6 +345,7 @@ namespace CatanGame.ViewModels
             UpdateCenTradeLists();
         }
 
+        // Sends the player trade request.
         private void ConfirmTradeWithPlayer()
         {
             game.ConfirmTradeWithPlayer();
@@ -347,11 +356,13 @@ namespace CatanGame.ViewModels
             ClosePopup();
         }
 
+        // Closes the trade popup.
         private void ClosePopup()
         {
             game.CloseTrade();
         }
 
+        // Shows the player trade view.
         private void GoToTradeWithPlayer()
         {
             IsVisibleTradeHub = false;
@@ -361,6 +372,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
 
+        // Shows the bank trade view.
         private void GoToTradeWithBank()
         {
             IsVisibleTradeHub = false;
@@ -370,6 +382,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
 
+        // Returns to the trade hub view.
         private void ReturnToTradeHub()
         {
             IsVisibleTradeHub = true;
@@ -383,6 +396,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsVisibleTradeHub));
         }
 
+        // Refreshes bank trade availability bindings.
         private void UpdateCenTradeLists()
         {
             OnPropertyChanged(nameof(CenTradeFourToOne));
@@ -390,21 +404,25 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(CenTradeTwoToOne));
         }
 
+        // Checks whether the trade request can be canceled.
         private bool CenCancelTradeRequest()
         {
             return game.TradeInProgress && PlayersInTrade[0] == game.PlayerNames[game.PlayerIndicator];
         }
 
+        // Checks whether the current trade can be accepted.
         private bool CenAcceptTrade()
         {
             return game.CenAcceptTrade();
         }
 
+        // Checks whether a player trade can be sent.
         private bool CenTradeWithPlayer()
         {
             return game.CenTradeWithPlayer();
         }
 
+        // Checks whether a new trade can be started.
         private bool CenTrade()
         {
             return !game.TradeInProgress;

@@ -92,6 +92,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Returns to login after successful registration.
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
@@ -105,11 +106,13 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsBusy));
         }
 
+        // Resets the form after failed registration.
         private void OnAuthFalier(object? sender, EventArgs e)
         {
             ResetFields();
         }
 
+        // Clears registration fields and busy state.
         private void ResetFields()
         {
             Email = string.Empty;
@@ -126,11 +129,13 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(UserName));
         }
 
+        // Checks whether the registration form is valid.
         private bool CanRegister()
         {
             return (!string.IsNullOrWhiteSpace(user.UserName) && !string.IsNullOrWhiteSpace(user.Password) && !string.IsNullOrWhiteSpace(user.ConfirmPassword) && !string.IsNullOrWhiteSpace(user.Email) && user.Password == user.ConfirmPassword && user.Email.Contains('@') && user.Email.Contains('.'));
         }
 
+        // Starts the registration request.
         private void Register()
         {
             IsBusy = true;
@@ -140,36 +145,42 @@ namespace CatanGame.ViewModels
             user.Register();
         }
 
+        // Toggles password visibility.
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
 
+        // Updates username validation message visibility.
         private void ToggleIsVisibleUserNameMessege()
         {
             IsVisibleUserNameMessege = string.IsNullOrWhiteSpace(user.UserName);
             OnPropertyChanged(nameof(IsVisibleUserNameMessege));
         }
 
+        // Updates password validation message visibility.
         private void ToggleIsVisiblePasswordMessege()
         {
             IsVisiblePasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && (string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12);
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
 
+        // Updates confirm password message visibility.
         private void ToggleIsVisibleConfirmPasswordMessege()
         {
             IsVisibleConfirmPasswordMessege = !string.IsNullOrWhiteSpace(user.UserName) && !(string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12) && user.Password != user.ConfirmPassword;
             OnPropertyChanged(nameof(IsVisibleConfirmPasswordMessege));
         }
 
+        // Updates email validation message visibility.
         private void ToggleIsVisibleEmailMessege()
         {
             IsVisibleEmailMessege = !string.IsNullOrWhiteSpace(user.UserName) && !(string.IsNullOrWhiteSpace(user.Password) || user.Password.Length < 8 || user.Password.Length > 12) && user.Password == user.ConfirmPassword && !(user.Email.Contains('@') && user.Email.Contains('.'));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
 
+        // Toggles confirm password visibility.
         private void ToggleIsPasswordConfirmPassword()
         {
             IsPasswordConfirmPassword = !IsPasswordConfirmPassword;

@@ -24,11 +24,13 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Selects the resource for Monopoly.
         private void PickCardToGet(object parameter)
         {
             SpecialCards.PickCardToGet(parameter);
         }
 
+        // Confirms the selected Monopoly resource.
         private void ConfirmSelectedCard(object parameter)
         {
             SpecialCards.ConfirmSelectedCard(parameter);

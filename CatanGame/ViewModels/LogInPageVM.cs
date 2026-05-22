@@ -73,6 +73,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        // Restores the login form to an interactive state.
         private void NotBusy()
         {
             IsBusy = false;
@@ -81,6 +82,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsBusy));
         }
 
+        // Disables the login form while work is running.
         private void Busy()
         {
             IsBusy = true;
@@ -89,6 +91,7 @@ namespace CatanGame.ViewModels
             OnPropertyChanged(nameof(IsBusy));
         }
 
+        // Navigates to the app shell after successful login.
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
@@ -99,11 +102,13 @@ namespace CatanGame.ViewModels
             NotBusy();
         }
 
+        // Resets the form after failed login.
         private void OnAuthFalier(object? sender, EventArgs e)
         {
             ResetFields();
         }
 
+        // Clears login fields and busy state.
         private void ResetFields()
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -116,40 +121,47 @@ namespace CatanGame.ViewModels
             });
         }
 
+        // Saves or clears remembered credentials.
         private void RememberMe()
         {
             user.RememberMe();
         }
 
+        // Toggles password visibility.
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
 
+        // Updates email validation message visibility.
         private void ToggleIsVisibleEmailMessege()
         {
             IsVisibleEmailMessege = !(user.Email.Contains(Strings.AtSign) && user.Email.Contains(Strings.Dot));
             OnPropertyChanged(nameof(IsVisibleEmailMessege));
         }
 
+        // Updates password validation message visibility.
         private void ToggleIsVisiblePasswordMessege()
         {
             IsVisiblePasswordMessege = (user.Email.Contains(Strings.AtSign) && user.Email.Contains(Strings.Dot)) && !(user.Password.Length >= 8 && user.Password.Length <= 12);
             OnPropertyChanged(nameof(IsVisiblePasswordMessege));
         }
 
+        // Starts the login request.
         private void Login()
         {
             Busy();
             user.Login();
         }
 
+        // Checks whether the login form is valid.
         private bool CanLogin()
         {
             return (Email.Contains(Strings.AtSign) && Email.Contains(Strings.Dot) && Password.Length >= 8 && Password.Length <= 12);
         }
 
+        // Navigates to the password reset page.
         private void GoToResetPassword()
         {
             Busy();
@@ -162,6 +174,7 @@ namespace CatanGame.ViewModels
                 });
         }
 
+        // Navigates to the registration page.
         private void GoToRegister()
         {
             Busy();
