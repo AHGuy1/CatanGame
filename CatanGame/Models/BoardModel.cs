@@ -35,11 +35,9 @@ namespace CatanGame.Models
 
         #region PrivateMethods
         // Maps a tile image name to its terrain type.
-        protected static TerrainType GetTerrainFromTileType(string tileType) => TerrainType.None;
-
+        protected static TerrainType GetTerrainFromTileType(string tileType) { if(Enum.TryParse(tileType, out TerrainType result)) return result; return TerrainType.None; }
         // Maps a number token image name to its dice value.
-        protected static int GetNumberTokenFromTile(string tileNumber) => 0;
-
+        protected static int GetNumberTokenFromTile(string tileNumber) { if (int.TryParse(tileNumber, out int result)) return result; return 0; }
         // Creates the hex tile nodes.
         protected abstract void InitHex(string[] tileTypes, string[] tileNumbers);
         // Creates the board edge links.

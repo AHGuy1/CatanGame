@@ -1,9 +1,11 @@
 using CatanGame.ModelsLogic;
 using CatanGame.Views;
 using IntelliJ.Lang.Annotations;
+using Microsoft.Maui.Controls;
 using SkiaSharp.Extended.UI.Controls;
 using System;
 using System.Windows.Input;
+using static Android.InputMethodServices.Keyboard;
 
 namespace CatanGame.Models
 {
@@ -48,34 +50,34 @@ namespace CatanGame.Models
 
         #region Static Methods
         // Gets the fixed board tile and number for a grid position.
-        protected static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber) { sourceTile = string.Empty; sourceNumber = string.Empty; }
+        protected static void GetFixedTile(int i, int k, out string sourceTile, out string sourceNumber) { sourceTile = i.ToString(); sourceNumber = k.ToString(); }
 
         // Gets the piece color name for a player number.
-        protected static string GetPiecesColor(int i) => string.Empty;
+        protected static string GetPiecesColor(int i) => i.ToString();
 
         // Gets a screen-based size value for board controls.
         protected static double GetSizeProportion() => 0;
 
         // Creates a centered empty grid.
-        protected static Grid CreateEmptyCenteredGrid() => new();
+        protected static Grid CreateEmptyCenteredGrid() => [];
 
         // Creates a grid row used for card displays.
-        protected static Grid CreateEmptyCardRowGrid() => new();
+        protected static Grid CreateEmptyCardRowGrid() => [];
 
         // Creates a hidden looping dice roll animation.
         protected static SKLottieView CreateDiceAnimation() => new();
 
         // Creates an image for a board tile.
-        protected static Image CreateTileImage(string imageSource) => new();
+        protected static Image CreateTileImage(string imageSource) { return new() { Source = imageSource }; }
 
         // Creates a visible dice face image.
         protected static Image CreateDiceImage() => new();
 
         // Creates an image for a number token.
-        protected static Image CreateNumberImage(string imageSource) => new();
+        protected static Image CreateNumberImage(string imageSource) { return new() { Source = imageSource }; }
 
         // Creates a road piece image with the given rotation.
-        protected static Image CreateRoadImage(int rotation) => new();
+        protected static Image CreateRoadImage(int rotation) { return new() { Rotation = rotation }; }
 
         // Creates an image for a settlement or city position.
         protected static Image CreateApexImage() => new();
@@ -90,22 +92,22 @@ namespace CatanGame.Models
         protected static IndexedButton CreateApexButton(int colmnIndex, int rowIndex) => new(rowIndex, colmnIndex, 0, 0);
 
         // Gets the dice image source for a roll value.
-        protected static string GetDiceImage(int dice) => string.Empty;
+        protected static string GetDiceImage(int dice) { return dice.ToString(); }
 
         // Creates a display image for a resource or bonus card.
-        public static Image CreateCardImage(string source) => new();
+        public static Image CreateCardImage(string source) { return new() { Source = source }; }
 
         // Converts a tile row and column to the hex array index.
-        public static int GetTileLocationInArray(int row, int column) => 0;
+        public static int GetTileLocationInArray(int row, int column) { return row + column; }
 
         // Gets the number of hex tiles in a board row.
-        public static int GetAmountOfColumnsTiles(int i) => 0;
+        public static int GetAmountOfColumnsTiles(int i) => i;
 
         // Gets the number of piece columns in a board row.
-        public static int GetAmountOfColumns(int i) => 0;
+        public static int GetAmountOfColumns(int i) => i;
 
         // Converts a piece row and column to its array index.
-        public static int GetPieceLocationInArray(int row, int column) => 0;
+        public static int GetPieceLocationInArray(int row, int column) { return row + column; }
         #endregion
 
         #region PublicMethods

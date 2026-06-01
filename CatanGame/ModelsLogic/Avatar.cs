@@ -10,7 +10,7 @@ namespace CatanGame.ModelsLogic
         }
         #endregion
 
-        #region Public Methods
+          #region Public Methods
         // Lowercases the first character of a string.
         public new static string LowercaseFirstChar(string value)
         {

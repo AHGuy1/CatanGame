@@ -20,9 +20,9 @@ namespace CatanGame.ModelsLogic
                     [
                         Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
                             Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                            Strings.KnightImage, Strings.KnightImage, Strings.KnightImage, Strings.KnightImage,
-                            Strings.KnightImage, Strings.KnightImage,
-                            Strings.UniversityImage, Strings.UniversityImage, Strings.UniversityImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
+                            Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
                             Strings.UniversityImage, Strings.UniversityImage,
                             Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage,
                             Strings.MonopolyImage, Strings.RoadBuildingImage, Strings.YearOfPlentyImage
@@ -227,11 +227,11 @@ namespace CatanGame.ModelsLogic
                 Game.MonoplizingPlayer = Game.PlayerNames[Game.PlayerIndicator];
                 Game.PlayersPassed = 1;
                 Dictionary<string, object> dict = new()
-                    {
-                        { nameof(Game.PlayersPassed), Game.PlayersPassed },
-                        { nameof(Game.MonopolizedCard), Game.MonopolizedCard },
-                        { nameof(Game.MonoplizingPlayer), Game.MonoplizingPlayer }
-                    };
+                {
+                    { nameof(Game.PlayersPassed), Game.PlayersPassed },
+                    { nameof(Game.MonopolizedCard), Game.MonopolizedCard },
+                    { nameof(Game.MonoplizingPlayer), Game.MonoplizingPlayer }
+                };
                 Game.UpdateFields(dict);
             }
             ClosePopUp(parameter);

@@ -17,15 +17,15 @@ namespace CatanGame.ViewModels
         #region Properties
         public int PlayerCount => game.PlayerCount;
         public int PlayerIndector => game.PlayerIndicator;
-        public string[] PlayerNames => game.PlayerNames;
-        public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn - 1] + game.StatusMessage;
-        public Color StatusColor => game.StatusColor;
-        public string AvatarUrl => game.PlayerAvatar.GetUrlWithString(PlayerNames[game.PlayerTurn - 1]);
-        public string TimeLeft => game.TimeLeft;
+        public double TimeOpacity => animations.TimeOpacity;
         public bool AvatarVisible => game.StatusMessage != GameStatus.Status.PleseWait.ToString();
         public bool IsBusy { get; set; } = false;
+        public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn - 1] + game.StatusMessage;
+        public string AvatarUrl => game.PlayerAvatar.GetUrlWithString(PlayerNames[game.PlayerTurn - 1]);
+        public string TimeLeft => game.TimeLeft;
+        public string[] PlayerNames => game.PlayerNames;
+        public Color StatusColor => game.StatusColor;
         public Color? TimeColor => animations.TimeColor;
-        public double TimeOpacity => animations.TimeOpacity;
         #endregion
 
         #region Constructor

@@ -627,6 +627,9 @@ namespace CatanGame.ModelsLogic
                     (EndTurnCommand as Command)?.ChangeCanExecute();
                     (RollButton.Command as Command)?.ChangeCanExecute();
                     (ShowBuildOptionsCommand as Command)?.ChangeCanExecute();
+                    for (int i = 0; i < SpecialCardImages.Length; i++)
+                        if (i != 1)
+                            (SpecialCardImages[i].Command as Command)?.ChangeCanExecute();
                     (SpecialCardImages[5].Command as Command)?.ChangeCanExecute();
                     (TradeButton.Command as Command)?.ChangeCanExecute();
                 });
