@@ -9,15 +9,18 @@ namespace CatanGame.ViewModels
     {
         #region Fields
         private readonly User user = new();
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Commands
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         public ICommand ToggleIsPasswordCommandConfirmPassword { get; }
+        public ICommand SwitchToLogInPageCommand { get; }
         #endregion
 
         #region Properties
+        public bool IsDisconnected => !connectivity.IsConnected;
         public bool IsPasswordConfirmPassword { get; set; } = true;
         public bool IsPassword { get; set; } = true;
         public bool IsVisibleUserNameMessege { get; set; } = true;
@@ -86,12 +89,34 @@ namespace CatanGame.ViewModels
             RegisterCommand = new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             ToggleIsPasswordCommandConfirmPassword = new Command(ToggleIsPasswordConfirmPassword);
+            SwitchToLogInPageCommand = new Command(SwitchToLogInPage);
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
             user.AuthComplete += OnAuthComplete;
             user.AuthFalier += OnAuthFalier;
+            user.Email = string.Empty;
+            user.Password = string.Empty;
         }
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            IsEnabled = connectivity.IsConnected;
+            OnPropertyChanged(nameof(IsDisconnected));
+            OnPropertyChanged(nameof(IsEnabled));
+        }
+
+        // Navigates back to the login page.
+        private void SwitchToLogInPage()
+        {
+            if (Application.Current != null)
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage = new LogInPage();
+                });
+        }
+
         // Returns to login after successful registration.
         private void OnAuthComplete(object? sender, EventArgs e)
         {

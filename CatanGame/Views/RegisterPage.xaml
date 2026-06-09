@@ -13,6 +13,13 @@
             Padding="30"
             Spacing="25"
             VerticalOptions="Center">
+            <Label Text="{x:Static m:Strings.NoInternetConnection}"
+                   IsVisible="{Binding IsDisconnected}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   FontSize="15"
+                   FontAttributes="Bold"
+                   TextColor="#E32636" />
             <Label
                 FontAttributes="Bold"
                 FontSize="32"
@@ -176,6 +183,17 @@
                 </Button.ImageSource>
 
             </Button>
+            <Label FontSize="20"
+                   HorizontalOptions="Center"
+                   IsEnabled="{Binding IsEnabled}"
+                   Text="{x:Static m:Strings.ReturnToLogInLabel}"
+                   TextColor="DodgerBlue"
+                   TextDecorations="Underline"
+                   VerticalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SwitchToLogInPageCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -60,6 +60,12 @@ namespace CatanGame.ModelsLogic
             await facl.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(OnComplete);
         }
 
+        // Signs out the current user.
+        public override void SignOut()
+        {
+            facl.SignOut();
+        }
+
         // Sends a password reset email.
         public override async void ResetPassword(string email, Action<Task> OnComplete)
         {

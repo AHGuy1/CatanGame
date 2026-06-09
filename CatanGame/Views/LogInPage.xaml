@@ -12,7 +12,14 @@
             Padding="30"
             Spacing="25"
             VerticalOptions="Center">
-
+            <Label
+                Text="{x:Static m:Strings.NoInternetConnection}"
+                IsVisible="{Binding IsDisconnected}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                FontSize="17"
+                FontAttributes="Bold"
+                TextColor="#E32636"/>
             <Label
                 FontAttributes="Bold"
                 FontSize="32"
@@ -46,7 +53,8 @@
                         Grid.Row="1"
                         FontSize="18"
                         Text="{Binding Email}"
-                        TextColor="black" />
+                        TextColor="black"
+                        IsEnabled="{Binding IsEnabled}" />
                     <Label
                         Grid.Row="2"
                         FontAttributes="Bold"
@@ -76,7 +84,8 @@
                             FontSize="18"
                             IsPassword="{Binding IsPassword}"
                             Text="{Binding Password}"
-                            TextColor="black" />
+                            TextColor="black"
+                            IsEnabled="{Binding IsEnabled}" />
                         <Button
                             BackgroundColor="Transparent"
                             BorderWidth="0"
@@ -105,7 +114,8 @@
                     HorizontalOptions="Start"
                     IsChecked="{Binding IsRemembered}"
                     VerticalOptions="Center"
-                    Color="DodgerBlue" />
+                    Color="DodgerBlue"
+                    IsEnabled="{Binding IsEnabled}" />
                 <Label
                     Grid.ColumnSpan="2"
                     FontAttributes="Bold"

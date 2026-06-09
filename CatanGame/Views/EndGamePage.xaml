@@ -6,6 +6,13 @@
              xmlns:vm="clr-namespace:CatanGame.ViewModels"
              x:DataType="vm:EndGamePageVM">
     <VerticalStackLayout Spacing="20">
+        <Label Text="{x:Static m:Strings.NoInternetConnection}"
+               IsVisible="{Binding IsDisconnected}"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="15"
+               FontAttributes="Bold"
+               TextColor="#E32636" />
         <Label Text="{Binding GameResult}"
                FontSize="60"
                TextColor="{Binding GameResultColor}"

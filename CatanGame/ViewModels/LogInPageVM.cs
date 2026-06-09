@@ -1,7 +1,6 @@
 ﻿using CatanGame.Models;
 using CatanGame.ModelsLogic;
 using CatanGame.Views;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace CatanGame.ViewModels
@@ -10,6 +9,7 @@ namespace CatanGame.ViewModels
     {
         #region Fields
         private readonly User user = new();
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Commands
@@ -20,6 +20,7 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Properties
+        public bool IsDisconnected => !connectivity.IsConnected;
         public bool IsBusy { get; set; } = false;
         public bool IsEnabled { get; set; } = true;
         public bool IsVisibleEmailMessege { get; set; } = true;
@@ -67,12 +68,20 @@ namespace CatanGame.ViewModels
             CreateAcoountPageCommand = new Command(GoToRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             PasswordReset = new Command(GoToResetPassword);
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
             user.AuthFalier += OnAuthFalier;
             user.AuthComplete += OnAuthComplete;
         }
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            IsEnabled = connectivity.IsConnected;
+            OnPropertyChanged(nameof(IsDisconnected));
+            OnPropertyChanged(nameof(IsEnabled));
+        }
         // Restores the login form to an interactive state.
         private void NotBusy()
         {

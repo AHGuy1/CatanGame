@@ -192,7 +192,7 @@ namespace CatanGame.Models
 
         #region PrivateMethods
         // Gets the display color for the active player.
-        protected static Color GetStatusColor(int playerTurn) => Colors.Black;
+        protected static Color GetStatusColor(int playerTurn) { if(playerTurn > 6) return Colors.Black; return Colors.White; }
 
         // Clears game event handlers.
         protected abstract void ClearEventHandelers();

@@ -9,6 +9,7 @@ namespace CatanGame.ViewModels
     {
         #region Fields
         private readonly User user = new();
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Commands
@@ -18,8 +19,10 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Properties
+        public bool IsDisconnected => !connectivity.IsConnected;
         public bool IsVisibleEmailMessege { get; set; } = true;
         public bool IsVisibleBeforePassWordReset { get; set; } = true;
+        public bool IsEnabled { get; set; } = true;
         public bool IsBusy { get; set; } = false;
         public bool IsVisibleAfterPassWordReset { get; set; } = false;
         public string Email
@@ -40,12 +43,21 @@ namespace CatanGame.ViewModels
             ResetPassWordCommand = new Command(ResetPassWord, CanResetPassWord);
             SwitchPageBackCommand = new Command(ChangePage);
             SwitchToLogInPageCommand = new Command(SwitchToLogInPage);
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
             user.AuthComplete += OnAuthComplete;
             user.AuthFalier += OnAuthFalier;
         }
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            IsEnabled = connectivity.IsConnected;
+            OnPropertyChanged(nameof(IsDisconnected));
+            OnPropertyChanged(nameof(IsEnabled));
+        }
+
         // Shows the reset confirmation state.
         private void OnAuthComplete(object? sender, EventArgs e)
         {

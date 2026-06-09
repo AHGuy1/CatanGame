@@ -30,7 +30,7 @@ namespace CatanGame.Models
         public const string AtSign = "@";
         public const string Dot = ".";
         public const string PasswordResetLabel = "Reset password";
-        public const string ReturnToLogInLabl = "Return to log in page";
+        public const string ReturnToLogInLabel = "Return to log in page";
         public const string PassWordResetLinkSentPartOne = "If the email matches an";
         public const string PassWordResetLinkSentPartTwo = "existing acoount a password";
         public const string PassWordResetLinkSentPartThree = "reset link has been sent.";
@@ -215,6 +215,9 @@ namespace CatanGame.Models
         public const string VictoryPoints = "victory points";
         public const string FinishedWith = "You finished with: ";
         public const string ReturnToHome = "Return to home";
+        public const string LogOut = "Log out";
+        public const string LogedOutMessage = "You were logged out";
+        public const string NoInternetConnection = "No internet connection";
         #endregion
     }
 }

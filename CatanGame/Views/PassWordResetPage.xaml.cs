@@ -8,7 +8,7 @@ public partial class PasswordResetPage : ContentPage
     public PasswordResetPage()
 	{
 		InitializeComponent();
-		BindingContext = new PasswordResetPageVM();
+        BindingContext = new PasswordResetPageVM();
     }
     protected override void OnAppearing()
     {

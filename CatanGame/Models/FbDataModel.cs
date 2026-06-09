@@ -33,11 +33,12 @@ namespace CatanGame.Models
         #region PublicMethods
         // Converts Firebase error text into a user friendly message.
         public static string GetErrorMessage(string msg) => msg;
-
         // Creates a user account with Firebase auth.
         public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<Task> OnComplete);
         // Signs in a user with Firebase auth.
         public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<Task> OnComplete);
+        // Signs out the current user.
+        public abstract void SignOut();
         // Sends a password reset request.
         public abstract void ResetPassword(string email, Action<Task> OnComplete);
         // Deletes a document and reports completion.

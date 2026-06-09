@@ -4,10 +4,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:m="clr-namespace:CatanGame.Models"
              xmlns:vm="clr-namespace:CatanGame.ViewModels"
-             Title="WaitingRoom"
              x:DataType="vm:WaitingRoomPageVM"
              IsBusy="{Binding IsBusy}"
              IsEnabled="{Binding IsEnabled}">
+    <Shell.TitleView>
+        <HorizontalStackLayout FlowDirection="LeftToRight">
+            <Grid ColumnDefinitions="*,*,*"
+                  ColumnSpacing="155">
+                <Label FontAttributes="Bold"
+                       FontSize="Medium"
+                       Text="WaitingRoom"
+                       VerticalTextAlignment="Center" />
+                <Label Text="{x:Static m:Strings.NoInternetConnection}"
+                       IsVisible="{Binding IsDisconnected}"
+                       Grid.Column="1"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       FontSize="17"
+                       FontAttributes="Bold"
+                       TextColor="#E32636" />
+            </Grid>
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ScrollView>
         <VerticalStackLayout>
             <Label HorizontalOptions="Center"

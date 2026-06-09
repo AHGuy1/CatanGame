@@ -8,6 +8,7 @@ namespace CatanGame.ViewModels
     {
         #region Fields
         private Game Game { get; set; }
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Commands
@@ -20,7 +21,7 @@ namespace CatanGame.ViewModels
         public string GoalReachedMessage => (Game.PlayerIndicator == Game.WinnerIndecator ? Strings.YouReachedTheGoal : Game.PlayerNames[Game.WinnerIndecator] 
             + Strings.EmptySpace + Strings.HasReachedTheGoal) + Strings.EmptySpace + Game.PointsGoal + Strings.EmptySpace+ Strings.VictoryPoints;
         public bool PlayerLost => Game.PlayerIndicator != Game.WinnerIndecator;
-
+        public bool IsDisconnected => !connectivity.IsConnected;
         public Color GameResultColor  => Game.PlayerIndicator == Game.WinnerIndecator ? Colors.Green : Colors.Red;
         #endregion
 
@@ -29,10 +30,17 @@ namespace CatanGame.ViewModels
         {
             Game = game;
             ReturnToHomeCommand = new Command(ReturnToHome);
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
         }
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(IsDisconnected));
+        }
+
         // Returns to the app home screen.
         private void ReturnToHome()
         {

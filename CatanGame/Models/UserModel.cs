@@ -26,6 +26,8 @@ namespace CatanGame.Models
         public abstract void Register();
         // Starts user login.
         public abstract void Login();
+        // Logs out the current user.
+        public abstract void LogOut();
         // Starts password reset.
         public abstract void ResetPassword();
         // Saves or clears remembered credentials.

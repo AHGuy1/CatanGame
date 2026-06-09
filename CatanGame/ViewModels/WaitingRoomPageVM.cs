@@ -11,6 +11,7 @@ namespace CatanGame.ViewModels
     {
         #region Fields
         private readonly Game game;
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Commands
@@ -35,6 +36,7 @@ namespace CatanGame.ViewModels
         public string AvatarUrl4 => PlayerCount > 3 ? !String.IsNullOrWhiteSpace(PlayerNames[3]) ? game.PlayerAvatar.GetUrlWithString(PlayerNames[3]) : string.Empty : string.Empty;
         public string AvatarUrl5 => PlayerCount > 4 ? !String.IsNullOrWhiteSpace(PlayerNames[4]) ? game.PlayerAvatar.GetUrlWithString(PlayerNames[4]) : string.Empty : string.Empty;
         public string AvatarUrl6 => PlayerCount > 5 ? !String.IsNullOrWhiteSpace(PlayerNames[5]) ? game.PlayerAvatar.GetUrlWithString(PlayerNames[5]) : string.Empty : string.Empty;
+        public bool IsDisconnected => !connectivity.IsConnected;
         public bool IsBusy { get; set; } = false;
         public bool IsEnabled => !IsBusy;
         public bool IsVisiblePlayer3Visible => PlayerCount > 2;
@@ -49,6 +51,7 @@ namespace CatanGame.ViewModels
             StartGameCommand = new Command(StartGame, CanStartGame);
             this.game = game;
             this.game.AddPlayerName();
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
             this.game.GameDeleted += OnGameDeleted;
             this.game.PlayerLeft += OnPlayerLeft;
             this.game.GameChanged += OnGameChanged;
@@ -71,6 +74,12 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(IsDisconnected));
+        }
+
         // Returns home when the game is deleted.
         private void OnGameDeleted(object? sender, string message)
         {
@@ -93,7 +102,7 @@ namespace CatanGame.ViewModels
         // Checks whether the start game command can run.
         private bool CanStartGame()
         {
-            return true;
+            return game.PlayerIndicator == 0 && game.IsFull;
         }
 
         // Navigates into the game page.

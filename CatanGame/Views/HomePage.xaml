@@ -6,23 +6,38 @@
     xmlns:m="clr-namespace:CatanGame.Models"
     xmlns:vm="clr-namespace:CatanGame.ViewModels"
     x:DataType="vm:HomePageVM"
-    IsBusy="{Binding IsBusy}"
-    IsEnabled="{Binding IsEnabled}">
+    IsBusy="{Binding IsBusy}">
     <Shell.TitleView>
-        <HorizontalStackLayout FlowDirection="LeftToRight">
+        <HorizontalStackLayout FlowDirection="LeftToRight"
+                               Spacing="15">
             <Label
                 FontAttributes="Bold"
                 FontSize="Medium"
                 Text="{x:Static m:Strings.AppTitle}"
                 VerticalTextAlignment="Center" />
+            <Label Text="{x:Static m:Strings.NoInternetConnection}"
+                   IsVisible="{Binding IsDisconnected}"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   FontSize="17"
+                   FontAttributes="Bold"
+                   TextColor="#E32636" />
         </HorizontalStackLayout>
     </Shell.TitleView>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding LogOutCommand}"
+                     IsEnabled="{Binding IsEnabled}"
+                     Order="Primary"
+                     Text="{x:Static m:Strings.LogOut}" />
+    </ContentPage.ToolbarItems>
     <VerticalStackLayout>
+
         <Grid
             Padding="5"
             ColumnSpacing="5"
             RowDefinitions="*,*,*">
-            <Grid ColumnDefinitions="1.22*,*">
+            <Grid ColumnDefinitions="1.22*,*"
+                  IsEnabled="{Binding IsEnabled}">
                 <Picker
                     Title="{x:Static m:Strings.SelectAmountOfPlayers}"
                     FontAttributes="Bold"
@@ -41,7 +56,8 @@
                     ItemsSource="{Binding TurnTimes}"
                     SelectedItem="{Binding SelectedTurnTime}" />
             </Grid>
-            <Grid Grid.Row="1" ColumnDefinitions="1.8*,*">
+            <Grid Grid.Row="1" ColumnDefinitions="1.8*,*"
+                  IsEnabled="{Binding IsEnabled}">
                 <Picker
                     Title="{x:Static m:Strings.SelectAmountOfPointsNeeded}"
                     FontAttributes="Bold"
@@ -63,6 +79,7 @@
                 Grid.ColumnSpan="2"
                 Margin="10"
                 Command="{Binding AddGameCommand}"
+                IsEnabled="{Binding IsEnabled}"
                 FontSize="Body"
                 HorizontalOptions="Fill"
                 Text="{x:Static m:Strings.AddGame}" />
@@ -73,16 +90,20 @@
             FontSize="18"
             HorizontalTextAlignment="Center"
             Keyboard="Numeric"
+            IsEnabled="{Binding IsEnabled}"
             Placeholder="{x:Static m:Strings.EnterGameCode}"
             Text="{Binding GameCode}" />
         <Button
             Command="{Binding JoinGameWithCodeCommand}"
+            IsEnabled="{Binding IsEnabled}"
             FontSize="18"
             HeightRequest="70"
             Text="{x:Static m:Strings.JoinGameButton}"
             TextColor="White" />
 
-        <ListView ItemsSource="{Binding GamesList}" SelectedItem="{Binding SelectedItem}">
+        <ListView ItemsSource="{Binding GamesList}" 
+                  SelectedItem="{Binding SelectedItem}"
+                  IsEnabled="{Binding IsEnabled}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="m:GameModel">
                     <ViewCell>

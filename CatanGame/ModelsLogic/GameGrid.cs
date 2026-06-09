@@ -3,7 +3,6 @@ using CatanGame.Views;
 using SkiaSharp.Extended.UI.Controls;
 using CommunityToolkit.Maui.Views;
 
-
 namespace CatanGame.ModelsLogic
 {
     public class GameGrid : GameGridModel

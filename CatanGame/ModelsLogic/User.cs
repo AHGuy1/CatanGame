@@ -89,6 +89,12 @@ namespace CatanGame.ModelsLogic
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, LoginOnComplete);
         }
 
+        // Starts logout for the current user.
+        public override void LogOut()
+        {
+            fbd.SignOut();
+        }
+
         // Starts a password reset for the current email.
         public override void ResetPassword()
         {

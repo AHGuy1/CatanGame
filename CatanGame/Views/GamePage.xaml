@@ -16,19 +16,21 @@
                 BackgroundColor="Transparent"
                 HorizontalOptions="Fill"
                 Source="boardframe.png"
-                VerticalOptions="Fill" />
+                VerticalOptions="Fill"/>
             <Grid
                 x:Name="grdBoard"
                 HorizontalOptions="Center"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"/>
             <Grid
                 x:Name="grdPieces"
                 HorizontalOptions="Center"
-                VerticalOptions="Center" />
+                VerticalOptions="Center"
+                IsEnabled="{Binding IsEnabled}"/>
         </Grid>
         <Grid>
-            <Grid x:Name="otherPieces" />
-            <Grid RowDefinitions="auto,auto"
+            <Grid x:Name="otherPieces"
+                  IsEnabled="{Binding IsEnabled}"/>
+            <Grid RowDefinitions="auto,auto,auto"
                   ColumnDefinitions="*,*"
                   VerticalOptions="Start"
                   HorizontalOptions="Center"
@@ -59,6 +61,7 @@
                            HeightRequest="30"
                            WidthRequest="30"
                            VerticalOptions="Center"
+                           HorizontalOptions="Center"
                            IsVisible="{Binding AvatarVisible}">
                         <Image.Source>
                             <UriImageSource Uri="{Binding AvatarUrl}"
@@ -67,6 +70,15 @@
                         </Image.Source>
                     </Image>
                 </Grid>
+                <Label Text="{x:Static m:Strings.NoInternetConnection}"
+                       IsVisible="{Binding IsDisconnected}"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="#E32636" />
             </Grid>
         </Grid>
     </HorizontalStackLayout>

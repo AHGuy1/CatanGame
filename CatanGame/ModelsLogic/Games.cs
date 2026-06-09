@@ -19,6 +19,7 @@ namespace CatanGame.ModelsLogic
         protected override void OnCompleteGameCodeAdded(Task task)
         {
             IsBusy = false;
+            IsEnabled = true;
             GameAdded?.Invoke(this, CurrentGame!);
         }
 
@@ -104,6 +105,7 @@ namespace CatanGame.ModelsLogic
         public override void AddGame(GameSize slectedAmountOfPlayers, int selectedAmountOfPoints, int TurnTime, bool isRandomBoard)
         {
             IsBusy = true;
+            IsEnabled = false;
             if (selectedAmountOfPoints == 0)
                 selectedAmountOfPoints = 10;
             if (TurnTime == 0)
@@ -117,6 +119,7 @@ namespace CatanGame.ModelsLogic
         public override void JoinGameWithCode(string gameCode)
         {
             IsBusy = true;
+            IsEnabled = false;
             GameCode gamecode = new();
             gamecode.GetDocument(gameCode, OnCompleteGetCodeDocument);
         }

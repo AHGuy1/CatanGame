@@ -12,6 +12,7 @@ namespace CatanGame.ViewModels
         private readonly Game game;
         private readonly GameGrid board;
         private readonly Animations animations;
+        private readonly ModelsLogic.Connectivity connectivity = new();
         #endregion
 
         #region Properties
@@ -20,6 +21,8 @@ namespace CatanGame.ViewModels
         public double TimeOpacity => animations.TimeOpacity;
         public bool AvatarVisible => game.StatusMessage != GameStatus.Status.PleseWait.ToString();
         public bool IsBusy { get; set; } = false;
+        public bool IsEnabled { get; set; } = true;
+        public bool IsDisconnected => !connectivity.IsConnected;
         public string StatusMessage => game.StatusMessage == Strings.YourTurn ? game.StatusMessage : PlayerNames[game.PlayerTurn - 1] + game.StatusMessage;
         public string AvatarUrl => game.PlayerAvatar.GetUrlWithString(PlayerNames[game.PlayerTurn - 1]);
         public string TimeLeft => game.TimeLeft;
@@ -48,6 +51,7 @@ namespace CatanGame.ViewModels
             this.game.TradeRecived += OnTradeRecived;
             this.game.CloseTradePopUp += OnCloseTradePopUp;
             animations.OpacityChanged += OnOpacityChanged;
+            connectivity.ConnectivityChanged += OnConnectivityChanged;
             OnPropertyChanged(nameof(game.TimeLeft));
             OnPropertyChanged(nameof(board));
             game.StartGame();
@@ -63,6 +67,14 @@ namespace CatanGame.ViewModels
         #endregion
 
         #region Private Methods
+        //Updates xaml that connectivity status has changed.
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            IsEnabled = connectivity.IsConnected;
+            OnPropertyChanged(nameof(IsDisconnected));
+            OnPropertyChanged(nameof(IsEnabled));
+        }
+
         // Closes the trade popup from game events.
         private void OnCloseTradePopUp(object? sender, EventArgs e)
         {
@@ -151,7 +163,9 @@ namespace CatanGame.ViewModels
         private void OnGameChanged(object? sender, EventArgs e)
         {
             IsBusy = false;
+            IsEnabled = true;
             OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(StatusMessage));
             OnPropertyChanged(nameof(TimeLeft));
             OnPropertyChanged(nameof(AvatarUrl));
@@ -163,6 +177,8 @@ namespace CatanGame.ViewModels
         private void EndTurn()
         {
             IsBusy = true;
+            IsEnabled = false;
+            OnPropertyChanged(nameof(IsEnabled));
             OnPropertyChanged(nameof(IsBusy));
             board.EnsurePlayerPlayed();
         }

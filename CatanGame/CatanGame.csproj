@@ -66,7 +66,7 @@
 	  <Compile Update="Views\BoardTest.xaml.cs">
 	    <DependentUpon>BoardTest.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\PassWordResetPage.xaml.cs">
+	  <Compile Update="Views\PasswordResetPage.xaml.cs">
 	    <DependentUpon>PasswordResetPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\TradePage.xaml.cs">

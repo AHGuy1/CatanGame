@@ -20,6 +20,7 @@ namespace CatanGame.Models
         #region Properties
         public Game? CurrentGame;
         public bool IsBusy { get; set; }
+        public bool IsEnabled { get; set; } = true;
         public ObservableCollection<Game>? GamesList { get; set; } = [];
         public ObservableCollection<GameSize>? AmountOfPlayers { get; set; } = [new GameSize(3), new GameSize(4), new GameSize(5), new GameSize(6)];
         public ObservableCollection<TurnTime> TurnTimes { get; set; } = [new TurnTime(20), new TurnTime(30), new TurnTime(45), new TurnTime(60), new TurnTime(75), new TurnTime(90), new TurnTime(120), new TurnTime(210), new TurnTime(300)];
