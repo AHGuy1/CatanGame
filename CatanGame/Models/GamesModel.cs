@@ -1,5 +1,4 @@
 using CatanGame.ModelsLogic;
-using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 

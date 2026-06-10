@@ -104,17 +104,15 @@ namespace CatanGame.ModelsLogic
         // Saves or clears remembered login credentials.
         public override void RememberMe()
         {
-            if (Preferences.Get(Keys.IsRememberedKey, false))
+            if (Preferences.Get(Keys.IsRememberedKey, true))
             {
                 Preferences.Set(Keys.EmailKey, Email);
                 Preferences.Set(Keys.PasswordKey, Password);
-                Preferences.Set(Keys.IsRememberedKey, true);
             }
             else
             {
                 Preferences.Remove(Keys.EmailKey);
                 Preferences.Remove(Keys.PasswordKey);
-                Preferences.Set(Keys.IsRememberedKey, false);
             }
         }
         #endregion

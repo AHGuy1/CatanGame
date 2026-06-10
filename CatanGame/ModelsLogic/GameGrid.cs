@@ -780,7 +780,7 @@ namespace CatanGame.ModelsLogic
         // Checks whether the player can buy a development card.
         protected override bool CenGetCardFromPackege()
         {
-            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(SpecialCards.CardPack[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
+            return Game.PlayerSheepCount > 0 && Game.PlayerOreCount > 0 && Game.PlayerWheatCount > 0 && !String.IsNullOrWhiteSpace(Game.SpecialCards[0]) && Game.StatusMessage == Strings.YourTurn && Game.Turn > Game.PlayerCount * 2 && !RollButton.IsEnabled;
         }
 
         // Checks whether the selected development card can be used.

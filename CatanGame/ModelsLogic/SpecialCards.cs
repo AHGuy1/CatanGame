@@ -131,6 +131,7 @@ namespace CatanGame.ModelsLogic
         // Returns a used card to the development card pack.
         protected override void ReturnCardToPackege(string card)
         {
+            CardPack = Game!.SpecialCards;
             bool found = false;
             for (int i = 0; i < CardPack.Length && !found; i++)
             {
@@ -274,6 +275,7 @@ namespace CatanGame.ModelsLogic
         // Draws the top development card into the player's hand.
         public override void GetCardFromPackege()
         {
+            CardPack = Game!.SpecialCards;
             if (CardPack[0] == Strings.KnightImage)
                 SpecialCardCounters[0]++;
             else if (CardPack[0] == Strings.UniversityImage)
